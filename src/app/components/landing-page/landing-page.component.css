@@ -7,10 +7,6 @@
 
 .charity-wrapper {
   width: 100%;
-  /* Using system-ui ensures the phone uses its native bold font */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* --- ROW 1: BRANDING --- */
