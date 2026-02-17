@@ -1,1 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+
+:root {
+  /* Define as a variable for easy reuse in components */
+  --system-fonts: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  
+  /* Setting the default font */
+  font-family: var(--system-fonts);
+  
+  /* This ensures fonts are crisp and visible on mobile (Retina/OLED) */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Prevents mobile browsers from automatically resizing text */
+  -webkit-text-size-adjust: 100%;
+  
+  /* Default font size and weight for visibility */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* Force headings to stay bold on mobile */
+h1, h2, h3, h4, h5, h6, strong, b {
+  font-weight: 700;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
