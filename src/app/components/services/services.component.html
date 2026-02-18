@@ -1,1 +1,26 @@
-<p>services works!</p>
+<header class="page-header">
+  <div class="header-overlay">
+    <h1>Our Services</h1>
+    <p>Empowering communities through dedicated service</p>
+  </div>
+</header>
+
+<section class="services-section">
+  <div class="container">
+    <div class="services-grid">
+      @for (service of services; track $index) {
+        <div class="service-card">
+          <div class="service-img-wrapper">
+            <img [src]="service.image" [alt]="service.title">
+          </div>
+          <div class="service-content">
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

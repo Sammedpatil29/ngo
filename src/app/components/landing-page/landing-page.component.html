@@ -80,10 +80,85 @@
   </nav>
 
   <section class="hero-section">
-    <div class="hero-card">
-      <div class="hero-overlay">
-        <h2 class="hero-title">Your Small Help Makes a <span class="highlight">Difference</span></h2>
+    <div class="carousel-container">
+      @for (slide of heroSlides; track $index) {
+        <div class="hero-card" 
+             [class.active]="$index === currentSlide()"
+             [style.background-image]="'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url(' + slide.image + ')'">
+          <div class="hero-overlay">
+            <h2 class="hero-title">{{slide.title}} <span class="highlight">{{slide.highlight}}</span></h2>
+          </div>
+        </div>
+      }
+
+      <!-- Controls -->
+      <button class="carousel-btn prev" (click)="prevSlide()">&#10094;</button>
+      <button class="carousel-btn next" (click)="nextSlide()">&#10095;</button>
+
+      <!-- Indicators -->
+      <div class="carousel-indicators">
+        @for (slide of heroSlides; track $index) {
+          <span class="dot" [class.active]="$index === currentSlide()" (click)="goToSlide($index)"></span>
+        }
       </div>
     </div>
   </section>
+
+  <section class="services-section">
+    <div class="container">
+      <h2 class="section-title">Our Services</h2>
+      <p class="section-subtitle">We are dedicated to serving the community through various initiatives.</p>
+      
+      <div class="services-grid">
+        @for (service of services; track $index) {
+          <div class="service-card">
+            <div class="service-img-wrapper">
+              <img [src]="service.image" [alt]="service.title">
+            </div>
+            <div class="service-content">
+              <h3>{{ service.title }}</h3>
+              <p>{{ service.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="members-section">
+    <div class="container">
+      <h2 class="section-title">Our Team</h2>
+      <div class="members-scroll-container">
+        @for (member of members; track $index) {
+          <div class="member-card">
+            <div class="member-img">
+              <img [src]="member.image" [alt]="member.name">
+            </div>
+            <div class="member-info">
+              <h4>{{ member.name }}</h4>
+              <p>{{ member.role }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="media-section">
+    <div class="container">
+      <h2 class="section-title">Media Appearances</h2>
+      <div class="media-grid">
+        @for (media of mediaAppearances; track $index) {
+          <div class="media-card">
+            <img [src]="media.image" [alt]="media.title">
+            <div class="media-info">
+              <h3>{{ media.title }}</h3>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
 </div>

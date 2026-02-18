@@ -1,1 +1,26 @@
-<p>valunteers works!</p>
+<header class="page-header">
+  <div class="header-overlay">
+    <h1>Our Volunteers</h1>
+    <p>Dedicated individuals making a difference</p>
+  </div>
+</header>
+
+<section class="volunteers-section">
+  <div class="container">
+    <div class="volunteers-grid">
+      @for (volunteer of volunteers; track $index) {
+        <div class="member-card">
+          <div class="member-img">
+            <img [src]="volunteer.image" [alt]="volunteer.name">
+          </div>
+          <div class="member-info">
+            <h4>{{ volunteer.name }}</h4>
+            <p>{{ volunteer.role }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

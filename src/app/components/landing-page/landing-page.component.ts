@@ -1,18 +1,116 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FooterComponent } from "../footer/footer.component";
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FooterComponent],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css'
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit, OnDestroy {
   // Navigation links using signals
   navItems = signal(['VOLUNTEERS', 'SERVICES', 'DONATE']);
   
   // Contact info
   contactPhone = signal('+91 90000 00000');
   contactEmail = signal('mayihelpyoufoundationjmd@gmail.com');
+
+  // Carousel Data
+  heroSlides = [
+    {
+      image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200',
+      title: 'Your Small Help Makes a',
+      highlight: 'Difference'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1200',
+      title: 'Empowering Communities for a',
+      highlight: 'Better Tomorrow'
+    },
+    {
+      image: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=1200',
+      title: 'Join Us in Spreading',
+      highlight: 'Smiles'
+    }
+  ];
+
+  currentSlide = signal(0);
+  private slideInterval: any;
+
+  ngOnInit() {
+    this.startAutoSlide();
+  }
+
+  ngOnDestroy() {
+    this.stopAutoSlide();
+  }
+
+  startAutoSlide() {
+    this.slideInterval = setInterval(() => {
+      this.nextSlide();
+    }, 5000);
+  }
+
+  stopAutoSlide() {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+    }
+  }
+
+  nextSlide() {
+    this.currentSlide.update(curr => (curr + 1) % this.heroSlides.length);
+  }
+
+  prevSlide() {
+    this.currentSlide.update(curr => (curr - 1 + this.heroSlides.length) % this.heroSlides.length);
+  }
+
+  goToSlide(index: number) {
+    this.currentSlide.set(index);
+    this.stopAutoSlide();
+    this.startAutoSlide();
+  }
+
+  // Services Data
+  services = [
+    {
+      title: 'Education Support',
+      description: 'Providing books, uniforms, and tuition fees for underprivileged children to ensure they have access to quality education.',
+      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500'
+    },
+    {
+      title: 'Medical Camps',
+      description: 'Organizing free health check-up camps and distributing medicines in rural areas to improve community health.',
+      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500'
+    },
+    {
+      title: 'Food Distribution',
+      description: 'Regular food donation drives to feed the hungry and homeless, ensuring basic nutrition for all.',
+      image: 'https://images.unsplash.com/photo-1594708767771-a7502209ff51?w=500'
+    },
+    {
+      title: 'Women Empowerment',
+      description: 'Skill development workshops and vocational training to help women become financially independent.',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500'
+    }
+  ];
+
+  // Members Data
+  members = [
+    { name: 'John Doe', role: 'President', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400' },
+    { name: 'Jane Smith', role: 'Secretary', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400' },
+    { name: 'Robert Brown', role: 'Treasurer', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400' },
+    { name: 'Emily Davis', role: 'Coordinator', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400' },
+    { name: 'Michael Wilson', role: 'Volunteer', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400' },
+    { name: 'Sarah Johnson', role: 'Advisor', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400' },
+  ];
+
+  // Media Appearances Data
+  mediaAppearances = [
+    { title: 'Feature in Local Daily', image: 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=500' },
+    { title: 'Community Award Ceremony', image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500' },
+    { title: 'Charity Event Coverage', image: 'https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=500' }
+  ];
 }

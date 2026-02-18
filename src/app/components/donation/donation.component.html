@@ -1,1 +1,62 @@
-<p>donation works!</p>
+<header class="page-header">
+  <div class="header-overlay">
+    <h1>Make a Donation</h1>
+    <p>Your contribution can change lives</p>
+  </div>
+</header>
+
+<section class="donation-section">
+  <div class="container">
+    <div class="donation-content">
+      <!-- Donation Form -->
+      <div class="donation-form-card">
+        <h2>Donate Now</h2>
+        <form (submit)="submitDonation($event)">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Your Name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="Your Email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="Your Phone Number" required>
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount (₹)</label>
+            <input type="number" min="10" step="10" id="amount" placeholder="Enter Amount" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Message (Optional)</label>
+            <textarea id="message" rows="4" placeholder="Leave a message..."></textarea>
+          </div>
+          <button type="submit" class="donate-btn">Proceed to Pay</button>
+        </form>
+      </div>
+
+      <!-- Payment Details -->
+      <div class="payment-details-card">
+        <h2>Bank Transfer Details</h2>
+        <div class="bank-info">
+          <p><strong>Bank Name:</strong> {{bankDetails.bankName}}</p>
+          <p><strong>Account Name:</strong> {{bankDetails.accountName}}</p>
+          <p><strong>Account Number:</strong> {{bankDetails.accountNumber}}</p>
+          <p><strong>IFSC Code:</strong> {{bankDetails.ifscCode}}</p>
+          <p><strong>Branch:</strong> {{bankDetails.branch}}</p>
+        </div>
+        
+        <div class="qr-section">
+          <h3>Scan to Pay</h3>
+          <div class="qr-placeholder">
+            <img src="assets/qr-code.png" alt="Payment QR Code">
+          </div>
+          <p>Accepting UPI payments</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>
