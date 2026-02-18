@@ -1,6 +1,7 @@
 import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from "../footer/footer.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing-page',
@@ -11,7 +12,7 @@ import { FooterComponent } from "../footer/footer.component";
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
   // Navigation links using signals
-  navItems = signal(['VOLUNTEERS', 'SERVICES', 'DONATE']);
+  navItems = ['VOLUNTEERS', 'SERVICES', 'DONATION'];
   
   // Contact info
   contactPhone = signal('+91 90000 00000');
@@ -38,6 +39,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   currentSlide = signal(0);
   private slideInterval: any;
+
+  constructor(private router: Router) {}
 
   ngOnInit() {
     this.startAutoSlide();
@@ -113,4 +116,8 @@ export class LandingPageComponent implements OnInit, OnDestroy {
     { title: 'Community Award Ceremony', image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=500' },
     { title: 'Charity Event Coverage', image: 'https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=500' }
   ];
+
+  goto(item: string) {
+    this.router.navigate([item.toLowerCase()]);
+  }
 }

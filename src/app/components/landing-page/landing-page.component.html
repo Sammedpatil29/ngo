@@ -40,8 +40,8 @@
       </div>
       <div class="nav-segment links-container">
         <div class="nav-links-row">
-          @for (item of navItems(); track item) {
-            <a href="#" class="nav-item">{{ item }}</a>
+          @for (item of navItems; track item) {
+            <a class="nav-item" (click)="goto(item)">{{ item }}</a>
           }
         </div>
         <div class="contact-bar">
