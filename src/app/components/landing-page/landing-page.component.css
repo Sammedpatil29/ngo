@@ -5,6 +5,96 @@
   --white: #ffffff;
 }
 
+:host {
+  --foundation-pink: #e91e63;
+  --foundation-green: #1b5e20;
+  --foundation-blue: #303f9f;
+}
+
+.foundation-header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap; /* Strictly no wrapping */
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1vw 2vw;
+  background: #fff;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent any stray scrollbars */
+}
+
+/* Side Boxes (Logos) */
+.header-side-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0; /* Prevents logos from being crushed */
+  width: 12vw;    /* Fixed relative width */
+}
+
+.header-logo {
+  width: 100%;
+  height: auto;
+  max-width: 100px;
+}
+
+/* Center Content */
+.header-center-box {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 0; /* Allows shrinking without breaking layout */
+}
+
+/* Typography Scaling */
+.brand-name {
+  color: var(--foundation-pink);
+  font-size: clamp(14px, 4.5vw, 48px); /* Scales perfectly with screen */
+  font-weight: 900;
+  margin: 0.5vw 0;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+}
+
+.motto-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: clamp(6px, 1.2vw, 16px);
+  white-space: nowrap;
+  gap: 1vw;
+}
+
+.address-row {
+  font-size: clamp(7px, 1.1vw, 14px);
+  white-space: nowrap;
+  margin-top: 0.2vw;
+}
+
+.meta-text {
+  font-size: clamp(6px, 1vw, 12px);
+  margin-top: 0.5vw;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Utility Colors */
+.green-text { color: var(--foundation-green); }
+.blue-text { color: var(--foundation-blue); }
+.bold { font-weight: 800; }
+
+/* Force standard bold on mobile */
+@media (max-width: 600px) {
+  .brand-name, .bold {
+    -webkit-font-smoothing: antialiased;
+    text-shadow: 0.1px 0 0 currentColor; /* Mimics extra weight on small screens */
+  }
+}
+
 .charity-wrapper {
   width: 100%;
 }
