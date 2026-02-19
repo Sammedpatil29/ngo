@@ -6,7 +6,7 @@
         <p><strong>Address:</strong><br> D No: 9/324, Shankar Rao Street,<br> PRODDATUR - 516 360,<br> Kadapa Dist. A.P</p>
         <p><strong>Phone:</strong> <a href="tel:{{contactPhone()}}">{{contactPhone()}}</a></p>
         <p><strong>Email:</strong> <a href="mailto:{{contactEmail()}}">{{contactEmail()}}</a></p>
-        <p><strong (click)="login()">Admin Login</strong></p>
+        <p style="cursor: pointer"><strong (click)="login()"><a>Admin Login</a></strong></p>
       </div>
       <div class="footer-section map-section">
         <h3>Our Location</h3>
@@ -16,6 +16,6 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2024 May I Help You Foundation. All rights reserved.</p>
+      <p>&copy; {{year}} May I Help You Foundation. All rights reserved.</p>
     </div>
   </footer>

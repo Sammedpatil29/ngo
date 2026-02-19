@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class FooterComponent {
   contactPhone = signal('+91 82972 53484');
   contactEmail = signal('mayihelpyoufoundationjmd@gmail.com');
+  year = new Date().getFullYear();
 
   constructor(private router: Router){}
 
