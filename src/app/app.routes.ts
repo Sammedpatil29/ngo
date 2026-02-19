@@ -21,5 +21,15 @@ export const routes: Routes = [
     {
         path: 'services',
         loadComponent: () => import('./components/services/services.component').then(m => m.ServicesComponent)
+    },
+    {
+        path: 'login',
+        loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent),
+        children: [
+            {
+                path: 'admin-layout',
+                loadComponent: () => import('./components/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent)
+            }
+        ]
     }
 ];

@@ -7,7 +7,7 @@ import { Component, signal } from '@angular/core';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent {
-  contactPhone = signal('+91 90000 00000');
+  contactPhone = signal('+91 82972 53484');
   contactEmail = signal('mayihelpyoufoundationjmd@gmail.com');
 
 }

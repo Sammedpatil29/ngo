@@ -15,7 +15,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   navItems = ['VOLUNTEERS', 'SERVICES', 'DONATION'];
   
   // Contact info
-  contactPhone = signal('+91 90000 00000');
+  contactPhone = signal('+91 82972 53484');
   contactEmail = signal('mayihelpyoufoundationjmd@gmail.com');
 
   // Carousel Data
