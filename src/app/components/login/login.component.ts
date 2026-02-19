@@ -18,8 +18,10 @@ export class LoginComponent {
 
   onLogin() {
     // Placeholder logic for demonstration
-    if (this.email === 'admin@ngo.org' && this.password === 'admin123') {
-      this.router.navigate(['/login/admin-layout']);
+    console.log('Attempting login with:', this.email, this.password);
+    if (this.email === 'admin@gmail.com' && this.password === 'admin123') {
+      alert('Login successful!');
+      this.router.navigate(['/admin-layout']);
     } else {
       alert('Invalid credentials (Try: admin@ngo.org / admin123)');
     }

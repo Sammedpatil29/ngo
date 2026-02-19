@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-footer',
@@ -9,5 +10,11 @@ import { Component, signal } from '@angular/core';
 export class FooterComponent {
   contactPhone = signal('+91 82972 53484');
   contactEmail = signal('mayihelpyoufoundationjmd@gmail.com');
+
+  constructor(private router: Router){}
+
+  login(){
+    this.router.navigate(['/login']);
+  }
 
 }

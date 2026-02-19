@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Images</h2>
+    <button class="btn btn-primary" (click)="onAdd()">Add New Image</button>
+  </div>
+
+  <div class="images-grid">
+    @for (img of images; track img.id) {
+      <div class="image-card" [class.disabled]="!img.isActive">
+        <div class="image-wrapper">
+          <img [src]="img.url" [alt]="img.place">
+          @if (!img.isActive) {
+            <div class="disabled-overlay">Disabled</div>
+          }
+        </div>
+        <div class="image-info">
+          <h4>{{ img.place }}</h4>
+        </div>
+        <div class="image-actions">
+          <button class="btn btn-sm btn-outline-primary" (click)="onEdit(img)">Edit</button>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" role="switch" [id]="'switch_' + img.id" [checked]="img.isActive" (change)="onToggleStatus(img)">
+            <label class="form-check-label" [for]="'switch_' + img.id">{{ img.isActive ? 'Enabled' : 'Disabled' }}</label>
+          </div>
+          <button class="btn btn-sm btn-outline-danger" (click)="onDelete(img)">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Modal -->
+@if (showModal) {
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show" style="display: block;" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditing ? 'Edit Image' : 'Add Image' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSave()">
+          <div class="mb-3">
+            <label for="place" class="form-label">Place / Title</label>
+            <input type="text" class="form-control" id="place" [(ngModel)]="currentImage.place" name="place" required>
+          </div>
+          <div class="mb-3">
+            <label for="url" class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="url" [(ngModel)]="currentImage.url" name="url" required>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="modalSwitch" [(ngModel)]="currentImage.isActive" name="isActive">
+            <label class="form-check-label" for="modalSwitch">Active</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}

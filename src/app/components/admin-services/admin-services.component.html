@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Services</h2>
+    <button class="btn btn-primary" (click)="onAdd()">Add New Service</button>
+  </div>
+
+  <div class="services-grid">
+    @for (service of services; track service.id) {
+      <div class="service-card" [class.disabled]="!service.isActive">
+        <div class="service-img">
+          <img [src]="service.image" [alt]="service.title">
+          @if (!service.isActive) {
+            <div class="disabled-overlay">Disabled</div>
+          }
+        </div>
+        <div class="service-info">
+          <h4>{{ service.title }}</h4>
+          <p>{{ service.description }}</p>
+        </div>
+        <div class="service-actions">
+          <button class="btn btn-sm btn-outline-primary" (click)="onEdit(service)">Edit</button>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" role="switch" [id]="'switch_' + service.id" [checked]="service.isActive" (change)="onToggleStatus(service)">
+            <label class="form-check-label" [for]="'switch_' + service.id">{{ service.isActive ? 'Enabled' : 'Disabled' }}</label>
+          </div>
+          <button class="btn btn-sm btn-outline-danger" (click)="onDelete(service)">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Modal -->
+@if (showModal) {
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show" style="display: block;" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditing ? 'Edit Service' : 'Add Service' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSave()">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" [(ngModel)]="currentService.title" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" [(ngModel)]="currentService.description" name="description" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="image" [(ngModel)]="currentService.image" name="image" required>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="modalSwitch" [(ngModel)]="currentService.isActive" name="isActive">
+            <label class="form-check-label" for="modalSwitch">Active</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}

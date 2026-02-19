@@ -1,0 +1,69 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Banners</h2>
+    <button class="btn btn-primary" (click)="onAdd()">Add New Banner</button>
+  </div>
+
+  <div class="banners-grid">
+    @for (banner of banners; track banner.id) {
+      <div class="banner-card" [class.disabled]="!banner.isActive">
+        <div class="banner-img">
+          <img [src]="banner.image" [alt]="banner.title">
+          @if (!banner.isActive) {
+            <div class="disabled-overlay">Disabled</div>
+          }
+        </div>
+        <div class="banner-info">
+          <h4>{{ banner.title }} <span class="text-warning">{{ banner.highlight }}</span></h4>
+        </div>
+        <div class="banner-actions">
+          <button class="btn btn-sm btn-outline-primary" (click)="onEdit(banner)">Edit</button>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" role="switch" [id]="'switch_' + banner.id" [checked]="banner.isActive" (change)="onToggleStatus(banner)">
+            <label class="form-check-label" [for]="'switch_' + banner.id">{{ banner.isActive ? 'Enabled' : 'Disabled' }}</label>
+          </div>
+          <button class="btn btn-sm btn-outline-danger" (click)="onDelete(banner)">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Modal -->
+@if (showModal) {
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show" style="display: block;" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditing ? 'Edit Banner' : 'Add Banner' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSave()">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" [(ngModel)]="currentBanner.title" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="highlight" class="form-label">Highlight Text</label>
+            <input type="text" class="form-control" id="highlight" [(ngModel)]="currentBanner.highlight" name="highlight" required>
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="image" [(ngModel)]="currentBanner.image" name="image" required>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="modalSwitch" [(ngModel)]="currentBanner.isActive" name="isActive">
+            <label class="form-check-label" for="modalSwitch">Active</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}
