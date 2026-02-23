@@ -76,7 +76,7 @@
 }
 
 .meta-text {
-  font-size: clamp(8px, 1vw, 12px);
+  font-size: clamp(8px, 1vw, 14px);
   margin-top: 0.5vw;
   line-height: 1.2;
   text-align: center;
