@@ -15,6 +15,7 @@ export class FooterComponent {
   constructor(private router: Router){}
 
   login(){
+    console.log('Navigating to login page');
     this.router.navigate(['/login']);
   }
 

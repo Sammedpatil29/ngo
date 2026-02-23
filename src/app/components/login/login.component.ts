@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AdminServiceService } from '../../services/admin-service.service';
 
 @Component({
   selector: 'app-login',
@@ -14,16 +15,24 @@ export class LoginComponent {
   email = '';
   password = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, public adminService: AdminServiceService) {}
 
   onLogin() {
-    // Placeholder logic for demonstration
-    console.log('Attempting login with:', this.email, this.password);
-    if (this.email === 'admin@gmail.com' && this.password === 'admin123') {
-      alert('Login successful!');
-      this.router.navigate(['/admin-layout']);
-    } else {
-      alert('Invalid credentials (Try: admin@ngo.org / admin123)');
+    let params = {
+      email: this.email,
+      password: this.password
     }
+    this.adminService.login(params).subscribe(
+      (response:any) => {
+        console.log('Login successful:', response);
+        sessionStorage.setItem('adminToken', response?.token);
+        this.router.navigate(['/admin-layout']);
+      },
+      (error) => {
+        console.error('Login failed:', error);
+        alert('Invalid credentials. Please try again.');
+      }
+    );
   }
+
 }

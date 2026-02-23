@@ -64,7 +64,7 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  font-size: clamp(6px, 1.2vw, 16px);
+  font-size: clamp(9px, 1.2vw, 16px);
   white-space: nowrap;
   gap: 1vw;
 }
@@ -76,7 +76,7 @@
 }
 
 .meta-text {
-  font-size: clamp(6px, 1vw, 12px);
+  font-size: clamp(8px, 1vw, 12px);
   margin-top: 0.5vw;
   line-height: 1.2;
   text-align: center;
