@@ -53,7 +53,7 @@
 /* Typography Scaling */
 .brand-name {
   color: var(--foundation-pink);
-  font-size: clamp(14px, 4.5vw, 48px); /* Scales perfectly with screen */
+  font-size: clamp(14px, 4.5vw, 62px); /* Scales perfectly with screen */
   font-weight: 900;
   margin: 0.5vw 0;
   white-space: nowrap;
