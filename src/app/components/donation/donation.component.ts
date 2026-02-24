@@ -12,10 +12,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class DonationComponent {
   bankDetails = {
-    bankName: 'State Bank of India',
+    bankName: 'UNION BANK',
     accountName: 'May I Help You Foundation',
-    accountNumber: '12345678901',
-    ifscCode: 'SBIN0001234',
+    accountNumber: '043711100002944',
+    ifscCode: 'UBIN0804371',
     branch: 'Proddatur Main Branch'
   };
 

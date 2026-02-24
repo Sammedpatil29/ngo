@@ -51,8 +51,12 @@
             <textarea class="form-control" id="description" [(ngModel)]="currentService.description" name="description" rows="3" required></textarea>
           </div>
           <div class="mb-3">
+            <label for="imageUpload" class="form-label">Upload Image</label>
+            <input type="file" class="form-control" id="imageUpload" accept="image/*">
+          </div>
+          <div class="mb-3">
             <label for="image" class="form-label">Image URL</label>
-            <input type="text" class="form-control" id="image" [(ngModel)]="currentService.image" name="image" required>
+            <input type="text" class="form-control" id="image" [(ngModel)]="currentService.image" name="image" required disabled>
           </div>
           <div class="form-check form-switch mb-3">
             <input class="form-check-input" type="checkbox" role="switch" id="modalSwitch" [(ngModel)]="currentService.isActive" name="isActive">

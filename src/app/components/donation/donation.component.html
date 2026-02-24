@@ -13,6 +13,11 @@
         <h2>Donate Now</h2>
         <form (submit)="submitDonation($event)">
           <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" #phoneRef placeholder="Your Phone Number" required (input)="0">
+          </div>
+          <fieldset [disabled]="phoneRef.value.length !== 10" style="border: none; padding: 0; margin: 0;">
+          <div class="form-group">
             <label for="name">Full Name</label>
             <input type="text" id="name" placeholder="Your Name" required>
           </div>
@@ -21,9 +26,35 @@
             <input type="email" id="email" placeholder="Your Email" required>
           </div>
           <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" placeholder="Your Phone Number" required>
+            <label>Want to be a donor?</label>
+            <small style="display: block; margin-bottom: 10px; color: #666;">If you opt to be a donor, you will get a call when there is an emergency near you.</small>
+            <div class="radio-group">
+              <div class="radio-option">
+                <input type="radio" id="bloodYes" name="donateBlood" value="yes" #bloodYes (change)="0">
+                <label for="bloodYes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="bloodNo" name="donateBlood" value="no" checked (change)="0">
+                <label for="bloodNo">No</label>
+              </div>
+            </div>
           </div>
+          @if (bloodYes.checked) {
+          <div class="form-group">
+            <label for="bloodGroup">Blood Group</label>
+            <select id="bloodGroup">
+              <option value="" disabled selected>Select Blood Group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+          }
           <div class="form-group">
             <label for="amount">Amount (₹)</label>
             <input type="number" min="10" step="10" id="amount" placeholder="Enter Amount" required>
@@ -33,6 +64,7 @@
             <textarea id="message" rows="4" placeholder="Leave a message..."></textarea>
           </div>
           <button type="submit" class="donate-btn">Proceed to Pay</button>
+          </fieldset>
         </form>
       </div>
 
@@ -53,6 +85,16 @@
             <img src="assets/qr-code.png" alt="Payment QR Code">
           </div>
           <p>Accepting UPI payments</p>
+        </div>
+        <div class="qr-section">
+          <h3 class="message-title">సదా మీ సేవలో...</h3>
+          <!-- <div class="qr-placeholder">
+            <img src="assets/qr-code.png" alt="Payment QR Code">
+          </div> -->
+          <p class="message-body">ఆనాథ శవానికి అంత్యక్రియలు, రక్తదానం, మెడికల్ క్యాంప్
+ఫ్రీ కూలింగ్ బాక్స్, ఓల్డ్ ఎజ్ హోమ్, కంటి దానం
+ఉచిత అంబులెన్స్, ఉచిత వైకుంఠ రథం, ఫ్రీ స్టేషనరీ,
+పర్యావరణంపై అవగాహన సదస్సు.</p>
         </div>
       </div>
     </div>

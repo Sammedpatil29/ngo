@@ -46,8 +46,12 @@
             <input type="text" class="form-control" id="place" [(ngModel)]="currentImage.place" name="place" required>
           </div>
           <div class="mb-3">
+            <label for="imageUpload" class="form-label">Upload Image</label>
+            <input type="file" class="form-control" id="imageUpload" accept="image/*">
+          </div>
+          <div class="mb-3">
             <label for="url" class="form-label">Image URL</label>
-            <input type="text" class="form-control" id="url" [(ngModel)]="currentImage.url" name="url" required>
+            <input type="text" class="form-control" id="url" [(ngModel)]="currentImage.url" name="url" required disabled>
           </div>
           <div class="form-check form-switch mb-3">
             <input class="form-check-input" type="checkbox" role="switch" id="modalSwitch" [(ngModel)]="currentImage.isActive" name="isActive">
