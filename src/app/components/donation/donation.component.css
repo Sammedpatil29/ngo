@@ -211,3 +211,14 @@ h2 {
   color: red;
   margin-bottom: 15px;
 }
+
+.amount-suggestions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.amount-suggestions button {
+  flex: 1;
+}

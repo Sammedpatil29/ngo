@@ -21,4 +21,8 @@ export class CommonServiceService {
   getServices() {
     return this.http.get(`${this.url}/api/services/active`);
   }
+
+  donorByPhone(phone: string) {
+    return this.http.get(`${this.url}/api/donations/phone/${phone}`);
+  }
 }
