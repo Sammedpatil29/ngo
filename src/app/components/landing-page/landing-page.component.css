@@ -52,10 +52,10 @@
 
 /* Typography Scaling */
 .brand-name {
-  font-family: cursive;
+  font-family: luckiest guy, anek telugu,sans-serif;
   font-weight: 900;
   color: var(--foundation-pink);
-  font-size: clamp(14px, 4.5vw, 62px); /* Scales perfectly with screen */
+  font-size: clamp(14px, 7.5vw, 62px); /* Scales perfectly with screen */
   font-weight: 900;
   margin: 0.5vw 0;
   white-space: nowrap;
