@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdminServiceService } from '../../services/admin-service.service';
 
 @Component({
   selector: 'app-admin-volunteers',
@@ -9,26 +10,37 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './admin-volunteers.component.html',
   styleUrl: './admin-volunteers.component.css'
 })
-export class AdminVolunteersComponent {
-  volunteers = [
-    { id: 1, name: 'Alice Green', role: 'Community Manager', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400', isActive: true },
-    { id: 2, name: 'David White', role: 'Field Coordinator', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400', isActive: true },
-    { id: 3, name: 'Emma Brown', role: 'Event Planner', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400', isActive: true },
-    { id: 4, name: 'James Black', role: 'Logistics', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400', isActive: true },
-    { id: 5, name: 'Olivia Grey', role: 'Social Media', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400', isActive: true },
-    { id: 6, name: 'Michael Blue', role: 'Fundraiser', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400', isActive: true },
-    { id: 7, name: 'Sophia Red', role: 'Content Writer', image: 'https://images.unsplash.com/photo-1554151228-14d9def656ec?w=400', isActive: true },
-    { id: 8, name: 'Daniel Gold', role: 'Tech Support', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400', isActive: true },
-  ];
+export class AdminVolunteersComponent implements OnInit {
+  
+  volunteers: any[] = [];
 
   showModal = false;
   isEditing = false;
-  currentVolunteer: any = { id: 0, name: '', role: '', image: '', isActive: true };
+  uploadedImage: any;
+  currentVolunteer: any;
+
+  constructor(private adminService: AdminServiceService) {
+    
+  }
+
+  ngOnInit(): void {
+    this.getVolunteers();
+  }
 
   onAdd() {
-    this.currentVolunteer = { id: 0, name: '', role: '', image: '', isActive: true };
+    this.currentVolunteer = {name: '', role: '', image: '', isActive: true };
     this.isEditing = false;
     this.showModal = true;
+  }
+
+  getVolunteers() {
+    this.adminService.getVolunteers().subscribe({
+      next: (response: any) => {
+        this.volunteers = response;
+        console.log(this.volunteers);
+      },
+      error: (error) => console.error('Error fetching volunteers:', error)
+    });
   }
 
   onEdit(volunteer: any) {
@@ -39,28 +51,69 @@ export class AdminVolunteersComponent {
 
   closeModal() {
     this.showModal = false;
+    this.getVolunteers()
   }
 
   onSave() {
     if (this.isEditing) {
-      const index = this.volunteers.findIndex(v => v.id === this.currentVolunteer.id);
-      if (index !== -1) {
-        this.volunteers[index] = this.currentVolunteer;
-      }
+      this.adminService.updateVolunteer(this.currentVolunteer).subscribe({
+        next: (response: any) => {
+          
+          this.closeModal();
+        },
+        error: (error) => console.error('Error updating volunteer:', error)
+      });
     } else {
-      this.currentVolunteer.id = this.volunteers.length > 0 ? Math.max(...this.volunteers.map(v => v.id)) + 1 : 1;
-      this.volunteers.push(this.currentVolunteer);
+      this.adminService.addVolunteer(this.currentVolunteer).subscribe({
+        next: (response: any) => {
+          this.closeModal();
+        },
+        error: (error) => console.error('Error adding volunteer:', error)
+      });
     }
-    this.closeModal();
   }
 
   onDelete(volunteer: any) {
     if(confirm(`Are you sure you want to delete ${volunteer.name}?`)) {
-      this.volunteers = this.volunteers.filter(v => v.id !== volunteer.id);
+      this.adminService.deleteVolunteer(volunteer.id).subscribe({
+        next: () => {
+          this.volunteers = this.volunteers.filter(v => v.id !== volunteer.id);
+        },
+        error: (error) => console.error('Error deleting volunteer:', error)
+      });
     }
   }
 
   onToggleStatus(volunteer: any) {
     volunteer.isActive = !volunteer.isActive;
+    this.adminService.updateVolunteer(volunteer).subscribe({
+      next: () => console.log('Status updated successfully'),
+      error: (error) => {
+        console.error('Error updating status:', error);
+        volunteer.isActive = !volunteer.isActive;
+      }
+    });
+  }
+
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.uploadedImage = e.target.result;
+        const params = {
+          image: this.uploadedImage
+        };
+        this.adminService.uploadImage(params).subscribe({
+          next: (response: any) => {
+            this.currentVolunteer.image = response.data; // Assuming the backend returns the image URL in this format
+          },
+          error: (error) => {
+            console.error('Error uploading image:', error);
+          }
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }

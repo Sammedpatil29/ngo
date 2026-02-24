@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdminServiceService } from '../../services/admin-service.service';
 
 @Component({
   selector: 'app-admin-services',
@@ -9,44 +10,35 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './admin-services.component.html',
   styleUrl: './admin-services.component.css'
 })
-export class AdminServicesComponent {
-  services = [
-    {
-      id: 1,
-      title: 'Education Support',
-      description: 'Providing books, uniforms, and tuition fees for underprivileged children to ensure they have access to quality education.',
-      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500',
-      isActive: true
-    },
-    {
-      id: 2,
-      title: 'Medical Camps',
-      description: 'Organizing free health check-up camps and distributing medicines in rural areas to improve community health.',
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500',
-      isActive: true
-    },
-    {
-      id: 3,
-      title: 'Food Distribution',
-      description: 'Regular food donation drives to feed the hungry and homeless, ensuring basic nutrition for all.',
-      image: 'https://images.unsplash.com/photo-1594708767771-a7502209ff51?w=500',
-      isActive: true
-    },
-    {
-      id: 4,
-      title: 'Women Empowerment',
-      description: 'Skill development workshops and vocational training to help women become financially independent.',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500',
-      isActive: true
-    }
-  ];
+export class AdminServicesComponent implements OnInit {
+  services:any[] = [];
 
   showModal = false;
   isEditing = false;
-  currentService: any = { id: 0, title: '', description: '', image: '', isActive: true };
+  currentService: any = {  title: '', description: '', image: '', isActive: true };
+  uploadedImage: any;
+
+
+
+  constructor(private adminService: AdminServiceService) { }
+
+  ngOnInit(): void {
+    this.getServices();
+  }
+
+
+  getServices() {
+    this.adminService.getServices().subscribe({
+      next: (response: any) => {
+        this.services = response;
+      },
+      error: (error) => console.error('Error fetching services:', error)
+    });
+  }
+
 
   onAdd() {
-    this.currentService = { id: 0, title: '', description: '', image: '', isActive: true };
+    this.currentService = {  title: '', description: '', image: '', isActive: true };
     this.isEditing = false;
     this.showModal = true;
   }
@@ -59,28 +51,68 @@ export class AdminServicesComponent {
 
   closeModal() {
     this.showModal = false;
+    this.getServices();
   }
 
   onSave() {
     if (this.isEditing) {
-      const index = this.services.findIndex(s => s.id === this.currentService.id);
-      if (index !== -1) {
-        this.services[index] = this.currentService;
-      }
+      this.adminService.updateServices(this.currentService).subscribe({
+        next: (response: any) => {
+          this.closeModal();
+        },
+        error: (error) => console.error('Error updating service:', error)
+      });
     } else {
-      this.currentService.id = this.services.length > 0 ? Math.max(...this.services.map(s => s.id)) + 1 : 1;
-      this.services.push(this.currentService);
+      this.adminService.addServices(this.currentService).subscribe({
+        next: (response: any) => {
+          this.closeModal();
+        },
+        error: (error) => console.error('Error adding service:', error)
+      });
     }
-    this.closeModal();
   }
 
   onDelete(service: any) {
     if(confirm(`Are you sure you want to delete ${service.title}?`)) {
-      this.services = this.services.filter(s => s.id !== service.id);
+      this.adminService.deleteServices(service.id).subscribe({
+        next: () => {
+          this.services = this.services.filter(s => s.id !== service.id);
+        },
+        error: (error) => console.error('Error deleting service:', error)
+      });
     }
   }
 
   onToggleStatus(service: any) {
     service.isActive = !service.isActive;
+    this.adminService.updateServices(service).subscribe({
+      next: () => console.log('Status updated successfully'),
+      error: (error) => {
+        console.error('Error updating status:', error);
+        service.isActive = !service.isActive;
+      }
+    });
+  }
+
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.uploadedImage = e.target.result;
+        const params = {
+          image: this.uploadedImage
+        };
+        this.adminService.uploadImage(params).subscribe({
+          next: (response: any) => {
+            this.currentService.image = response.data; // Assuming the backend returns the image URL in this format
+          },
+          error: (error) => {
+            console.error('Error uploading image:', error);
+          }
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }

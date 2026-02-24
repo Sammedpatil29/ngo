@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AdminServiceService } from '../../services/admin-service.service';
 
 @Component({
   selector: 'app-admin-banners',
@@ -9,37 +10,34 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './admin-banners.component.html',
   styleUrl: './admin-banners.component.css'
 })
-export class AdminBannersComponent {
-  banners = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200',
-      title: 'Your Small Help Makes a',
-      highlight: 'Difference',
-      isActive: true
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1200',
-      title: 'Empowering Communities for a',
-      highlight: 'Better Tomorrow',
-      isActive: true
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=1200',
-      title: 'Join Us in Spreading',
-      highlight: 'Smiles',
-      isActive: true
-    }
+export class AdminBannersComponent implements OnInit {
+  banners: any[] = [
+    
   ];
 
   showModal = false;
   isEditing = false;
-  currentBanner: any = { id: 0, title: '', highlight: '', image: '', isActive: true };
+  currentBanner: any = {  title: '', highlight: '', image: '', isActive: true };
+  uploadedImage: any;
+
+
+  constructor(private adminService: AdminServiceService) { }
+
+  ngOnInit(): void {
+    this.getBanners();
+  }
+
+  getBanners() {
+    this.adminService.getBanners().subscribe({
+      next: (response: any) => {
+        this.banners = response;
+      },
+      error: (error) => console.error('Error fetching banners:', error)
+    });
+  }
 
   onAdd() {
-    this.currentBanner = { id: 0, title: '', highlight: '', image: '', isActive: true };
+    this.currentBanner = {  title: '', highlight: '', image: '', isActive: true };
     this.isEditing = false;
     this.showModal = true;
   }
@@ -52,28 +50,70 @@ export class AdminBannersComponent {
 
   closeModal() {
     this.showModal = false;
+    this.getBanners();
   }
 
   onSave() {
     if (this.isEditing) {
-      const index = this.banners.findIndex(b => b.id === this.currentBanner.id);
-      if (index !== -1) {
-        this.banners[index] = this.currentBanner;
-      }
+      this.adminService.updateBanners(this.currentBanner).subscribe({
+        next: (response: any) => {
+          this.getBanners();
+          this.closeModal();
+        },
+        error: (error) => console.error('Error updating banner:', error)
+      });
     } else {
-      this.currentBanner.id = this.banners.length > 0 ? Math.max(...this.banners.map(b => b.id)) + 1 : 1;
-      this.banners.push(this.currentBanner);
+      this.adminService.addBanners(this.currentBanner).subscribe({
+        next: (response: any) => {
+          this.getBanners();
+          this.closeModal();
+        },
+        error: (error) => console.error('Error adding banner:', error)
+      });
     }
-    this.closeModal();
   }
 
   onDelete(banner: any) {
     if(confirm(`Are you sure you want to delete this banner?`)) {
-      this.banners = this.banners.filter(b => b.id !== banner.id);
+      this.adminService.deleteBanners(banner.id).subscribe({
+        next: () => {
+          this.banners = this.banners.filter((b:any) => b.id !== banner.id);
+        },
+        error: (error) => console.error('Error deleting banner:', error)
+      });
     }
   }
 
   onToggleStatus(banner: any) {
     banner.isActive = !banner.isActive;
+    this.adminService.updateBanners(banner).subscribe({
+      next: () => console.log('Status updated successfully'),
+      error: (error) => {
+        console.error('Error updating status:', error);
+        banner.isActive = !banner.isActive;
+      }
+    });
+  }
+
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.uploadedImage = e.target.result;
+        const params = {
+          image: this.uploadedImage
+        };
+        this.adminService.uploadImage(params).subscribe({
+          next: (response: any) => {
+            this.currentBanner.image = response.data; // Assuming the backend returns the image URL in this format
+          },
+          error: (error) => {
+            console.error('Error uploading image:', error);
+          }
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }
