@@ -15,7 +15,7 @@ import { AdminServiceService } from '../../services/admin-service.service';
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
   // Navigation links using signals
-  navItems = ['VOLUNTEERS', 'SERVICES', 'GALLERY', 'BRANCHES', 'DONATION'];
+  navItems = ['VOLUNTEERS', 'SERVICES', 'GALLERY', 'DONATION'];
   
   // Contact info
   contactPhone = signal('+91 82972 53484');
