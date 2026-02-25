@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from '../footer/footer.component';
 import { FormsModule } from '@angular/forms';
@@ -36,7 +36,12 @@ export class DonationComponent implements OnInit {
     bloodGroup: ""
   };
 
-  constructor(private commonService: CommonServiceService) { }
+  showPaymentModal = false;
+  paymentStatus: 'success' | 'failure' = 'success';
+  paymentTitle = '';
+  paymentMessage = '';
+
+  constructor(private commonService: CommonServiceService, private zone: NgZone) { }
 
   ngOnInit(): void {
     this.loadRazorpayScript();
@@ -54,7 +59,7 @@ export class DonationComponent implements OnInit {
   submitDonation(event: Event) {
     event.preventDefault();
     if (!this.donation.amount) {
-      alert('Please enter donation amount');
+      this.showModal('failure', 'Missing Information', 'Please enter a donation amount.');
       return;
     }
 
@@ -64,7 +69,7 @@ export class DonationComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error initiating donation:', error);
-        alert('Something went wrong. Please try again later.');
+        this.showModal('failure', 'Error', 'Something went wrong. Please try again later.');
       }
     });
   }
@@ -79,16 +84,9 @@ export class DonationComponent implements OnInit {
       image: '/assets/logo.png',
       order_id: orderData.orderId,
       handler: (response: any) => {
-        // this.verifyPayment(orderData.orderId);
-        this.donation.donorName = '';
-        this.donation.email = '';
-        this.donation.phone = '';
-        this.donation.city = '';
-        this.donation.amount = '';
-        this.donation.message = '';
-        this.donation.isBloodDonor = false;
-        this.donation.bloodGroup = '';
-        alert('Payment Successful! Thank you for your support.');
+        this.zone.run(() => {
+          this.verifyPayment(response);
+        });
       },
       prefill: {
         name: this.donation.donorName,
@@ -105,16 +103,28 @@ export class DonationComponent implements OnInit {
 
     const rzp = new Razorpay(options);
     rzp.on('payment.failed', (response: any) => {
-      console.error('Payment failed:', response.error);
-      alert('Payment Failed: ' + response.error.description);
+      this.zone.run(() => {
+        console.error('Payment failed:', response.error);
+        this.showModal('failure', 'Payment Failed', response.error.description);
+      });
     });
     rzp.open();
+  }
+
+  showModal(status: 'success' | 'failure', title: string, message: string) {
+    this.paymentStatus = status;
+    this.paymentTitle = title;
+    this.paymentMessage = message;
+    this.showPaymentModal = true;
+  }
+
+  closePaymentModal() {
+    this.showPaymentModal = false;
   }
 
   verifyPayment(paymentResponse: any) {
     this.commonService.verifyPayment(paymentResponse).subscribe({
       next: (response: any) => {
-        alert('Payment Successful! Thank you for your support.');
         this.donation = {
           donorName: "",
           email: "",
@@ -128,10 +138,11 @@ export class DonationComponent implements OnInit {
           isBloodDonor: false,
           bloodGroup: ""
         };
+        this.showModal('success', 'Payment Successful!', 'మీ సహాయం మరియు విరాళానికి మేము ఎంతో కృతజ్ఞులము!');
       },
       error: (error) => {
         console.error('Payment verification failed:', error);
-        alert('Payment verification failed. Please contact support.');
+        this.showModal('failure', 'Payment Verification Failed', 'Your payment could not be verified. Please contact support.');
       }
     });
   }

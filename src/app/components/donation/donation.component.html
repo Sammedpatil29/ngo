@@ -118,4 +118,32 @@
   </div>
 </section>
 
+<!-- Payment Status Modal -->
+@if (showPaymentModal) {
+<div class="modal-backdrop fade show" style="background-color: rgba(0, 0, 0, 0.5);"></div>
+<div class="modal fade show" style="display: block;" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" [ngClass]="{'bg-success text-white': paymentStatus === 'success', 'bg-danger text-white': paymentStatus === 'failure'}">
+        <h5 class="modal-title">{{ paymentTitle }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closePaymentModal()"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <div class="mb-3" style="font-size: 4rem;">
+          @if (paymentStatus === 'success') {
+            <span>✅</span>
+          } @else {
+            <span>❌</span>
+          }
+        </div>
+        <p class="lead" style="font-family: luckiest guy, anek telugu, sans-serif;">{{ paymentMessage }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" [ngClass]="{'btn-success': paymentStatus === 'success', 'btn-danger': paymentStatus === 'failure'}" (click)="closePaymentModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
 <app-footer></app-footer>

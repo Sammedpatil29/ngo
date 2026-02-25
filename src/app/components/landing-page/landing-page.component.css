@@ -280,7 +280,7 @@
   justify-content: center;
   align-items: center;
   gap: 1vw;
-  font-size: clamp(6px, 1.1vw, 15px);
+  font-size: clamp(8px, 1.1vw, 15px);
   font-weight: 700;
   color: var(--foundation-green);
   white-space: nowrap;
