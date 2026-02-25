@@ -25,4 +25,12 @@ export class CommonServiceService {
   donorByPhone(phone: string) {
     return this.http.get(`${this.url}/api/donations/phone/${phone}`);
   }
+
+  createDonation(data: any) {
+    return this.http.post(`${this.url}/api/donations`, data);
+  }
+
+  verifyPayment(data: any) {
+    return this.http.post(`${this.url}/api/donations/verify`, data);
+  }
 }

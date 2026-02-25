@@ -6,6 +6,10 @@
 </header>
 
 <section class="donation-section">
+  <div>
+   <h3 class="message-title text-center">అవసరమైన పేద ప్రజలకు
+మీ సహయం ముఖ్యం</h3>
+</div>
   <div class="container">
     <div class="donation-content">
       <!-- Donation Form -->
@@ -19,7 +23,7 @@
           <fieldset [disabled]="donation.phone.length !== 10" style="border: none; padding: 0; margin: 0;">
           <div class="form-group">
             <label for="name">Full Name</label>
-            <input type="text" id="name" placeholder="Your Name" required [(ngModel)]="donation.name" name="name">
+            <input type="text" id="name" placeholder="Your Name" required [(ngModel)]="donation.donorName" name="name">
           </div>
           <div class="form-group">
             <label for="email">Email Address</label>
@@ -34,16 +38,16 @@
             <small style="display: block; margin-bottom: 10px; color: #666;">If you opt to be a donor, you will get a call when there is an emergency near you.</small>
             <div class="radio-group">
               <div class="radio-option">
-                <input type="radio" id="bloodYes" name="donateBlood" [value]="true" [(ngModel)]="donation.donateBlood">
+                <input type="radio" id="bloodYes" name="isBloodDonor" [value]="true" [(ngModel)]="donation.isBloodDonor">
                 <label for="bloodYes">Yes</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="bloodNo" name="donateBlood" [value]="false" [(ngModel)]="donation.donateBlood">
+                <input type="radio" id="bloodNo" name="isBloodDonor" [value]="false" [(ngModel)]="donation.isBloodDonor">
                 <label for="bloodNo">No</label>
               </div>
             </div>
           </div>
-          @if (donation.donateBlood) {
+          @if (donation.isBloodDonor) {
           <div class="form-group">
             <label for="bloodGroup">Blood Group</label>
             <select id="bloodGroup" [(ngModel)]="donation.bloodGroup" name="bloodGroup">
@@ -80,7 +84,9 @@
       </div>
 
       <!-- Payment Details -->
+       
       <div class="payment-details-card">
+       
         <h2>Bank Transfer Details</h2>
         <div class="bank-info">
           <p><strong>Bank Name:</strong> {{bankDetails.bankName}}</p>
