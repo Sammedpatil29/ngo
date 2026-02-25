@@ -1,0 +1,43 @@
+:host {
+  --primary: #1b5e20;
+  --accent: #e91e63;
+  --white: #ffffff;
+}
+
+/* --- PAGE HEADER --- */
+.page-header {
+  position: relative;
+  height: 300px;
+  background-image: url('https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1600');
+  background-size: cover;
+  background-position: center;
+}
+
+.header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  text-align: center;
+}
+
+.header-overlay h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.header-overlay p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  font-weight: 500;
+  opacity: 0.9;
+}

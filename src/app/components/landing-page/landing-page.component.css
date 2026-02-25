@@ -52,6 +52,7 @@
 
 /* Typography Scaling */
 .brand-name {
+  font-family: cooper;
   font-weight: 900;
   color: var(--foundation-pink);
   font-size: clamp(14px, 4.5vw, 62px); /* Scales perfectly with screen */
