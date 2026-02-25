@@ -130,4 +130,20 @@ addBanners(params: any) {
   getDonations() {
     return this.http.get(`${this.url}/api/donations`);
   }
+
+  getReviews() {
+    return this.http.get(`${this.url}/api/reviews`);
+  }
+
+  addReview(params: any) {
+    return this.http.post(`${this.url}/api/reviews`, params);
+  }
+
+  updateReview(params: any) {
+    return this.http.put(`${this.url}/api/reviews/${params.id}`, params);
+  }
+
+  deleteReview(id: number) {
+    return this.http.delete(`${this.url}/api/reviews/${id}`);
+  }
 }

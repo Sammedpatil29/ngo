@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Manage Reviews</h2>
+    <button class="btn btn-primary" (click)="onAdd()">Add Review</button>
+  </div>
+
+  <div class="reviews-grid">
+    @for (review of reviews; track review.id) {
+      <div class="review-card" [class.disabled]="!review.isActive">
+        <div class="review-header">
+          <div class="reviewer-initial">{{ review.name ? review.name.charAt(0).toUpperCase() : '?' }}</div>
+          <div class="reviewer-info">
+            <h4>{{ review.name }}</h4>
+            <div class="stars text-warning">
+              @for (star of [1,2,3,4,5]; track star) {
+                <span [style.font-weight]="star <= review.ratings ? 'bold' : 'normal'">
+                    {{ star <= review.ratings ? '★' : '☆' }}
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+        
+        <div class="review-body">
+          <p class="review-text">"{{ review.comment }}"</p>
+          <div class="text-muted small">{{ review.date | date:'mediumDate' }}</div>
+        </div>
+
+        <div class="review-actions">
+          <button class="btn btn-sm btn-outline-primary" (click)="onEdit(review)">Edit</button>
+          <div class="form-check form-switch mb-0 d-inline-block mx-2">
+            <input class="form-check-input" type="checkbox" role="switch" [id]="'switch_' + review.id" [checked]="review.isActive" (change)="onToggleStatus(review)">
+          </div>
+          <button class="btn btn-sm btn-outline-danger" (click)="onDelete(review)">Delete</button>
+        </div>
+
+        @if (!review.isActive) {
+          <div class="disabled-badge">Disabled</div>
+        }
+      </div>
+    } @empty {
+      <div class="text-center w-100 py-5 text-muted">No reviews found.</div>
+    }
+  </div>
+</div>
+
+<!-- Modal -->
+@if (showModal) {
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show" style="display: block;" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditing ? 'Edit Review' : 'Add Review' }}</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onSave()">
+          <div class="mb-3">
+            <label for="name" class="form-label">Reviewer Name</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="currentReview.name" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="rating" class="form-label">Rating</label>
+            <select class="form-select" id="rating" [(ngModel)]="currentReview.ratings" name="rating" required>
+              <option [value]="5">5 Stars</option>
+              <option [value]="4">4 Stars</option>
+              <option [value]="3">3 Stars</option>
+              <option [value]="2">2 Stars</option>
+              <option [value]="1">1 Star</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="comment" class="form-label">Comment</label>
+            <textarea class="form-control" id="comment" rows="3" [(ngModel)]="currentReview.comment" name="comment" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" [(ngModel)]="currentReview.date" name="date" required>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" role="switch" id="modalSwitch" [(ngModel)]="currentReview.isActive" name="isActive">
+            <label class="form-check-label" for="modalSwitch">Active</label>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}

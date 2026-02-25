@@ -63,6 +63,10 @@ export const routes: Routes = [
             {
                 path: 'admin-donations',
                 loadComponent: () => import('./components/admin-donations/admin-donations.component').then(m => m.AdminDonationsComponent)
+            },
+            {
+                path: 'admin-review',
+                loadComponent: () => import('./components/admin-review/admin-review.component').then(m => m.AdminReviewComponent)
             }
         ]
     }

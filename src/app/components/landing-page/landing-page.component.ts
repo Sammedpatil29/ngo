@@ -3,17 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FooterComponent } from "../footer/footer.component";
 import { Router } from '@angular/router';
 import { CommonServiceService } from '../../services/common-service.service';
+import { FormsModule } from '@angular/forms';
+import { AdminServiceService } from '../../services/admin-service.service';
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, FooterComponent],
+  imports: [CommonModule, FooterComponent, FormsModule],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css'
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
   // Navigation links using signals
-  navItems = ['VOLUNTEERS', 'SERVICES', 'DONATION'];
+  navItems = ['VOLUNTEERS', 'SERVICES', 'GALLERY', 'BRANCHES', 'DONATION'];
   
   // Contact info
   contactPhone = signal('+91 82972 53484');
@@ -40,8 +42,16 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   currentSlide = signal(0);
   private slideInterval: any;
+  reviews: any[] = [];
+  
+  showFeedbackModal = false;
+  newReview = { name: '', ratings: 5, comment: '', date: '', isActive: false };
 
-  constructor(private router: Router, private commonService: CommonServiceService) {}
+  constructor(
+    private router: Router, 
+    private commonService: CommonServiceService,
+    private adminService: AdminServiceService
+  ) {}
 
   ngOnInit() {
     this.getHomeData();
@@ -54,6 +64,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.services = response.services;
         this.members = response.teamMembers;
         this.mediaAppearances = response.news;
+        this.reviews = response.reviews;
         this.startAutoSlide();
       },
       error: (error) => console.error('Error fetching home data:', error)
@@ -133,5 +144,28 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   goto(item: string) {
     this.router.navigate([item.toLowerCase()]);
+  }
+
+  openWhatsApp() {
+    window.open('https://wa.me/918297253484', '_blank');
+  }
+
+  openFeedbackModal() {
+    this.newReview = { name: '', ratings: 5, comment: '', date: new Date().toISOString().split('T')[0], isActive: false };
+    this.showFeedbackModal = true;
+  }
+
+  closeFeedbackModal() {
+    this.showFeedbackModal = false;
+  }
+
+  submitFeedback() {
+    this.adminService.addReview(this.newReview).subscribe({
+      next: () => {
+        alert('Thank you for your feedback!');
+        this.closeFeedbackModal();
+      },
+      error: (err) => console.error('Error submitting feedback:', err)
+    });
   }
 }
