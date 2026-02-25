@@ -122,4 +122,12 @@ addBanners(params: any) {
   deleteNews(id: number) {
     return this.http.delete(`${this.url}/api/news/${id}`);
   }
+
+  getDonors() {
+    return this.http.get(`${this.url}/api/donations/donors`);
+  }
+
+  getDonations() {
+    return this.http.get(`${this.url}/api/donations`);
+  }
 }

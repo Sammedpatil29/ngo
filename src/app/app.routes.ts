@@ -55,6 +55,14 @@ export const routes: Routes = [
             {
                 path: 'admin-images',
                 loadComponent: () => import('./components/admin-images/admin-images.component').then(m => m.AdminImagesComponent)
+            },
+            {
+                path: 'admin-donors',
+                loadComponent: () => import('./components/admin-donors/admin-donors.component').then(m => m.AdminDonorsComponent)
+            },
+            {
+                path: 'admin-donations',
+                loadComponent: () => import('./components/admin-donations/admin-donations.component').then(m => m.AdminDonationsComponent)
             }
         ]
     }
