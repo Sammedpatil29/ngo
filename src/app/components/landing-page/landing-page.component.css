@@ -1,3 +1,6 @@
+@import url('https://fonts.cdnfonts.com/css/cooper-black');
+
+
 :host {
   --primary: #1b5e20;
   --accent: #e91e63;
@@ -52,8 +55,8 @@
 
 /* Typography Scaling */
 .brand-name {
-  font-family: cooper;
-  font-weight: 900;
+  font-family: 'Cooper Black', serif;
+  font-weight: 600;
   color: var(--foundation-pink);
   font-size: clamp(14px, 4.5vw, 62px); /* Scales perfectly with screen */
   font-weight: 900;
@@ -78,7 +81,7 @@
 }
 
 .meta-text {
-  font-size: clamp(8px, 1vw, 14px);
+  font-size: clamp(6px, 1vw, 14px);
   margin-top: 0.5vw;
   line-height: 1.2;
   text-align: center;
@@ -274,6 +277,7 @@
 
 .contact-details {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 1vw;
   font-size: clamp(6px, 1.1vw, 15px);
@@ -301,11 +305,11 @@
   .contact-social-row { gap: 1vw; }
 }
 /* --- HERO --- */
-.hero-section { padding: 15px; }
+.hero-section { padding: 0px; }
 .carousel-container {
   position: relative;
   height: clamp(300px, 60vh, 700px);
-  border-radius: 15px;
+  border-radius: 0px;
   overflow: hidden;
 }
 

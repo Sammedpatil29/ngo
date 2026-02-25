@@ -53,6 +53,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  --bs-gutter-x: 0px;
 }
 
 .donation-content {
