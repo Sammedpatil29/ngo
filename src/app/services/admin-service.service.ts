@@ -135,7 +135,7 @@ addBanners(params: any) {
     return this.http.get(`${this.url}/api/reviews`);
   }
 
-  addReview(params: any) {
+  aaddReview(params: any) {
     return this.http.post(`${this.url}/api/reviews`, params);
   }
 

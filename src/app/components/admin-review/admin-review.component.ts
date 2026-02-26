@@ -68,7 +68,7 @@ export class AdminReviewComponent implements OnInit {
         error: (error) => console.error('Error updating review:', error)
       });
     } else {
-      this.adminService.addReview(this.currentReview).subscribe({
+      this.adminService.aaddReview(this.currentReview).subscribe({
         next: () => {
           this.closeModal();
         },

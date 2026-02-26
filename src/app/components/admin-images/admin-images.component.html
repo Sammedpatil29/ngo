@@ -1,32 +1,60 @@
 <div class="container-fluid">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Manage Images</h2>
-    <button class="btn btn-primary" (click)="onAdd()">Add New Image</button>
+  <!-- Categories Header -->
+  <div class="d-flex overflow-auto py-3 mb-3 border-bottom align-items-center bg-light">
+    <div class="d-flex flex-nowrap px-2 gap-3">
+      @for (cat of categories; track cat.id) {
+        <div class="category-card" 
+          [class.selected]="selectedCategory?.id === cat.id"
+          (click)="selectCategory(cat)">
+          <img [src]="cat.url" [alt]="cat.name">
+          <div class="category-name">{{ cat.name }}</div>
+        </div>
+      }
+      <div class="category-card add-card" (click)="onAddCategory()">
+        <i class="bi bi-plus-circle fs-1"></i>
+        <div>Add Category</div>
+      </div>
+    </div>
   </div>
 
-  <div class="images-grid">
-    @for (img of images; track img.id) {
-      <div class="image-card" [class.disabled]="!img.isActive">
-        <div class="image-wrapper">
-          <img [src]="img.url" [alt]="img.place">
-          @if (!img.isActive) {
-            <div class="disabled-overlay">Disabled</div>
-          }
-        </div>
-        <div class="image-info">
-          <h4>{{ img.place }}</h4>
-        </div>
-        <div class="image-actions">
-          <button class="btn btn-sm btn-outline-primary" (click)="onEdit(img)">Edit</button>
-          <div class="form-check form-switch mb-0">
-            <input class="form-check-input" type="checkbox" role="switch" [id]="'switch_' + img.id" [checked]="img.isActive" (change)="onToggleStatus(img)">
-            <label class="form-check-label" [for]="'switch_' + img.id">{{ img.isActive ? 'Enabled' : 'Disabled' }}</label>
-          </div>
-          <button class="btn btn-sm btn-outline-danger" (click)="onDelete(img)">Delete</button>
-        </div>
+  @if (selectedCategory) {
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>{{ selectedCategory.name }} <small class="text-muted fs-6">({{ selectedCategory.images.length }} images)</small></h2>
+      <div>
+        <button class="btn btn-outline-secondary me-2" (click)="onEditCategory(selectedCategory)">Edit Category</button>
+        <button class="btn btn-outline-danger me-2" (click)="onDeleteCategory(selectedCategory)">Delete Category</button>
+        <button class="btn btn-primary" (click)="onAddImage()">Add Image</button>
       </div>
-    }
-  </div>
+    </div>
+
+    <div class="images-grid">
+      @for (img of selectedCategory.images; track img.id) {
+        <div class="image-card" [class.disabled]="!img.isActive">
+          <div class="image-wrapper">
+            <img [src]="img.url" [alt]="img.place">
+            @if (!img.isActive) {
+              <div class="disabled-overlay">Disabled</div>
+            }
+          </div>
+          <div class="image-info">
+            <h4>{{ img.place }}</h4>
+          </div>
+          <div class="image-actions">
+            <button class="btn btn-sm btn-outline-primary" (click)="onEditImage(img)">Edit</button>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" role="switch" [id]="'switch_' + img.id" [checked]="img.isActive" (change)="onToggleImageStatus(img)">
+              <label class="form-check-label" [for]="'switch_' + img.id">{{ img.isActive ? 'Enabled' : 'Disabled' }}</label>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" (click)="onDeleteImage(img)">Delete</button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="text-center mt-5">
+      <p class="text-muted">Please select a category to view images.</p>
+    </div>
+  }
 </div>
 
 <!-- Modal -->
@@ -36,27 +64,48 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{ isEditing ? 'Edit Image' : 'Add Image' }}</h5>
+        <h5 class="modal-title">
+          @if (modalType === 'category') {
+            {{ isEditing ? 'Edit Category' : 'Add Category' }}
+          } @else {
+            {{ isEditing ? 'Edit Image' : 'Add Image' }}
+          }
+        </h5>
         <button type="button" class="btn-close" (click)="closeModal()"></button>
       </div>
       <div class="modal-body">
         <form (ngSubmit)="onSave()">
-          <div class="mb-3">
-            <label for="place" class="form-label">Place / Title</label>
-            <input type="text" class="form-control" id="place" [(ngModel)]="currentImage.place" name="place" required>
-          </div>
-          <div class="mb-3">
-            <label for="imageUpload" class="form-label">Upload Image</label>
-            <input type="file" class="form-control" id="imageUpload" accept="image/*" (change)="onImageSelected($event)">
-          </div>
-          <div class="mb-3">
-            <label for="url" class="form-label">Image URL</label>
-            <input type="text" class="form-control" id="url" [(ngModel)]="currentImage.url" name="url" required disabled>
-          </div>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" role="switch" id="modalSwitch" [(ngModel)]="currentImage.isActive" name="isActive">
-            <label class="form-check-label" for="modalSwitch">Active</label>
-          </div>
+          @if (modalType === 'category') {
+            <div class="mb-3">
+              <label for="catName" class="form-label">Category Name</label>
+              <input type="text" class="form-control" id="catName" [(ngModel)]="currentCategory.name" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label for="catImageUpload" class="form-label">Category Image</label>
+              <input type="file" class="form-control" id="catImageUpload" accept="image/*" (change)="onImageSelected($event)">
+            </div>
+            <div class="mb-3">
+              <label for="catUrl" class="form-label">Image URL</label>
+              <input type="text" class="form-control" id="catUrl" [(ngModel)]="currentCategory.url" name="catUrl" disabled>
+            </div>
+          } @else {
+            <div class="mb-3">
+              <label for="place" class="form-label">Place / Title</label>
+              <input type="text" class="form-control" id="place" [(ngModel)]="currentImage.place" name="place" required>
+            </div>
+            <div class="mb-3">
+              <label for="imageUpload" class="form-label">Upload Image</label>
+              <input type="file" class="form-control" id="imageUpload" accept="image/*" (change)="onImageSelected($event)">
+            </div>
+            <div class="mb-3">
+              <label for="url" class="form-label">Image URL</label>
+              <input type="text" class="form-control" id="url" [(ngModel)]="currentImage.url" name="url" required disabled>
+            </div>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" role="switch" id="modalSwitch" [(ngModel)]="currentImage.isActive" name="isActive">
+              <label class="form-check-label" for="modalSwitch">Active</label>
+            </div>
+          }
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
             <button type="submit" class="btn btn-primary">Save changes</button>

@@ -160,7 +160,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   submitFeedback() {
-    this.adminService.addReview(this.newReview).subscribe({
+    this.adminService.aaddReview(this.newReview).subscribe({
       next: () => {
         alert('Thank you for your feedback!');
         this.closeFeedbackModal();
