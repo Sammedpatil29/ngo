@@ -5,17 +5,19 @@ import { Router } from '@angular/router';
 import { CommonServiceService } from '../../services/common-service.service';
 import { FormsModule } from '@angular/forms';
 import { AdminServiceService } from '../../services/admin-service.service';
+import { LoaderComponent } from "../loader/loader.component";
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, FooterComponent, FormsModule],
+  imports: [CommonModule, FooterComponent, FormsModule, LoaderComponent],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css'
 })
 export class LandingPageComponent implements OnInit, OnDestroy {
   // Navigation links using signals
   navItems = ['VOLUNTEERS', 'SERVICES', 'GALLERY', 'DONATION'];
+  isLoading = false
   
   // Contact info
   contactPhone = signal('+91 82972 53484');
@@ -58,6 +60,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   getHomeData(){
+    this.isLoading = true;
     this.commonService.getHomeData().subscribe({
       next: (response: any) => {
         this.heroSlides = response.banners;
@@ -65,9 +68,13 @@ export class LandingPageComponent implements OnInit, OnDestroy {
         this.members = response.teamMembers;
         this.mediaAppearances = response.news;
         this.reviews = response.reviews;
+        this.isLoading = false;
         this.startAutoSlide();
       },
-      error: (error) => console.error('Error fetching home data:', error)
+      error: (error) => {
+        console.error('Error fetching home data:', error);
+        this.isLoading = false;
+      }
     });
   }
 

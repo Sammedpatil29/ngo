@@ -1,4 +1,5 @@
-<div class="charity-wrapper">
+@if (!isLoading) {
+  <div class="charity-wrapper">
   <header class="foundation-header">
   <div class="header-side-box">
     <span class="meta-text green-text bold">Service is our Motto</span>
@@ -277,3 +278,6 @@
     </div>
   }
 </div>
+} @else {
+  <app-loader></app-loader>
+}
