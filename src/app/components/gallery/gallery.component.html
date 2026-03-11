@@ -4,6 +4,8 @@
     <p>Capturing moments of service and impact</p>
   </div>
 </header>
+
+@if(!isLoading) {
 <section class="gallery-section">
   <!-- Sticky Category Header -->
   <div class="sticky-top bg-white py-3 shadow-sm mb-3 z-2">
@@ -50,5 +52,8 @@
     }
   </div>
 </section>
+} @else {
+  <app-loader></app-loader>
+}
 
 <app-footer></app-footer>

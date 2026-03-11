@@ -5,7 +5,8 @@
   </div>
 </header>
 
-<section class="services-section">
+@if(!isLoading){
+  <section class="services-section">
   <div class="container">
     <div class="services-grid">
       @for (service of services; track $index) {
@@ -22,5 +23,8 @@
     </div>
   </div>
 </section>
+} @else {
+  <app-loader></app-loader>
+}
 
 <app-footer></app-footer>

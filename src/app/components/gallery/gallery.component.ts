@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { MediaService } from '../../services/media.service';
 import { FooterComponent } from '../footer/footer.component';
+import { LoaderComponent } from "../loader/loader.component";
 
 interface Image {
   id: number;
@@ -21,13 +22,14 @@ interface Category {
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule, FooterComponent],
+  imports: [CommonModule, FooterComponent, LoaderComponent],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css']
 })
 export class GalleryComponent implements OnInit {
   private mediaService = inject(MediaService);
   categories: Category[] = [];
+  isLoading = false;
 
   selectedCategory: Category | null = null;
 
@@ -36,14 +38,19 @@ export class GalleryComponent implements OnInit {
   }
 
   fetchCategories() {
+    this.isLoading = true;
     this.mediaService.getMedia().subscribe({
       next: (data) => {
         this.categories = data;
+        this.isLoading = false;
         if (this.categories.length > 0) {
           this.selectedCategory = this.categories[0];
         }
       },
-      error: (err) => console.error('Error fetching gallery data', err)
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error fetching gallery data', err);
+      }
     });
   }
 
