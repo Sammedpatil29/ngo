@@ -175,4 +175,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       error: (err) => console.error('Error submitting feedback:', err)
     });
   }
+
+  openInsta(){
+    window.open('https://www.instagram.com/mayihelpyoufoundation?igsh=cjN4NWRreHFzazZz', '_blank');
+  }
+
+  openYoutube(){
+    window.open('https://www.youtube.com/@Nannubhai-z3o', '_blank');
+  }
 }

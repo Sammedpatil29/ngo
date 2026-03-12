@@ -723,3 +723,14 @@
   line-height: 1.5;
   font-style: italic;
 }
+
+.strip {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  color: var(--white);
+  font-family: luckiest guy, anek telugu, sans-serif;
+  background-image: radial-gradient(circle, #03c94f, #06ba40, #06ab30, #049c20, #008e0b);
+  font-weight: 700;
+}
