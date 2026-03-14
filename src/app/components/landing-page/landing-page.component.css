@@ -180,7 +180,7 @@
   width: 100%;
   background: #ffffff;
   border-bottom: 0.5vw solid var(--foundation-green);
-  padding: 1vw 0;
+  padding: 1vw 0 0 0;
 }
 
 .action-nav-row {
