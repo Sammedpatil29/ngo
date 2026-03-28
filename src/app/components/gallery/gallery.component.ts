@@ -32,6 +32,10 @@ export class GalleryComponent implements OnInit {
   isLoading = false;
 
   selectedCategory: Category | null = null;
+  
+  viewingImage: Image | null = null;
+  activeImages: Image[] = [];
+  currentImageIndex: number = 0;
 
   ngOnInit() {
     this.fetchCategories();
@@ -56,5 +60,34 @@ export class GalleryComponent implements OnInit {
 
   selectCategory(cat: Category) {
     this.selectedCategory = cat;
+  }
+
+  openLightbox(img: Image) {
+    if (this.selectedCategory && this.selectedCategory.images) {
+      // Filter so the next/prev buttons only cycle through active images
+      this.activeImages = this.selectedCategory.images.filter(i => i.isActive);
+      this.currentImageIndex = this.activeImages.findIndex(i => i.id === img.id);
+      this.viewingImage = this.activeImages[this.currentImageIndex];
+    }
+  }
+
+  closeLightbox() {
+    this.viewingImage = null;
+  }
+
+  prevImage() {
+    if (this.activeImages.length > 0) {
+      // Navigate to previous, loop around to end if at the start
+      this.currentImageIndex = (this.currentImageIndex - 1 + this.activeImages.length) % this.activeImages.length;
+      this.viewingImage = this.activeImages[this.currentImageIndex];
+    }
+  }
+
+  nextImage() {
+    if (this.activeImages.length > 0) {
+      // Navigate to next, loop around to start if at the end
+      this.currentImageIndex = (this.currentImageIndex + 1) % this.activeImages.length;
+      this.viewingImage = this.activeImages[this.currentImageIndex];
+    }
   }
 }
