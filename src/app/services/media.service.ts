@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
+import { environment } from '../../environments/environment';
 interface Image {
   id: number;
   place: string;
@@ -22,7 +22,7 @@ interface Category {
 })
 export class MediaService {
   private http = inject(HttpClient);
-  private baseUrl = 'https://ngo-backend-4032850793.asia-south1.run.app/api/media';
+  private baseUrl = environment.apiUrl + '/api/media';
 
   getMedia(): Observable<Category[]> {
     return this.http.get<Category[]>(this.baseUrl)

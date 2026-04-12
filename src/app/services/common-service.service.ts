@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -8,7 +8,7 @@ export class CommonServiceService {
 
   constructor(private http: HttpClient) { }
 
-  url = 'https://ngo-backend-4032850793.asia-south1.run.app';
+  url = environment.apiUrl;
 
   getHomeData() {
     return this.http.get(`${this.url}/api/home`);
