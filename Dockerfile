@@ -8,6 +8,6 @@ RUN npm run build --configuration=production
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 # Adjust the path below to match your actual 'dist' folder name
-COPY --from=build /app/dist/may-i-help-you-foundation-frontend/browser /usr/share/nginx/html
+COPY --from=build /app/dist/ngo/browser /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
