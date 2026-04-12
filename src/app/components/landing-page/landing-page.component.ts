@@ -57,6 +57,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getHomeData();
+    setTimeout(() => {
+      this.openFeedbackModal();
+    }, 5000)
   }
 
   getHomeData(){
