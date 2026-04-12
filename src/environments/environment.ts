@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://your-api-link.com'
+  apiUrl: 'https://ngo-backend-7nsh.onrender.com'
 };
