@@ -34,6 +34,14 @@ export class DonorFormComponent {
       bloodGroup: this.donor.bloodGroup
     }
     this.adminService.createDonor(params).subscribe((res:any)=>{
+      this.donor = {
+    name: '',
+    email: '',
+    phone: '',
+    city: '',
+    isBloodDonor: false,
+    bloodGroup: ''
+  };
       alert('Donor added Successfully✅')
     }, error => {
       alert('error while updating Donor❌')
