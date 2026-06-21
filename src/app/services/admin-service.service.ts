@@ -128,6 +128,10 @@ addBanners(params: any) {
     return this.http.get(`${this.url}/api/donations/donors`);
   }
 
+  createDonor(params:any) {
+    return this.http.post(`${this.url}/api/donors`, params);
+  }
+
   getDonations() {
     return this.http.get(`${this.url}/api/donations`);
   }
