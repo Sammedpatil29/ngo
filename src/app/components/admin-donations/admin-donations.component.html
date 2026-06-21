@@ -37,7 +37,7 @@
                   } @else if (donation.paymentStatus === 'pending') {
                     <span class="badge bg-warning text-dark rounded-pill">Pending</span>
                   } @else {
-                    <span class="badge bg-danger rounded-pill">{{ donation.paymentStatus }}</span>
+                    <span class="badge bg-danger rounded-pill">{{ donation.paymentStatus | titlecase }}</span>
                   }
                 </td>
                 <td><small class="text-muted font-monospace">{{ donation.transactionId }}</small></td>

@@ -28,6 +28,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/gallery/gallery.component').then(m => m.GalleryComponent)
     },
     {
+        path: 'donor-form',
+        loadComponent: () => import('./components/donor-form/donor-form.component').then(m => m.DonorFormComponent)
+    },
+    {
         path: 'login',
         loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent),
     },
