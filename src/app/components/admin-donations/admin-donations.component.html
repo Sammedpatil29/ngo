@@ -1,4 +1,22 @@
 <div class="container-fluid">
+  <div class="donation-summary-row mb-4">
+    <div class="donation-summary-card">
+      <div class="summary-label">Today</div>
+      <div class="summary-value">₹ {{ metrics.today.amount | number:'1.0-0' }}</div>
+      <div class="summary-meta">{{ metrics.today.count }} donations</div>
+    </div>
+    <div class="donation-summary-card">
+      <div class="summary-label">This Week</div>
+      <div class="summary-value">₹ {{ metrics.week.amount | number:'1.0-0' }}</div>
+      <div class="summary-meta">{{ metrics.week.count }} donations</div>
+    </div>
+    <div class="donation-summary-card">
+      <div class="summary-label">This Month</div>
+      <div class="summary-value">₹ {{ metrics.month.amount | number:'1.0-0' }}</div>
+      <div class="summary-meta">{{ metrics.month.count }} donations</div>
+    </div>
+  </div>
+
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Donations List</h2>
     <div class="w-25">
@@ -54,3 +72,7 @@
     </div>
   </div>
 </div>
+
+@if(isLoading){
+  <app-loader></app-loader>
+}
