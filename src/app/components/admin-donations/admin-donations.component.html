@@ -41,7 +41,7 @@
                   }
                 </td>
                 <td><small class="text-muted font-monospace">{{ donation.transactionId }}</small></td>
-                <td>{{ donation.createdAt | date:'mediumDate' }}</td>
+                <td>{{ donation.createdAt | date:'dd/MM/yyyy, hh:mm a' }}</td>
               </tr>
             } @empty {
               <tr>

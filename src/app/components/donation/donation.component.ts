@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FooterComponent } from '../footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { CommonServiceService } from '../../services/common-service.service';
+import { LoaderComponent } from "../loader/loader.component";
 
 declare var Razorpay: any;
 
 @Component({
   selector: 'app-donation',
   standalone: true,
-  imports: [CommonModule, FooterComponent, FormsModule],
+  imports: [CommonModule, FooterComponent, FormsModule, LoaderComponent],
   templateUrl: './donation.component.html',
   styleUrl: './donation.component.css'
 })
@@ -21,6 +22,8 @@ export class DonationComponent implements OnInit {
     ifscCode: 'UBIN0804371',
     branch: 'Proddatur Main Branch'
   };
+
+  isLoading: boolean = false
 
   donation = {
     donorName: "",
@@ -62,12 +65,13 @@ export class DonationComponent implements OnInit {
       this.showModal('failure', 'Missing Information', 'Please enter a donation amount.');
       return;
     }
-
+    this.isLoading = true
     this.commonService.createDonation(this.donation).subscribe({
       next: (response: any) => {
         this.openRazorpay(response);
       },
       error: (error) => {
+        this.isLoading = false
         console.error('Error initiating donation:', error);
         this.showModal('failure', 'Error', 'Something went wrong. Please try again later.');
       }
@@ -123,6 +127,7 @@ export class DonationComponent implements OnInit {
   }
 
   verifyPayment(paymentResponse: any) {
+    this.isLoading = true
     this.commonService.verifyPayment(paymentResponse).subscribe({
       next: (response: any) => {
         this.donation = {
@@ -138,9 +143,11 @@ export class DonationComponent implements OnInit {
           isBloodDonor: false,
           bloodGroup: ""
         };
+        this.isLoading = false
         this.showModal('success', 'Payment Successful!', 'మీ సహాయం మరియు విరాళానికి మేము ఎంతో కృతజ్ఞులము!');
       },
       error: (error) => {
+        this.isLoading = false
         console.error('Payment verification failed:', error);
         this.showModal('failure', 'Payment Verification Failed', 'Your payment could not be verified. Please contact support.');
       }
@@ -149,8 +156,10 @@ export class DonationComponent implements OnInit {
 
   checkPhone(phone: string) {
   if (phone.length === 10) {
+    this.isLoading = true
     this.commonService.donorByPhone(phone).subscribe({
       next: (data: any) => {
+        this.isLoading = false
         if (data) {
           this.donation.donorName = data.donorName || '';
           this.donation.email = data.email || '';
@@ -161,6 +170,7 @@ export class DonationComponent implements OnInit {
         }
       },
       error: (err) => {
+        this.isLoading = false
         console.log('Donor not found or error:', err);
         this.donation.donorName =  '';
           this.donation.email = '';

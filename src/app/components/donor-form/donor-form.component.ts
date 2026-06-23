@@ -20,6 +20,8 @@ export class DonorFormComponent {
     bloodGroup: ''
   };
 
+  isLoading: boolean = false
+
   bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
   constructor(private adminService: AdminServiceService){}
@@ -33,7 +35,9 @@ export class DonorFormComponent {
       isBloodDonor: this.donor.isBloodDonor,
       bloodGroup: this.donor.bloodGroup
     }
+    this.isLoading = true
     this.adminService.createDonor(params).subscribe((res:any)=>{
+      this.isLoading = false
       this.donor = {
     name: '',
     email: '',
@@ -44,7 +48,11 @@ export class DonorFormComponent {
   };
       alert('Donor added Successfully✅')
     }, error => {
-      alert('error while updating Donor❌')
+      if (error.error && error.error.message) {
+    alert(error.error.message);
+  } else {
+    alert(error.message || 'Something went wrong');
+  }
     })
   }
 }

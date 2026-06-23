@@ -388,6 +388,42 @@
 
 .dot.active { background-color: white; transform: scale(1.2); }
 
+.hero-badge-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.hero-badge {
+  background: rgba(233, 30, 99, 0.12);
+  border: 1px solid rgba(233, 30, 99, 0.28);
+  color: #d32f6b;
+  padding: 0.85rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-badge-button {
+  cursor: pointer;
+  background: #d32f6b;
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 10px 20px rgba(211, 47, 107, 0.25);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.hero-badge-button:hover {
+  background: #b71c44;
+  transform: translateY(-1px);
+}
+
 /* --- SERVICES SECTION --- */
 .services-section {
   padding: 60px 15px;
