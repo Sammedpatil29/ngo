@@ -210,6 +210,13 @@
     </div>
   </section>
 
+  <div class="hero-badge-row">
+          <div class="hero-badge">Trusted Since 2014</div>
+          <div class="hero-badge">100+ Families Helped</div>
+          <div class="hero-badge">24/7 Donor Network</div>
+          <button type="button" class="hero-badge hero-badge-button" (click)="goto('donor-form')">Register as Donor</button>
+        </div>
+
   <section class="reviews-section">
     <div class="container">
       <h2 class="section-title">Our Reviews</h2>
@@ -247,6 +254,9 @@
   <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px;">
     <button class="btn rounded-circle" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-color: transparent;" (click)="goto('donation')">
       <img style="height: 70px; width: 70px" src="assets/wired-flat-290-coin-hover-pinch.gif" alt="">
+    </button>
+    <button class="btn rounded-circle" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background-color: transparent;" (click)="goto('donor-form')">
+      <span style="font-size: 54px">🩸</span>
     </button>
     <button class="btn btn-primary rounded-circle shadow" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;" (click)="openFeedbackModal()" title="Give Feedback">
       <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-chat-text" viewBox="0 0 16 16">

@@ -39,7 +39,7 @@
                 <td>
                   <span class="badge bg-danger">{{ donor.bloodGroup || '-' }}</span>
                 </td>
-                <td>{{ donor.createdAt | date:'mediumDate' }}</td>
+                <td>{{ donor.createdAt | date:'dd/MM/yyyy, hh:mm a' }}</td>
               </tr>
             } @empty {
               <tr>
