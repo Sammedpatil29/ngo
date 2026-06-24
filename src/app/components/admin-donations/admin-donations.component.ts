@@ -18,7 +18,8 @@ export class AdminDonationsComponent implements OnInit {
   metrics = {
     today: { amount: 0, count: 0 },
     week: { amount: 0, count: 0 },
-    month: { amount: 0, count: 0 }
+    month: { amount: 0, count: 0 },
+    year: { amount: 0, count: 0 }
   };
 
   isLoading: boolean = false
@@ -42,6 +43,8 @@ export class AdminDonationsComponent implements OnInit {
         this.metrics.week.count = response.razorpayStats.lastWeek.count
         this.metrics.month.amount = response.razorpayStats.thisMonth.total
         this.metrics.month.count = response.razorpayStats.thisMonth.count
+        this.metrics.year.amount = response.razorpayStats.thisYear.total
+        this.metrics.year.count = response.razorpayStats.thisYear.count
       },
       error: (error) => {
         this.isLoading = false

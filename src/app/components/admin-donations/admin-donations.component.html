@@ -1,19 +1,20 @@
 <div class="container-fluid">
-  <div class="donation-summary-row mb-4">
+  <div class="donation-summary-row mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
     <div class="donation-summary-card">
-      <div class="summary-label">Today</div>
+      <div class="summary-label"><Span>Today</Span><small class="text-secondary">{{ metrics.today.count }} donations</small></div>
       <div class="summary-value">₹ {{ metrics.today.amount | number:'1.0-0' }}</div>
-      <div class="summary-meta">{{ metrics.today.count }} donations</div>
     </div>
     <div class="donation-summary-card">
-      <div class="summary-label">This Week</div>
+       <div class="summary-label"><Span>This Week</Span><small class="text-secondary">{{ metrics.week.count }} donations</small></div>
       <div class="summary-value">₹ {{ metrics.week.amount | number:'1.0-0' }}</div>
-      <div class="summary-meta">{{ metrics.week.count }} donations</div>
     </div>
     <div class="donation-summary-card">
-      <div class="summary-label">This Month</div>
+       <div class="summary-label"><Span>This Month</Span><small class="text-secondary">{{ metrics.month.count }} donations</small></div>
       <div class="summary-value">₹ {{ metrics.month.amount | number:'1.0-0' }}</div>
-      <div class="summary-meta">{{ metrics.month.count }} donations</div>
+    </div>
+    <div class="donation-summary-card">
+       <div class="summary-label"><Span>This Year</Span><small class="text-secondary">{{ metrics.year.count }} donations</small></div>
+      <div class="summary-value">₹ {{ metrics.year.amount | number:'1.0-0' }}</div>
     </div>
   </div>
 
