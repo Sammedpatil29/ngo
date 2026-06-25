@@ -4,6 +4,7 @@ import { FooterComponent } from '../footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { CommonServiceService } from '../../services/common-service.service';
 import { LoaderComponent } from "../loader/loader.component";
+import { timer, switchMap, tap, takeWhile, finalize } from 'rxjs';
 
 declare var Razorpay: any;
 
@@ -127,31 +128,48 @@ export class DonationComponent implements OnInit {
   }
 
   verifyPayment(paymentResponse: any) {
-    this.isLoading = true
-    this.commonService.verifyPayment(paymentResponse).subscribe({
-      next: (response: any) => {
-        this.donation = {
-          donorName: "",
-          email: "",
-          phone: '',
-          city: '',
-          amount: '',
-          currency: "INR",
-          message: "",
-          transactionId: "",
-          paymentStatus: "pending",
-          isBloodDonor: false,
-          bloodGroup: ""
-        };
-        this.isLoading = false
-        this.showModal('success', 'Payment Successful!', 'మీ సహాయం మరియు విరాళానికి మేము ఎంతో కృతజ్ఞులము!');
-      },
-      error: (error) => {
-        this.isLoading = false
-        console.error('Payment verification failed:', error);
-        this.showModal('failure', 'Payment Verification Failed', 'Your payment could not be verified. Please contact support.');
-      }
-    });
+     this.isLoading = true;
+
+    const MAX_RETRIES = 5;
+    const RETRY_INTERVAL_MS = 3000; // 3 seconds
+
+    let attempt = 0;
+
+    timer(0, RETRY_INTERVAL_MS).pipe(
+      tap(() => attempt++),
+      switchMap(() => this.commonService.verifyPayment(paymentResponse)),
+      tap((response: any) => {
+        // Assuming the response has a 'status' field, e.g., { status: 'success' | 'failure' | 'pending' }
+        if (response.status === 'success') {
+          this.isLoading = false;
+          this.showModal('success', 'Payment Successful!', `Dear ${this.donation.donorName}, మీ సహాయం మరియు విరాళానికి మేము ఎంతో కృతజ్ఞులము!`);
+          this.donation = {
+            donorName: "",
+            email: "",
+            phone: '',
+            city: '',
+            amount: '',
+            currency: "INR",
+            message: "",
+            transactionId: "",
+            paymentStatus: "pending",
+            isBloodDonor: false,
+            bloodGroup: ""
+          };
+        } else if (response.status === 'failure') {
+          this.isLoading = false;
+          console.error('Payment verification failed with status: failure', response);
+          this.showModal('failure', 'Payment Verification Failed', 'Your payment could not be verified. Please contact support.');
+        }
+      }),
+      takeWhile((response: any) => response.status === 'pending' && attempt < MAX_RETRIES, true),
+      finalize(() => {
+        if (this.isLoading) { // If still loading, it means polling timed out
+          this.isLoading = false;
+          this.showModal('failure', 'Payment Verification Timed Out', 'We could not confirm your payment status. Please contact support.');
+        }
+      })
+    ).subscribe();
   }
 
   checkPhone(phone: string) {
