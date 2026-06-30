@@ -81,7 +81,7 @@ export class DonationComponent implements OnInit {
 
   openRazorpay(orderData: any) {
     const options = {
-      key: 'rzp_test_S5RLYqr6y2I6xs',
+      key: 'rzp_live_T7pd8t1TXmAhLL',
       amount: orderData.amount,
       currency: orderData.currency,
       name: 'May I Help You Foundation',
