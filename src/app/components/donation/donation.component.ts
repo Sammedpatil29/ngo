@@ -103,6 +103,14 @@ export class DonationComponent implements OnInit {
       },
       theme: {
         color: '#d31a70'
+      },
+      modal: {
+        ondismiss: () => {
+          this.zone.run(() => {
+            this.isLoading = false;
+            console.log('User closed the Razorpay modal');
+          });
+        }
       }
     };
 
@@ -111,6 +119,7 @@ export class DonationComponent implements OnInit {
       this.zone.run(() => {
         console.error('Payment failed:', response.error);
         this.showModal('failure', 'Payment Failed', response.error.description);
+        this.isLoading = false;
       });
     });
     rzp.open();
