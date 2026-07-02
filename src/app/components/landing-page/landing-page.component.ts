@@ -56,14 +56,13 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.getHomeData();
-    setTimeout(() => {
-      this.openFeedbackModal();
-    }, 5000)
+    this.getHomeData(true);
   }
 
-  getHomeData(){
-    this.isLoading = true;
+  getHomeData(reload: boolean = false) {
+    if(reload){
+      this.isLoading = true;
+    }
     this.commonService.getHomeData().subscribe({
       next: (response: any) => {
         this.heroSlides = response.banners;
