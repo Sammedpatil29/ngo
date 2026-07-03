@@ -151,7 +151,7 @@ export class DonationComponent implements OnInit {
         // Assuming the response has a 'status' field, e.g., { status: 'success' | 'failure' | 'pending' }
         if (response.status === 'success') {
           this.isLoading = false;
-          this.showModal('success', 'Payment Successful!', `Dear ${this.donation.donorName}, మీ సహాయం మరియు విరాళానికి మేము ఎంతో కృతజ్ఞులము!`);
+          this.showModal('success', 'Payment Successful!', `Dear ${this.donation.donorName} గారు,\n మీ సహాయం మరియు విరాళానికి మేము ఎంతో కృతజ్ఞులము!`);
           this.donation = {
             donorName: "",
             email: "",
