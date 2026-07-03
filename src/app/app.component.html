@@ -18,11 +18,9 @@
               <div class="mb-3">
                 <label for="rating" class="form-label">Rating</label>
                 <select class="form-select" id="rating" [(ngModel)]="newReview.ratings" name="rating" required>
-                  <option [value]="5">5 Stars</option>
-                  <option [value]="4">4 Stars</option>
-                  <option [value]="3">3 Stars</option>
-                  <option [value]="2">2 Stars</option>
-                  <option [value]="1">1 Star</option>
+                  @for(value of [5, 4, 3, 2, 1]; track value) {
+                    <option [value]="value">{{ value }} Star{{ value > 1 ? 's' : '' }}</option>
+                  }
                 </select>
               </div>
               <div class="mb-3">
