@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AdminServiceService } from './services/admin-service.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,12 +15,14 @@ export class AppComponent implements OnInit {
   showFeedbackModal = false;
   newReview = { name: '', ratings: 5, comment: '', date: '', isActive: false };
 
-  constructor(private adminService: AdminServiceService){}
+  constructor(private adminService: AdminServiceService, private router: Router){}
 
   ngOnInit() {
     setTimeout(() => {
-      this.openFeedbackModal();
-    }, 5000)
+      if(this.router.url === '/home' || this.router.url === '/') {
+        this.openFeedbackModal();
+      }
+    }, 10000)
   }
 
   openFeedbackModal() {
