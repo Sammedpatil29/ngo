@@ -66,7 +66,7 @@
           }
           <div class="form-group">
             <label for="amount">Amount (₹)<span class=text-danger>*</span></label>
-            <input type="number" min="1" step="10" id="amount" placeholder="Enter Amount" required [(ngModel)]="donation.amount" name="amount">
+            <input type="number" min="1" step="10" [maxlength]="6" id="amount" placeholder="Enter Amount" required [(ngModel)]="donation.amount" name="amount">
             <div class="amount-suggestions">
               <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '10'">₹10</button>
               <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '50'">₹50</button>
@@ -78,7 +78,7 @@
           <div class="form-group">
             <div class="d-flex align-items-baseline">
               <label for="message">Message </label> &nbsp;
-            <small style="display: block; margin-bottom: 10px; color: #666;">(Max 200 characters)</small>
+            <small style="display: block; margin-bottom: 10px; color: #666;">({{donation.message.length}}/200 characters)</small>
             </div>
             <textarea id="message" rows="4" placeholder="Leave a message..." maxlength="200" [(ngModel)]="donation.message" name="message"></textarea>
           </div>
