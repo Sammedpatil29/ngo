@@ -48,6 +48,7 @@ export class DonorFormComponent {
   };
       alert('Donor added Successfully✅')
     }, error => {
+      this.isLoading = false
       if (error.error && error.error.message) {
     alert(error.error.message);
   } else {
