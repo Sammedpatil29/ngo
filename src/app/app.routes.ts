@@ -13,6 +13,11 @@ export const routes: Routes = [
     },
     {
         path: 'donation',
+        redirectTo: 'membership-donation',
+        pathMatch: 'full'
+    },
+    {
+        path: 'membership-donation',
         loadComponent: () => import('./components/donation/donation.component').then(m => m.DonationComponent)
     },
     {
