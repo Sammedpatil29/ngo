@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 export class AppComponent implements OnInit {
   title = 'ngo';
   showFeedbackModal = false;
+  isSubmitting = false;
   newReview = { name: '', ratings: 5, comment: '', date: '', isActive: false };
 
   constructor(private adminService: AdminServiceService, private router: Router){}
@@ -35,12 +36,18 @@ export class AppComponent implements OnInit {
   }
 
   submitFeedback() {
+    this.isSubmitting = true;
     this.adminService.aaddReview(this.newReview).subscribe({
       next: () => {
+        this.isSubmitting = false;
         alert('Thank you for your feedback!');
         this.closeFeedbackModal();
       },
-      error: (err) => console.error('Error submitting feedback:', err)
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error('Error submitting feedback:', err);
+        alert('Failed to submit feedback. Please try again later.');
+      }
     });
   }
 }
