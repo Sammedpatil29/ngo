@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminServiceService } from '../../services/admin-service.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-admin-review',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoaderComponent],
   templateUrl: './admin-review.component.html',
   styleUrl: './admin-review.component.css'
 })
@@ -14,6 +15,7 @@ export class AdminReviewComponent implements OnInit {
   reviews: any[] = [
   ];
   showModal = false;
+  isLoading = false;
   isEditing = false;
   currentReview: any = { name: '', ratings: 5, comment: '', date: '', isActive: true };
 
@@ -24,11 +26,16 @@ export class AdminReviewComponent implements OnInit {
   }
 
   getReviews() {
+    this.isLoading = true;
     this.adminService.getReviews().subscribe({
       next: (response: any) => {
         this.reviews = response;
+        this.isLoading = false;
       },
-      error: (error) => console.error('Error fetching reviews:', error)
+      error: (error) => {
+        console.error('Error fetching reviews:', error);
+        this.isLoading = false;
+      }
     });
   }
 
