@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonServiceService } from '../../services/common-service.service';
 import { LoaderComponent } from "../loader/loader.component";
 import { timer, switchMap, tap, takeWhile, finalize } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 declare var Razorpay: any;
 
@@ -285,10 +286,13 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
   paymentTitle = '';
   paymentMessage = '';
 
-  constructor(private commonService: CommonServiceService, private zone: NgZone) { }
+  constructor(private commonService: CommonServiceService, private zone: NgZone, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.loadRazorpayScript();
+    this.route.queryParams.subscribe(params => {
+      this.selectedLanguage = params['lang'] || 'english';
+    });
     this.changeLanguage();
   }
 
@@ -303,6 +307,12 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
 
   changeLanguage(){
     this.changedText = this.languages[this.selectedLanguage]
+    this.router.navigate([], {
+      queryParams: {
+        lang: this.selectedLanguage
+      },
+      queryParamsHandling: 'merge' // 'merge' keeps existing query params, 'preserve' keeps old ones completely, default replaces them
+    });
   }
 
   submitDonation(event: Event) {
