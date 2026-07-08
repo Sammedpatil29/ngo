@@ -24,7 +24,7 @@ export class DonationComponent implements OnInit {
     branch: 'Proddatur Main Branch'
   };
 
-  selectedLanguage: any = 'kannada'
+  selectedLanguage: any = 'english';  
 
   changedText: any;
 
@@ -67,10 +67,18 @@ export class DonationComponent implements OnInit {
           'ಅನಾಥ ಶವಗಳಿಗೆ ಅಂತ್ಯಕ್ರಿಯೆ ◇ ರಕ್ತ ದಾನ ◇ ಮೆಡಿಕಲ್ ಕ್ಯಾಂಪ್ ◇ ಫ್ರೀ ಕೂಲಿಂಗ್ ಬಾಕ್ಸ್ ◇ ವೃದ್ಧಾಶ್ರಮ ◇ ಕಣ್ಣು ದಾನ ◇ ಉಚಿತ ಆಂಬ್ಯುಲೆನ್ಸ್ ◇ ಉಚಿತ ವೈಕುಂಠ ವಾಹನ ◇ ಫ್ರೀ ದಿನಸಿ ◇ ಪರಿಸರ ಸಂರಕ್ಷಣಾ ಕಾರ್ಯಕ್ರಮಗಳು ಮತ್ತು ಇತರ ಸೇವೆಗಳು.',
           'ಪೇಮೆಂಟ್ ಅಪ್ಡೇಟ್ ಗಳನ್ನು ಕಳೆದುಕೊಳ್ಳದೆ ಇರಲು, ಇಮೇಲ್ ಅನ್ನು ದಯವಿಟ್ಟು ಒಮ್ಮೆ ಪರೀಕ್ಷಿಸಿಕೊಳ್ಳಿ.',
           'ನೀವು ರಕ್ತದಾನಿಯಾದರೆ, ನಿಮ್ಮ ಸಮೀಪದಲ್ಲಿ ತಎಮರ್ಜೆನ್ಸೀ ಇದ್ದಾಗ ನಾವು ಕರೆಮಾಡುತ್ತೇವೆ.'
-      ]
+      ],
+      paymentSuccessTitle: 'ಪಾವತಿ ಯಶಸ್ವಿಯಾಗಿದೆ!',
+      paymentFailedTitle: 'ಪಾವತಿ ವಿಫಲವಾಗಿದೆ',
+      paymentFailedMessage: 'ನಿಮ್ಮ ಪಾವತಿಯನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ಬೆಂಬಲವನ್ನು ಸಂಪರ್ಕಿಸಿ.',
+paymentSuccessMessage: 'ಪ್ರಿಯ ${donorName},\nನಿಮ್ಮ ಉದಾರ ದೇಣಿಗೆಗೆ ಧನ್ಯವಾದಗಳು! ನಿಮ್ಮ ಬೆಂಬಲಕ್ಕೆ ನಾವು ಕೃತಜ್ಞರಾಗಿದ್ದೇವೆ.',
+paymentVerificationFailedTitle: 'ಪಾವತಿ ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
+paymentVerificationFailedMessage: 'ನಿಮ್ಮ ಪಾವತಿಯನ್ನು ಪರಿಶೀಲಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಸಹಾಯವಾಣಿಯನ್ನು ಸಂಪರ್ಕಿಸಿ.',
+paymentVerificationTimedOutTitle: 'ಪಾವತಿ ಪರಿಶೀಲನೆಯ ಸಮಯ ಮೀರಿದೆ',
+paymentVerificationTimedOutMessage: 'ನಿಮ್ಮ ಪಾವತಿಯ ಸ್ಥಿತಿಯನ್ನು ದೃಢೀಕರಿಸಲು ನಮಗೆ ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಸಹಾಯವಾಣಿಯನ್ನು ಸಂಪರ್ಕಿಸಿ.'
       },
       telugu: {
-        header: 'ఇప్పటికే దానం చేయండి',
+        header: 'ఇప్పుడే విరాళం ఇవ్వండి',
         name: 'దాని పేరు',
         email: 'ఈమెయిల్ చిరునామా',
         phone: 'దూరవాణి సంఖ్య',
@@ -105,7 +113,15 @@ export class DonationComponent implements OnInit {
           'ఆనాథ శవానికి అంత్యక్రియలు ◇ రక్తదానం ◇ మెడికల్ క్యాంప్ ◇ ఫ్రీ కూలింగ్ బాక్స్ ◇ ఓల్డ్ ఎజ్ హోమ్ ◇ కంటి దానం ◇ ఉచిత అంబులెన్స్ ◇ ఉచిత వైకుంఠ రథం ◇ ఫ్రీ స్టేషనరీ ◇ పర్యావరణంపై అవగాహన సదస్సు.     ◇  ఆనాథ శవానికి అంత్యక్రియలు ◇ రక్తదానం ◇ మెడికల్ క్యాంప్ ◇ ఫ్రీ కూలింగ్ బాక్స్ ◇ ఓల్డ్ ఎజ్ హోమ్ ◇ కంటి దానం ◇ ఉచిత అంబులెన్స్ ◇ ఉచిత వైకుంఠ రథం ◇ ఫ్రీ స్టేషనరీ ◇ పర్యావరణంపై అవగాహన సదస్సు.',
           'దయచేసి చెల్లింపు నవీకరణలను మిస్ కాకుండా ఉండటానికి, ఇమెయిల్‌ను ఒకసారి తనిఖీ చేయండి.',
           'మీరు రక్తదాత అయితే, మీ సమీపంలో అత్యవసర పరిస్థితి ఉన్నప్పుడు మేము మీకు కాల్ చేస్తాము.'
-        ]
+        ],
+        paymentSuccessTitle: 'చెల్లింపు విజయవంతమైంది!',
+        paymentFailedTitle: 'చెల్లింపు విఫలమైంది',
+        paymentFailedMessage: 'మీ చెల్లింపు ప్రక్రియను ప్రాసెస్ చేయలేకపోయింది. దయచేసి మళ్లీ ప్రయత్నించండి లేదా మద్దతు (Support) బృందాన్ని సంప్రదించండి.',
+paymentSuccessMessage: 'ప్రియమైన ${donorName},\nమీరు అందించిన ఉదారమైన విరాళానికి ధన్యవాదాలు! మీ మద్దతుకు మేము ఎంతగానో కృతజ్ఞులం.',
+paymentVerificationFailedTitle: 'చెల్లింపు ధృవీకరణ విఫలమైంది',
+paymentVerificationFailedMessage: 'మీ చెల్లింపును ధృవీకరించడం సాధ్యం కాలేదు. దయచేసి సహాయక బృందాన్ని (Support) సంప్రదించండి.',
+paymentVerificationTimedOutTitle: 'చెల్లింపు ధృవీకరణ సమయం ముగిసింది',
+paymentVerificationTimedOutMessage: 'మేము మీ చెల్లింపు స్థితిని నిర్ధారించలేకపోయాము. దయచేసి సహాయక బృందాన్ని (Support) సంప్రదించండి.'
   
       },
       tamil: {
@@ -144,8 +160,15 @@ export class DonationComponent implements OnInit {
           'அனாத தொடர்புகளுக்கான இறக்கும் செயல் ◇ ரத்ததானம் ◇ மெடிகல் கேம்ப் ◇ இலவச கூலிங் பேக் ◇ பழைய வயதினர் வீடு ◇ கண்ணுக்கான தானம் ◇ இலவச அம்புலன்ஸ் ◇ இலவச வைகுண்டி ரத்தம் ◇ இலவச நிலையம் ◇சரஸ்வதி.',
           'பணம் அப்டெட்ஸை இழப்பதிலிருந்து சிறப்பாக, emailஐ  once check.',
           'நீங்கள் ரத்ததானராயினால், அருகில் ஆபத்து இருபடி, எனவே எழுதி அழைப்படுவதற்காக.'
-        ]
-  
+        ],
+paymentSuccessTitle: 'பணம் செலுத்துதல் வெற்றிகரமாக முடிந்தது!',
+paymentFailedTitle: 'பணம் செலுத்துதல் தோல்வியுற்றது',
+paymentFailedMessage: 'உங்கள் பணம் செலுத்தும் செயல்முறை முடியவில்லை. தயவுசெய்து மீண்டும் முயற்சிக்கவும் அல்லது ஆதரவு குழுவை தொடர்பு கொள்ளவும்.',
+paymentSuccessMessage: 'அன்பிற்குரிய ${donorName},\nஉங்களின் தாராளமான நன்கொடைக்கு நன்றி! உங்கள் ஆதரவிற்கு நாங்கள் மிகவும் கடமைப்பட்டிருக்கிறோம்.',
+paymentVerificationFailedTitle: 'பணம் செலுத்தல் சரிபார்ப்பு தோல்வியுற்றது',
+paymentVerificationFailedMessage: 'உங்கள் பணம் செலுத்துதலை சரிபார்க்க முடியவில்லை. தயவுசெய்து ஆதரவு குழுவை (Support) தொடர்பு கொள்ளவும்.',
+paymentVerificationTimedOutTitle: 'பணம் செலுத்தல் சரிபார்ப்பு நேரம் முடிந்தது',
+paymentVerificationTimedOutMessage: 'உங்கள் பணம் செலுத்திய நிலையை எங்களால் உறுதிப்படுத்த முடியவில்லை. தயவுசெய்து ஆதரவு குழுவை (Support) தொடர்பு கொள்ளவும்.'  
       },
       hindi: {
         header: 'अभिनन्दन करें',
@@ -183,8 +206,16 @@ export class DonationComponent implements OnInit {
           'अनाथ शवों के अंतिम संस्कार ◇ रक्तदान ◇ मेडिकल कैंप ◇ फ्री कूलिंग बॉक्स ◇ ओल्ड एज होम ◇ आंखों का दान ◇ मुफ्त एम्बुलेंस ◇ मुफ्त वैकुंठ रथ ◇ फ्री स्टेशनरी ◇ पर्यावरण पर जागरूकता सम्मेलन।',
           'कृपया भुगतान अपडेट्स को मिस न करने के लिए, कृपया ईमेल की एक बार जांच करें।',
           'यदि आप रक्तदाता हैं, तो जब आपके पास नजदीकी आपातकालीन स्थिति होगी, तो हम आपको कॉल करेंगे।'
-        ]
-  
+        ],
+        paymentSuccessTitle: 'भुगतान सफल!',
+        paymentFailedTitle: 'भुगतान विफल',
+        paymentFailedMessage: 'आपका भुगतान प्रक्रिया में नहीं हो सका। कृपया फिर से प्रयास करें या समर्थन के लिए संपर्क करें。',
+      paymentSuccessMessage: 'प्रिय ${donorName},\nआपके उदार दान के लिए धन्यवाद! हम आपके समर्थन के लिए आभारी हैं।',
+      paymentVerificationFailedTitle: 'भुगतान सत्यापन विफल',
+      paymentVerificationFailedMessage: 'आपका भुगतान सत्यापित नहीं किया जा सका। कृपया समर्थन के लिए संपर्क करें。',
+      paymentVerificationTimedOutTitle: 'भुगतान सत्यापन समय समाप्त',
+      paymentVerificationTimedOutMessage: 'हम आपके भुगतान की स्थिति की पुष्टि नहीं कर सके। कृपया समर्थन के लिए संपर्क करें。'
+
       },
       english:{
         header: 'Donate Now',
@@ -222,7 +253,15 @@ export class DonationComponent implements OnInit {
           'Funeral services for orphaned corpses ◇ Blood donation ◇ Medical camp ◇ Free cooling box ◇ Old age home ◇ Eye donation ◇ Free ambulance ◇ Free Vaikuntha Ratham ◇ Free stationery ◇ Awareness conference on the environment.',
           'Please check the email once to ensure that payment updates are not missed.',
           'If you are a blood donor, we will call you when there is an emergency near you.'
-      ]
+      ],
+      paymentSuccessTitle: 'Payment Successful!',
+      paymentFailedTitle: 'Payment Failed!',
+      paymentFailedMessage: 'Your payment could not be processed. Please try again or contact support.',
+      paymentSuccessMessage: 'Dear ${donorName},\nThank you for your generous donation! We are grateful for your support.',
+      paymentVerificationFailedTitle: 'Payment Verification Failed',
+      paymentVerificationFailedMessage: 'Your payment could not be verified. Please contact support.',
+      paymentVerificationTimedOutTitle: 'Payment Verification Timed Out',
+      paymentVerificationTimedOutMessage: 'We could not confirm your payment status. Please contact support.'
         
       }
     }
@@ -324,7 +363,7 @@ export class DonationComponent implements OnInit {
     rzp.on('payment.failed', (response: any) => {
       this.zone.run(() => {
         console.error('Payment failed:', response.error);
-        this.showModal('failure', 'Payment Failed', response.error.description);
+        this.showModal('failure', this.changedText.paymentFailedTitle, this.changedText.paymentFailedMessage);
         this.isLoading = false;
       });
     });
@@ -357,7 +396,7 @@ export class DonationComponent implements OnInit {
         // Assuming the response has a 'status' field, e.g., { status: 'success' | 'failure' | 'pending' }
         if (response.status === 'success') {
           this.isLoading = false;
-          this.showModal('success', 'Payment Successful!', `Dear ${this.donation.donorName} గారు,\n మీ సహాయం మరియు విరాళానికి మేము ఎంతో కృతజ్ఞులము!`);
+          this.showModal('success', this.changedText.paymentSuccessTitle, this.changedText.paymentSuccessMessage.replace('${donorName}', this.donation.donorName));
           this.donation = {
             donorName: "",
             email: "",
@@ -374,14 +413,14 @@ export class DonationComponent implements OnInit {
         } else if (response.status === 'failure') {
           this.isLoading = false;
           console.error('Payment verification failed with status: failure', response);
-          this.showModal('failure', 'Payment Verification Failed', 'Your payment could not be verified. Please contact support.');
+          this.showModal('failure', this.changedText.paymentVerificationFailedTitle, this.changedText.paymentVerificationFailedMessage);
         }
       }),
       takeWhile((response: any) => response.status === 'pending' && attempt < MAX_RETRIES, true),
       finalize(() => {
         if (this.isLoading) { // If still loading, it means polling timed out
           this.isLoading = false;
-          this.showModal('failure', 'Payment Verification Timed Out', 'We could not confirm your payment status. Please contact support.');
+          this.showModal('failure', this.changedText.paymentVerificationTimedOutTitle, this.changedText.paymentVerificationTimedOutMessage);
         }
       })
     ).subscribe();
