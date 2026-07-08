@@ -1,50 +1,62 @@
-<header class="page-header">
-  <div class="header-overlay">
-    <h1>Membership Donation</h1>
-    <p style="font-family: luckiest guy, anek telugu, sans-serif;">ప్రతి వాళ్ళు గొప్ప సేవలు చెయ్యలేకపోవచ్చు, కానీ చేసిన చిన్న సేవ గొప్పగా ఉండాలి.</p>
+<header class="simple-header">
+  <div class="header-left">
+    <img src="assets/logo.png" alt="Logo" class="logo">
+    <span class="foundation-name">May I Help You Foundation</span>
+  </div>
+  <div class="header-right">
+    <div class="btn-group p-1 gap-1" role="group">
+      <button type="button" class="btn btn-sm" [ngClass]="{'btn-success': selectedLanguage === 'english', 'btn-outline-success': selectedLanguage !== 'english'}" (click)="selectedLanguage = 'english'; changeLanguage()">English</button>
+      <button type="button" class="btn btn-sm" [ngClass]="{'btn-success': selectedLanguage === 'telugu', 'btn-outline-success': selectedLanguage !== 'telugu'}" (click)="selectedLanguage = 'telugu'; changeLanguage()">తెలుగు</button>
+      <button type="button" class="btn btn-sm" [ngClass]="{'btn-success': selectedLanguage === 'kannada', 'btn-outline-success': selectedLanguage !== 'kannada'}" (click)="selectedLanguage = 'kannada'; changeLanguage()">ಕನ್ನಡ</button>
+      <button type="button" class="btn btn-sm" [ngClass]="{'btn-success': selectedLanguage === 'tamil', 'btn-outline-success': selectedLanguage !== 'tamil'}" (click)="selectedLanguage = 'tamil'; changeLanguage()">தமிழ்</button>
+      <button type="button" class="btn btn-sm" [ngClass]="{'btn-success': selectedLanguage === 'hindi', 'btn-outline-success': selectedLanguage !== 'hindi'}" (click)="selectedLanguage = 'hindi'; changeLanguage()">हिन्दी</button>
+    </div>
   </div>
 </header>
 
-<section class="donation-section">
-  <div>
-   <h3 class="message-title text-center">అవసరమైన పేద ప్రజలకు
-మీ సహయం ముఖ్యం</h3>
+<div class="scrolling-strip">
+  <div class="scrolling-text">
+    <span>{{changedText.quotes[3]}} &nbsp; &nbsp; ◇ &nbsp;</span>
+    <span>{{changedText.quotes[3]}} &nbsp; &nbsp; &nbsp;</span>
+  </div>
 </div>
+
+<section class="donation-section">
   <div class="container">
     <div class="donation-content">
       <!-- Donation Form -->
       <div class="donation-form-card">
-        <h2>Donate Now</h2>
+        <h2>{{changedText.header || 'Donate Now'}}</h2>
         <form #donationForm="ngForm" (submit)="submitDonation($event)">
           <div class="form-group">
-            <label for="phone">Phone Number<span class=text-danger>*</span></label>
-            <input type="tel" id="phone" placeholder="Your Phone Number" maxlength="10" required [(ngModel)]="donation.phone" name="phone" (ngModelChange)="checkPhone($event)">
+            <label for="phone">{{changedText.phone || 'Phone Number'}}<span class=text-danger>*</span></label>
+            <input type="tel" id="phone" [placeholder]="changedText.placeholder.phone" maxlength="10" required [(ngModel)]="donation.phone" name="phone" (ngModelChange)="checkPhone($event)">
           </div>
           <fieldset [disabled]="!donationForm.controls['phone']?.valid" style="border: none; padding: 0; margin: 0;">
           <div class="form-group">
-            <label for="name">Full Name<span class=text-danger>*</span></label>
-            <input type="text" id="name" placeholder="Your Name" required [(ngModel)]="donation.donorName" name="name">
+            <label for="name">{{changedText.name || 'Full Name'}}<span class=text-danger>*</span></label>
+            <input type="text" id="name" [placeholder]="changedText.placeholder.name" required [(ngModel)]="donation.donorName" name="name">
           </div>
           <div class="form-group">
-            <label for="email">Email Address<span class=text-danger>*</span></label>
-            <input type="email" id="email" placeholder="Your Email" required [(ngModel)]="donation.email" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}">
-              <small style="display: block; margin-bottom: 10px; color: #666;">Please check entered email to ensure no payment updates are missed.</small>
+            <label for="email">{{changedText.email || 'Email Address'}}<span class=text-danger>*</span></label>
+            <input type="email" id="email" [placeholder]="changedText.placeholder.email" required [(ngModel)]="donation.email" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}">
+              <small style="display: block; margin-bottom: 10px; color: #666;">{{changedText.quotes[4] || 'Please check entered email to ensure no payment updates are missed.'}}</small>
           </div>
           <div class="form-group">
-            <label for="city">City<span class=text-danger>*</span></label>
-            <input type="text" id="city" placeholder="Your City" required [(ngModel)]="donation.city" name="city">
+            <label for="city">{{changedText.city || 'City'}}<span class=text-danger>*</span></label>
+            <input type="text" id="city" [placeholder]="changedText.placeholder.city" required [(ngModel)]="donation.city" name="city">
           </div>
           <div class="form-group">
-            <label>Want to be a donor?</label>
-            <small style="display: block; margin-bottom: 10px; color: #666;">If you opt to be a donor, you will get a call when there is an emergency near you.</small>
+            <label>{{changedText.donorConfirmationMessage || 'Want to be a donor?'}}</label>
+            <small style="display: block; margin-bottom: 10px; color: #666;">{{changedText.quotes[5] || 'If you opt to be a donor, you will get a call when there is an emergency near you.'}}</small>
             <div class="radio-group">
               <div class="radio-option">
                 <input type="radio" id="bloodYes" name="isBloodDonor" [value]="true" [(ngModel)]="donation.isBloodDonor">
-                <label for="bloodYes">Yes</label>
+                <label for="bloodYes">{{changedText.yes || 'Yes'}}</label>
               </div>
               <div class="radio-option">
                 <input type="radio" id="bloodNo" name="isBloodDonor" [value]="false" [(ngModel)]="donation.isBloodDonor">
-                <label for="bloodNo">No</label>
+                <label for="bloodNo">{{changedText.no || 'No'}}</label>
               </div>
             </div>
           </div>
@@ -65,8 +77,8 @@
           </div>
           }
           <div class="form-group">
-            <label for="amount">Amount (₹)<span class=text-danger>*</span></label>
-            <input type="number" min="1" step="10" [maxlength]="6" id="amount" placeholder="Enter Amount" required [(ngModel)]="donation.amount" name="amount">
+            <label for="amount">{{changedText.amount || 'Amount'}} (₹)<span class=text-danger>*</span></label>
+            <input type="number" min="1" step="10" [maxlength]="6" id="amount" [placeholder]="changedText.placeholder.amount" required [(ngModel)]="donation.amount" name="amount">
             <div class="amount-suggestions">
               <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '10'">₹10</button>
               <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '50'">₹50</button>
@@ -77,12 +89,12 @@
           </div>
           <div class="form-group">
             <div class="d-flex align-items-baseline">
-              <label for="message">Message </label> &nbsp;
+              <label for="message">{{changedText.message || 'Message'}} </label> &nbsp;
             <small style="display: block; margin-bottom: 10px; color: #666;">({{donation.message.length}}/200 characters)</small>
             </div>
-            <textarea id="message" rows="4" placeholder="Leave a message..." maxlength="200" [(ngModel)]="donation.message" name="message"></textarea>
+            <textarea id="message" rows="4" [placeholder]="changedText.placeholder.message" maxlength="200" [(ngModel)]="donation.message" name="message"></textarea>
           </div>
-          <button type="submit" class="donate-btn" [disabled]="!donationForm.valid">Proceed to Pay</button>
+          <button type="submit" class="donate-btn" [disabled]="!donationForm.valid">{{changedText.submit || 'Proceed to Pay'}}</button>
           </fieldset>
         </form>
       </div>
@@ -91,31 +103,28 @@
        
       <div class="payment-details-card">
        
-        <h2>Bank Transfer Details</h2>
+        <h2>{{changedText.bankDetails || 'Bank Transfer Details'}}</h2>
         <div class="bank-info">
-          <p><strong>Bank Name:</strong> {{bankDetails.bankName}}</p>
-          <p><strong>Account Name:</strong> {{bankDetails.accountName}}</p>
-          <p><strong>Account Number:</strong> {{bankDetails.accountNumber}}</p>
-          <p><strong>IFSC Code:</strong> {{bankDetails.ifscCode}}</p>
-          <p><strong>Branch:</strong> {{bankDetails.branch}}</p>
+          <p><strong>{{changedText.bankName || 'Bank Name'}}:</strong> {{bankDetails.bankName}}</p>
+          <p><strong>{{changedText.accountName || 'Account Name'}}:</strong> {{bankDetails.accountName}}</p>
+          <p><strong>{{changedText.accountNumber || 'Account Number'}}:</strong> {{bankDetails.accountNumber}}</p>
+          <p><strong>{{changedText.ifscCode || 'IFSC Code'}}:</strong> {{bankDetails.ifscCode}}</p>
+          <p><strong>{{changedText.branch || 'Branch'}}:</strong> {{bankDetails.branch}}</p>
         </div>
         
         <div class="qr-section">
-          <h3>Scan to Pay</h3>
+          <h3>{{changedText.scantopay || 'Scan to Pay'}}</h3>
           <div class="qr-placeholder">
             <img src="assets/qr-code.png" alt="Payment QR Code">
           </div>
-          <p>Accepting UPI payments</p>
+          <p>{{changedText.acceptMessage || 'Accepting UPI payments'}}</p>
         </div>
         <div class="qr-section">
-          <h3 class="message-title">సదా మీ సేవలో...</h3>
-          <!-- <div class="qr-placeholder">
-            <img src="assets/qr-code.png" alt="Payment QR Code">
-          </div> -->
-          <p class="message-body">ఆనాథ శవానికి అంత్యక్రియలు, రక్తదానం, మెడికల్ క్యాంప్
+          <h3 class="message-title">{{changedText.quotes[2] || 'సదా మీ సేవలో...'}}</h3>
+          <!-- <p class="message-body">ఆనాథ శవానికి అంత్యక్రియలు, రక్తదానం, మెడికల్ క్యాంప్
 ఫ్రీ కూలింగ్ బాక్స్, ఓల్డ్ ఎజ్ హోమ్, కంటి దానం
 ఉచిత అంబులెన్స్, ఉచిత వైకుంఠ రథం, ఫ్రీ స్టేషనరీ,
-పర్యావరణంపై అవగాహన సదస్సు.</p>
+పర్యావరణంపై అవగాహన సదస్సు.</p> -->
         </div>
       </div>
     </div>
