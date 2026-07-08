@@ -24,7 +24,208 @@ export class DonationComponent implements OnInit {
     branch: 'Proddatur Main Branch'
   };
 
+  selectedLanguage: any = 'kannada'
+
+  changedText: any;
+
   isLoading: boolean = false
+
+  languages:any = {
+      kannada: {
+        header: 'ಈಗಲೇ ದಾನ ಮಾಡಿ',
+        name: 'ದಾನಿಯ ಹೆಸರು',
+        email: 'ಇಮೇಲ್ ವಿಳಾಸ',
+        phone: 'ದೂರವಾಣಿ ಸಂಖ್ಯೆ',
+        city: 'ಊರು/ನಗರ',
+        amount: 'ದಾನದ ಮೊತ್ತ',
+        message: 'ಸಂದೇಶ',
+        submit: 'ಪೇಮೆಂಟ್ ಮಾಡಿ',
+        bankDetails: 'ಬ್ಯಾಂಕ್ ಖಾತೆಯ ವಿವರಗಳು',
+        bankName: 'ಬ್ಯಾಂಕ್ ಹೆಸರು',
+        accountName: 'ಖಾತೆ ಹೆಸರು',
+        accountNumber: 'ಖಾತೆ ಸಂಖ್ಯೆ',
+        branch: 'ಶಾಖೆಯ ಹೆಸರು',
+        ifscCode: 'IFSC ಕೋಡ್',
+        donorConfirmationMessage: 'ರಕ್ತದಾನಿಯಾಗಲು ಬಯಸುತ್ತಿರಾ?',
+        yes : 'ಹೌದು',
+        no: 'ಇಲ್ಲ',
+        bloodGroup: 'ರಕ್ತದ ಗುಂಪು',
+        scantopay: 'ಸ್ಕ್ಯಾನ್ ಟು ಪೇ',
+        acceptMessage: 'UPI ಪೇಮೆಂಟ್ ಗಳನ್ನು ಸ್ವೀಕರಿಸುತ್ತೇವೆ.',
+        placeholder: {
+          phone: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ದೂರವಾಣಿ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ',
+          name: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ',
+          email: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ',
+          city: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಊರು/ನಗರವನ್ನು ನಮೂದಿಸಿ',
+          amount: 'ದಯವಿಟ್ಟು ದಾನದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ',
+          message: 'ದಯವಿಟ್ಟು ಸಂದೇಶವನ್ನು ಬರೆಯಿರಿ...'
+        },
+        quotes: [
+          'ಪ್ರತಿಯೊಬ್ಬರೂ ದೊಡ್ಡ ದೊಡ್ಡ ಸೇವೆಗಳನ್ನು ಮಾಡಲಾಗಬಹುದು, ಆದರೆ ಮಾಡಿದ ಸಣ್ಣ ಸಹಾಯ ದೊಡ್ಡದಾಗಬಹುದು.',
+          'ಅವಶ್ಯಕತೆ ಇರುವ ಬಡ ಜನರಿಗೆ ನಿಮ್ಮ ಸಹಾಯ ಮುಖ್ಯವಾಗಿದೆ.',
+          'ಸದಾ ನಿಮ್ಮ ಸೇವೆಯಲ್ಲಿ!',
+          'ಅನಾಥ ಶವಗಳಿಗೆ ಅಂತ್ಯಕ್ರಿಯೆ ◇ ರಕ್ತ ದಾನ ◇ ಮೆಡಿಕಲ್ ಕ್ಯಾಂಪ್ ◇ ಫ್ರೀ ಕೂಲಿಂಗ್ ಬಾಕ್ಸ್ ◇ ವೃದ್ಧಾಶ್ರಮ ◇ ಕಣ್ಣು ದಾನ ◇ ಉಚಿತ ಆಂಬ್ಯುಲೆನ್ಸ್ ◇ ಉಚಿತ ವೈಕುಂಠ ವಾಹನ ◇ ಫ್ರೀ ದಿನಸಿ ◇ ಪರಿಸರ ಸಂರಕ್ಷಣಾ ಕಾರ್ಯಕ್ರಮಗಳು ಮತ್ತು ಇತರ ಸೇವೆಗಳು.',
+          'ಪೇಮೆಂಟ್ ಅಪ್ಡೇಟ್ ಗಳನ್ನು ಕಳೆದುಕೊಳ್ಳದೆ ಇರಲು, ಇಮೇಲ್ ಅನ್ನು ದಯವಿಟ್ಟು ಒಮ್ಮೆ ಪರೀಕ್ಷಿಸಿಕೊಳ್ಳಿ.',
+          'ನೀವು ರಕ್ತದಾನಿಯಾದರೆ, ನಿಮ್ಮ ಸಮೀಪದಲ್ಲಿ ತಎಮರ್ಜೆನ್ಸೀ ಇದ್ದಾಗ ನಾವು ಕರೆಮಾಡುತ್ತೇವೆ.'
+      ]
+      },
+      telugu: {
+        header: 'ఇప్పటికే దానం చేయండి',
+        name: 'దాని పేరు',
+        email: 'ఈమెయిల్ చిరునామా',
+        phone: 'దూరవాణి సంఖ్య',
+        city: 'నగరం/కల్లన',
+        amount: 'దాన మొత్తം',
+        message: 'సందేశం',
+        submit: 'పేమెంట్ చేయండి',
+        bankDetails: 'బ్యాంక్ ఖాతె వివరాలు',
+        bankName: 'బ్యాంక్ పేరు',
+        accountName: 'అకౌంటు పేరు',
+        accountNumber: 'అకౌంటు సంఖ్య',
+        branch: 'బ్రాంచ్ పేరు',
+        ifscCode: 'IFSC కోడ్',
+        donorConfirmationMessage: 'రక్తదాత కావాలా?',
+        yes : 'అవును',
+        no: 'లేదు',
+        bloodGroup: 'రక్తద గుంపు',
+        scantopay: 'స్కాన్ టు పే',
+        acceptMessage: 'UPI పేమెంట్లను స్వీకరిస్తాము.',
+        placeholder: {
+          phone: 'దయచేసి మీ ఫోన్ నంబర్ ను నమోదు చేయండి',
+          name: 'దయచేసి మీ పూర్తి పేరు నమోదు చేయండి',
+          email: 'దయచేసి మీ ఈమెయిల్ చిరునామాను నమోదు చేయండి',
+          city: 'దయచేసి మీ నగరం/పట్టణం నమోదు చేయండి',
+          amount: 'దయచేసి దాన మొత్తాన్ని నమోదు చేయండి',
+          message: 'దయచేసి సందేశాన్ని వ్రాయండి...'
+        },
+        quotes: [
+          'ప్రతి వాళ్ళు గొప్ప సేవలు చెయ్యలేకపోవచ్చు, కానీ చేసిన చిన్న సేవ గొప్పగా ఉండాలి.',
+          'అవసరమైన పేద ప్రజలకు మీ సహయం ముఖ్యం.',
+          'సదా మీ సేవలో...',
+          'ఆనాథ శవానికి అంత్యక్రియలు ◇ రక్తదానం ◇ మెడికల్ క్యాంప్ ◇ ఫ్రీ కూలింగ్ బాక్స్ ◇ ఓల్డ్ ఎజ్ హోమ్ ◇ కంటి దానం ◇ ఉచిత అంబులెన్స్ ◇ ఉచిత వైకుంఠ రథం ◇ ఫ్రీ స్టేషనరీ ◇ పర్యావరణంపై అవగాహన సదస్సు.     ◇  ఆనాథ శవానికి అంత్యక్రియలు ◇ రక్తదానం ◇ మెడికల్ క్యాంప్ ◇ ఫ్రీ కూలింగ్ బాక్స్ ◇ ఓల్డ్ ఎజ్ హోమ్ ◇ కంటి దానం ◇ ఉచిత అంబులెన్స్ ◇ ఉచిత వైకుంఠ రథం ◇ ఫ్రీ స్టేషనరీ ◇ పర్యావరణంపై అవగాహన సదస్సు.',
+          'దయచేసి చెల్లింపు నవీకరణలను మిస్ కాకుండా ఉండటానికి, ఇమెయిల్‌ను ఒకసారి తనిఖీ చేయండి.',
+          'మీరు రక్తదాత అయితే, మీ సమీపంలో అత్యవసర పరిస్థితి ఉన్నప్పుడు మేము మీకు కాల్ చేస్తాము.'
+        ]
+  
+      },
+      tamil: {
+         header: 'இப்போதுதான் தானம் செய்யவும்',
+        name: 'தானியாளர் பெயர்',
+        email: 'மின்னஞ்சல் முகவரி',
+        phone: 'தொலைபேசி எண்',
+        city: 'நகரம்/ஊர்',
+        amount: 'தானம் தொகை',
+        message: 'செய்தி',
+        submit: 'பணம் செலுத்த தொடரவும்',
+        bankDetails: 'வங்கி கணக்கு விவரங்கள்',
+        bankName: 'வங்கி பெயர்',
+        accountName: 'கணக்கு பெயர்',
+        accountNumber: 'கணக்கு எண்',
+        branch: 'கிளை பெயர்',
+        ifscCode: 'IFSC குறியீடு',
+        donorConfirmationMessage: 'தானியாளர் ஆக விரும்புகிறீர்களா?',
+        yes : 'ஆம்',
+        no: 'இல்லை',
+        bloodGroup: 'இரத்த குழு',
+        scantopay: 'பணம் செலுத்த ஸ்கேன் செய்யவும்',
+        acceptMessage: 'UPI பணப்பரிவர்த்தனைகளை ஏற்றுக்கொள்கிறோம்.',
+        placeholder: {
+          phone: 'தயவுசெய்து உங்கள் தொலைபேசி எண்ணை உள்ளிடவும்',
+          name: 'தயவுசெய்து உங்கள் முழுப் பெயரை உள்ளிடவும்',
+          email: 'தயவுசெய்து உங்கள் மின்னஞ்சல் முகவரியை உள்ளிடவும்',
+          city: 'தயவுசெய்து உங்கள் நகரம்/ஊரை உள்ளிடவும்',
+          amount: 'தயவுசெய்து தானம் தொகையை உள்ளிடவும்',
+          message: 'தயவுசெய்து செய்தியை உள்ளிடவும்...'
+        },
+        quotes: [
+          'ஒவ்வொருவரும் பெரிய சேவைகளை செய்ய முடியாது, ஆனால் செய்த சிறிய உதவி பெரியதாக இருக்கலாம்.',
+          'அவச்சியமான கூட்டமைப்புகளுக்கு உங்கள் உதவி முக்கியமானது.',
+          'எப்போதும் உங்கள் சேவையில்...',
+          'அனாத தொடர்புகளுக்கான இறக்கும் செயல் ◇ ரத்ததானம் ◇ மெடிகல் கேம்ப் ◇ இலவச கூலிங் பேக் ◇ பழைய வயதினர் வீடு ◇ கண்ணுக்கான தானம் ◇ இலவச அம்புலன்ஸ் ◇ இலவச வைகுண்டி ரத்தம் ◇ இலவச நிலையம் ◇சரஸ்வதி.',
+          'பணம் அப்டெட்ஸை இழப்பதிலிருந்து சிறப்பாக, emailஐ  once check.',
+          'நீங்கள் ரத்ததானராயினால், அருகில் ஆபத்து இருபடி, எனவே எழுதி அழைப்படுவதற்காக.'
+        ]
+  
+      },
+      hindi: {
+        header: 'अभिनन्दन करें',
+        name: 'दाता का नाम',
+        email: 'ईमेल पता',
+        phone: 'फ़ोन नंबर',
+        city: 'शहर',
+        amount: 'दान राशि',
+        message: 'संदेश',
+        submit: 'भुगतान के लिए आगे बढ़ें',
+        bankDetails: 'बैंक खाता विवरण',
+        bankName: 'बैंक का नाम',
+        accountName: 'खाता नाम',
+        accountNumber: 'खाता संख्या',
+        branch: 'शाखा का नाम',
+        ifscCode: 'IFSC कोड',
+        donorConfirmationMessage: 'क्या आप दाता बनना चाहते हैं?',
+        yes : 'हां',
+        no: 'नहीं',
+        bloodGroup: 'रक्त समूह',
+        scantopay: 'भुगतान के लिए स्कैन करें',
+        acceptMessage: 'UPI भुगतान स्वीकार किए जा रहे हैं।',
+        placeholder: {
+          phone: 'कृपया अपना फ़ोन नंबर दर्ज करें',
+          name: 'कृपया अपना पूरा नाम दर्ज करें',
+          email: 'कृपया अपना ईमेल पता दर्ज करें',
+          city: 'कृपया अपना शहर दर्ज करें',
+          amount: 'कृपया दान राशि दर्ज करें',
+          message: 'कृपया एक संदेश दर्ज करें...'
+        },
+        quotes: [
+          'हर कोई बड़ी सेवा नहीं कर सकता, लेकिन की गई छोटी मदद बड़ी हो सकती है।',
+          'जरूरतमंद गरीब लोगों के लिए आपकी मदद महत्वपूर्ण है।',
+          'हमेशा आपकी सेवा में...',
+          'अनाथ शवों के अंतिम संस्कार ◇ रक्तदान ◇ मेडिकल कैंप ◇ फ्री कूलिंग बॉक्स ◇ ओल्ड एज होम ◇ आंखों का दान ◇ मुफ्त एम्बुलेंस ◇ मुफ्त वैकुंठ रथ ◇ फ्री स्टेशनरी ◇ पर्यावरण पर जागरूकता सम्मेलन।',
+          'कृपया भुगतान अपडेट्स को मिस न करने के लिए, कृपया ईमेल की एक बार जांच करें।',
+          'यदि आप रक्तदाता हैं, तो जब आपके पास नजदीकी आपातकालीन स्थिति होगी, तो हम आपको कॉल करेंगे।'
+        ]
+  
+      },
+      english:{
+        header: 'Donate Now',
+        name: 'Donor Name',
+        email: 'Email Address',
+        phone: 'Phone Number',
+        city: 'City',
+        amount: 'Donation Amount',
+        message: 'Message',
+        submit: 'Proceed to payment',
+        bankDetails: 'Bank Account Details',
+        bankName: 'Bank Name',
+        accountName: 'Account Name',
+        accountNumber: 'Account Number',
+        branch: 'Branch Name',
+        ifscCode: 'IFSC Code',
+        donorConfirmationMessage: 'Want to be a donor?',
+        yes : 'Yes',
+        no: 'No',
+        bloodGroup: 'Blood Group',
+        scantopay: 'Scan to Pay',
+        acceptMessage: 'Accepting UPI payments.',
+        placeholder: {
+          phone: 'Please enter your phone number',
+          name: 'Please enter your full name',
+          email: 'Please enter your email address',
+          city: 'Please enter your city',
+          amount: 'Please enter the donation amount',
+          message: 'Please enter a message...'
+        },
+        quotes: [
+          'Not everyone can do great things, but small help can be great.',
+          'Your help is important for the needy poor.',
+          'Always at your service...',
+          'Funeral services for orphaned corpses ◇ Blood donation ◇ Medical camp ◇ Free cooling box ◇ Old age home ◇ Eye donation ◇ Free ambulance ◇ Free Vaikuntha Ratham ◇ Free stationery ◇ Awareness conference on the environment.',
+          'Please check the email once to ensure that payment updates are not missed.',
+          'If you are a blood donor, we will call you when there is an emergency near you.'
+      ]
+        
+      }
+    }
 
   donation = {
     donorName: "",
@@ -49,6 +250,7 @@ export class DonationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRazorpayScript();
+    this.changeLanguage();
   }
 
   loadRazorpayScript() {
@@ -58,6 +260,10 @@ export class DonationComponent implements OnInit {
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       document.body.appendChild(script);
     }
+  }
+
+  changeLanguage(){
+    this.changedText = this.languages[this.selectedLanguage]
   }
 
   submitDonation(event: Event) {

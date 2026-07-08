@@ -22,6 +22,8 @@ export class AdminDonationsComponent implements OnInit {
     year: { amount: 0, count: 0 }
   };
 
+  
+
   isLoading: boolean = false
 
   constructor(private adminService: AdminServiceService) { }
