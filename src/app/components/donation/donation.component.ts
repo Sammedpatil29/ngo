@@ -289,11 +289,17 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
   constructor(private commonService: CommonServiceService, private zone: NgZone, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
+    this.changedText = this.languages[this.selectedLanguage]; // Initialize with default language
     this.loadRazorpayScript();
     this.route.queryParams.subscribe(params => {
-      this.selectedLanguage = params['lang'] || 'english';
+      const lang = params['lang'];
+      if (lang && this.languages[lang]) {
+        this.selectedLanguage = lang;
+        this.changedText = this.languages[this.selectedLanguage];
+      } else {
+        this.selectedLanguage = 'english'; // Default to English if no valid lang param
+      }
     });
-    this.changeLanguage();
   }
 
   loadRazorpayScript() {
