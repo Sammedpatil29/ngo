@@ -30,6 +30,10 @@ export class CommonServiceService {
     return this.http.post(`${this.url}/api/donations`, data);
   }
 
+  createAutoDonation(params: any) {
+    return this.http.post(`${this.url}/api/donations/subscribe-custom`, params);
+  }
+
   verifyPayment(data: any) {
     return this.http.post(`${this.url}/api/donations/verify`, data);
   }

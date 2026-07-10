@@ -41,6 +41,7 @@ export class DonationComponent implements OnInit {
         amount: 'ದಾನದ ಮೊತ್ತ',
         message: 'ಸಂದೇಶ',
         submit: 'ಪೇಮೆಂಟ್ ಮಾಡಿ',
+        submitauto: 'ಆಟೋ ಪೇಮೆಂಟ್',
         bankDetails: 'ಬ್ಯಾಂಕ್ ಖಾತೆಯ ವಿವರಗಳು',
         bankName: 'ಬ್ಯಾಂಕ್ ಹೆಸರು',
         accountName: 'ಖಾತೆ ಹೆಸರು',
@@ -87,6 +88,7 @@ paymentVerificationTimedOutMessage: 'ನಿಮ್ಮ ಪಾವತಿಯ ಸ್�
         amount: 'దాన మొత్తం',
         message: 'సందేశం',
         submit: 'పేమెంట్ చేయండి',
+        submitauto: 'Monthly ఆటో పేమెంట్',
         bankDetails: 'బ్యాంక్ ఖాతె వివరాలు',
         bankName: 'బ్యాంక్ పేరు',
         accountName: 'అకౌంటు పేరు',
@@ -134,6 +136,7 @@ paymentVerificationTimedOutMessage: 'మేము మీ చెల్లిం�
         amount: 'தானம் தொகை',
         message: 'செய்தி',
         submit: 'பணம் செலுத்த தொடரவும்',
+        submitauto: 'மாதாந்திர தானியங்கு பணம் செலுத்த',
         bankDetails: 'வங்கி கணக்கு விவரங்கள்',
         bankName: 'வங்கி பெயர்',
         accountName: 'கணக்கு பெயர்',
@@ -180,6 +183,7 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
         amount: 'दान राशि',
         message: 'संदेश',
         submit: 'भुगतान के लिए आगे बढ़ें',
+        submitauto: 'मासिक ऑटो भुगतान',
         bankDetails: 'बैंक खाता विवरण',
         bankName: 'बैंक का नाम',
         accountName: 'खाता नाम',
@@ -227,6 +231,7 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
         amount: 'Donation Amount',
         message: 'Message',
         submit: 'Proceed to payment',
+        submitauto: 'Monthly Auto Payment',
         bankDetails: 'Bank Account Details',
         bankName: 'Bank Name',
         accountName: 'Account Name',
@@ -340,6 +345,28 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
     });
   }
 
+  submitAutoDonation(event: Event) {
+    event.preventDefault();
+    if (!this.donation.amount) {
+      this.showModal('failure', 'Missing Information', 'Please enter a donation amount.');
+      return;
+    }
+    this.isLoading = true
+    let params = {
+      "customAmount": this.donation.amount
+    }
+    this.commonService.createAutoDonation(params).subscribe({
+      next: (response: any) => {
+        this.openRazorpayForSubscription(response.subscriptionId);
+      },
+      error: (error) => {
+        this.isLoading = false
+        console.error('Error initiating donation:', error);
+        this.showModal('failure', 'Error', 'Something went wrong. Please try again later.');
+      }
+    });
+  }
+
   openRazorpay(orderData: any) {
     const options = {
       key: 'rzp_live_T7pd8t1TXmAhLL',
@@ -385,6 +412,35 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
     });
     rzp.open();
   }
+
+  openRazorpayForSubscription(subscriptionId: string) {
+  const options = {
+    key: 'rzp_live_TBrXkFXc7eJwDA', // Public Key ID
+    subscription_id: subscriptionId, // Mandate session identifier
+    name: 'May I Help You Foundation',
+    description: 'Monthly Automated Contribution',
+    image: 'assets/logo.png',
+    handler: (response: any) => {
+      // Triggered automatically if authorization passes
+      // this.verifySignatureOnBackend(response);
+      alert('Subscription payment successful! Payment ID: ' + response.razorpay_payment_id);
+    },
+    prefill: {
+        name: this.donation.donorName,
+        email: this.donation.email,
+        contact: this.donation.phone
+      },
+      notes: {
+        address: this.donation.city
+      },
+      theme: {
+        color: '#d31a70'
+      },
+  };
+
+  const rzp = new Razorpay(options);
+  rzp.open();
+}
 
   showModal(status: 'success' | 'failure', title: string, message: string) {
     this.paymentStatus = status;
