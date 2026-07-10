@@ -94,7 +94,19 @@
   }
 
   .header-left .foundation-name {
-    font-size: 1.2rem;
+    font-size: 1.7rem;
+    text-wrap: nowrap;
+  }
+
+  .header-left {
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+
+  }
+
+  .header-left .logo {
+    height: 80px;
   }
 }
 
