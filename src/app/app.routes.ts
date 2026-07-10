@@ -44,7 +44,7 @@ export const routes: Routes = [
         path: 'admin-layout',
         loadComponent: () => import('./components/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent),
         children: [
-            { path: '', redirectTo: 'admin-banners', pathMatch: 'full' },
+            { path: '', redirectTo: 'admin-donations', pathMatch: 'full' },
             
             {
                 path: 'admin-banners',
