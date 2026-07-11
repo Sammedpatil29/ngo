@@ -1,0 +1,145 @@
+<div class="text-center mt-2">
+    <img src="/assets/logo.png" height="80" alt="">
+  <h3 class="mt-2">
+    @if(type === 'privacy-policy') {
+        Privacy Policy
+    } @else if(type === 'terms') {
+        Terms and Conditions
+    } @else {
+        Cancellation and Refund Policy
+    }
+  </h3>
+</div>
+@if(type === 'privacy-policy') {
+    <div class="privacy-policy-container">
+  <p class="last-updated">Last Updated: July 2026</p>
+
+  <p>Welcome to the <strong>May I Help You Foundation</strong> ("we", "our", or "us"). We operate the website <a href="https://mayihelpyoufoundation.org" target="_blank">mayihelpyoufoundation.org</a>. We are deeply committed to protecting your personal data and ensuring your privacy as a donor, volunteer, or visitor to our platform.</p>
+
+  <hr class="section-divider" />
+
+  <h2>1. Information We Collect</h2>
+  <p>We collect personal information that you voluntarily provide to us when you make a donation, register for events, or contact us. This may include:</p>
+  <ul>
+    <li><strong>Identity & Contact Data:</strong> Name, email address, phone number, and mailing address.</li>
+    <li><strong>Donation & Transaction Data:</strong> Donation amounts, transaction history, and timestamps.</li>
+    <li><strong>Statutory Compliance Data:</strong> PAN card details (strictly required under Indian Income Tax law for issuing 80G tax-exemption certificates).</li>
+  </ul>
+
+  <h2>2. Payment Processing & Financial Security</h2>
+  <p>All online financial contributions made to the May I Help You Foundation are processed securely through our verified third-party payment gateway, <strong>Razorpay</strong>.</p>
+  <ul>
+    <li>We do not store or collect your raw credit card numbers, CVV codes, or UPI PINs on our website servers.</li>
+    <li>All payment information is captured directly by Razorpay using industry-standard PCI-DSS compliant encryption layers.</li>
+    <li>For auto-pay and recurring monthly contributions, tokenized mandates are stored securely by Razorpay under strict regulatory supervision.</li>
+  </ul>
+
+  <h2>3. How We Use Your Information</h2>
+  <p>We use the gathered information to:</p>
+  <ul>
+    <li>Process your one-time or recurring auto-pay donations efficiently.</li>
+    <li>Generate and email automated statutory 80G donation tax receipts.</li>
+    <li>Send operation updates, newsletters, and administrative notifications related to your active support cycles.</li>
+    <li>Comply with prevailing legal, statutory, or regulatory requirements under local governing authorities.</li>
+  </ul>
+
+  <h2>4. Data Retention & Sharing</h2>
+  <p>We do not rent, sell, or trade donor databases or personal records to any third-party marketing firms. Your information is shared exclusively with trusted infrastructure partners (like our payment processor, Razorpay) strictly to execute transaction intents. Financial record keeping is legally maintained in accordance with tax laws.</p>
+
+  <h2>5. Security of Your Data</h2>
+  <p>The security of your personal data is highly vital to us. We employ Secure Sockets Layer (SSL) encryption protocols across our entire ecosystem to guarantee all data transmitted between your browser and our servers remains private and protected.</p>
+
+  <h2>6. Contact Us</h2>
+  <p>If you have any questions, concerns, or requests regarding this Privacy Policy or your personal information records, please feel free to reach out to us:</p>
+  
+</div>
+} @else if(type === 'terms') {
+    <div class="privacy-policy-container">
+  <p class="last-updated">Last Updated: July 2026</p>
+
+  <p>Welcome to <strong>May I Help You Foundation</strong> ("we", "our", or "us"). By accessing and using our website <a href="https://mayihelpyoufoundation.org" target="_blank">mayihelpyoufoundation.org</a>, you agree to comply with and be bound by the following terms and conditions. Please read them carefully.</p>
+
+  <hr class="section-divider" />
+
+  <h2>1. General Conditions</h2>
+  <p>By using this website, you represent that you are at least the age of majority in your state or province of residence. We reserve the right to refuse service, block access, or modify site content at any time for any reason without prior notice.</p>
+
+  <h2>2. Donations and Recurring Auto-Pay</h2>
+  <p>All donations made through this website are voluntary contributions geared toward our charitable operations.</p>
+  <ul>
+    <li><strong>Payment Processing:</strong> We partner with <strong>Razorpay</strong> to securely handle payment processing. By initiating a donation, you agree to share your basic information with Razorpay in accordance with their terms of service.</li>
+    <li><strong>Auto-Pay Mandates:</strong> If you select a recurring payment tier, you authorize Razorpay to automatically debit your specified account at the defined monthly or annual intervals. You can cancel this mandate at any time through your donor portal or by contacting us directly.</li>
+    <li><strong>Statutory Compliance:</strong> Donors seeking tax-exemption privileges in India are strictly required to provide valid PAN card details. We are not liable for tax certificate rejections resulting from inaccurate data entry.</li>
+  </ul>
+
+  <h2>3. Accuracy of Billing and Account Information</h2>
+  <p>You agree to provide current, complete, and accurate purchase and account information for all donations made at our platform. You agree to promptly update your account and other information, including your email address and payment method details, so that we can complete your transactions and contact you as needed.</p>
+
+  <h2>4. Prohibited Uses</h2>
+  <p>In addition to other prohibitions as set forth in the Terms and Conditions, you are prohibited from using the site or its content:</p>
+  <ul>
+    <li>For any unlawful purpose or to solicit others to perform or participate in any unlawful acts.</li>
+    <li>To violate any international, federal, provincial, or state regulations, rules, or local laws.</li>
+    <li>To submit false or misleading financial information, or attempt to bypass our security infrastructure.</li>
+    <li>To upload or transmit viruses or any other type of malicious code that will or may be used in any way that will affect the functionality or operation of the Service.</li>
+  </ul>
+
+  <h2>5. Limitation of Liability</h2>
+  <p>May I Help You Foundation does not guarantee, represent, or warrant that your use of our service will be uninterrupted, timely, secure, or error-free. In no case shall our directors, officers, employees, or volunteers be liable for any injury, loss, claim, or any direct, indirect, incidental, punitive, special, or consequential damages of any kind arising from your use of this service.</p>
+
+  <h2>6. Changes to Terms and Conditions</h2>
+  <p>You can review the most current version of the Terms and Conditions at any time at this page. We reserve the right, at our sole discretion, to update, change, or replace any part of these Terms by posting updates and changes to our website. It is your responsibility to check our website periodically for changes.</p>
+
+  <h2>7. Contact Information</h2>
+  <p>Questions about the Terms and Conditions should be sent to us at:</p>
+  
+</div>
+} @else {
+    <div class="privacy-policy-container">
+  <p class="last-updated">Last Updated: July 2026</p>
+
+  <p>Welcome to <strong>May I Help You Foundation</strong> ("we", "our", or "us"). We operate the website <a href="https://mayihelpyoufoundation.org" target="_blank">mayihelpyoufoundation.org</a>. As a non-profit organization, we highly value your support and contributions to our charitable activities. Please read our policy regarding cancellations and refunds carefully.</p>
+
+  <hr class="section-divider" />
+
+  <h2>1. Voluntary Contributions</h2>
+  <p>All financial contributions, donations, and sponsorships made to the May I Help You Foundation through our platform are completely voluntary. Because these funds are immediately allocated and deployed toward our active social welfare projects, community relief operations, and foundation infrastructure, donations are generally considered non-refundable.</p>
+
+  <h2>2. Monthly Auto-Pay & Subscription Cancellation</h2>
+  <p>If you have registered for a recurring monthly contribution (auto-pay mandate) via <strong>Razorpay</strong>, you retain full control over your active subscription cycle.</p>
+  <ul>
+    <li><strong>Cancellation Request:</strong> You can cancel your monthly automated donation mandate at any time. To ensure that your account is not debited for the upcoming billing cycle, please initiate the cancellation at least <strong>3 working days</strong> before your scheduled monthly debit date.</li>
+    <li><strong>How to Cancel:</strong> You can cancel your mandate directly through your donor dashboard, or by sending an explicit cancellation request email containing your subscription details to <a href="mailto:mayihelpyoufoundationjmd@gmail.com">{{email}}</a>.</li>
+    <li><strong>Post-Cancellation Effect:</strong> Once a recurring mandate is cancelled, no further automated debits will be processed from your linked bank account or card in subsequent months.</li>
+  </ul>
+
+  <h2>3. Exceptional Refund Requests</h2>
+  <p>We understand that technical glitches or manual input errors can occasionally occur during the checkout process. We will review and process genuine refund requests under the following exceptional conditions:</p>
+  <ul>
+    <li><strong>Duplicate Transactions:</strong> If your bank account or card was charged twice for the exact same transaction due to a technical error or system latency during processing.</li>
+    <li><strong>Unauthorized Accidental Debits:</strong> If an incorrect donation amount was entered accidentally, provided the error is reported immediately.</li>
+  </ul>
+
+  <h2>4. Timeline to Request a Refund</h2>
+  <p>To request a refund under the exceptional circumstances outlined above, the donor must reach out to us within **7 working days** from the actual date of the transaction. Any request received after 7 working days will not be eligible for evaluation or processing.</p>
+
+  <h2>5. Refund Process and Timelines</h2>
+  <p>Once a valid refund request is received via email, our administrative and finance teams will review the details against our payment gateway logs:</p>
+  <ul>
+    <li>If approved, the refund process will be initiated through our payment partner, Razorpay, back to the donor's original payment source (same credit card, debit card, bank account, or UPI ID used during checkout).</li>
+    <li>The refund settlement typically takes approximately **5 to 7 working days** to reflect in your account, subject entirely to standard banking operational timelines and cycles.</li>
+    <li>Please note that any transaction convenience fees or statutory taxes levied by banks or the payment gateway provider during the initial checkout phase are non-refundable.</li>
+  </ul>
+
+  <h2>6. Contact Information</h2>
+  <p>For any queries, updates, or assistance regarding canceling a mandate or reviewing an accidental transaction, please contact our support team:</p>
+  
+</div>
+}
+<div class="contact-box mx-5">
+    <p><strong>May I Help You Foundation</strong></p>
+    <p>Email: {{ email }}</p>
+    <p>Contact: {{ contact }}</p>
+    <p>Website: <a href="https://mayihelpyoufoundation.org" target="_blank">mayihelpyoufoundation.org</a></p>
+  </div>
+  <div class="p-4"></div>
