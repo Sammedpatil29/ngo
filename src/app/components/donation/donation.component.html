@@ -96,7 +96,7 @@
           </div>
           <div class="action-buttons">
           <button type="submit" class="donate-btn" [disabled]="!donationForm.valid">{{changedText.submit || 'Proceed to Pay'}}</button>
-          <!-- <button (click)="submitAutoDonation($event)" class="donate-btn text-center" [disabled]="!donationForm.valid">{{changedText.submitauto || 'Proceed to Auto Pay'}}</button> -->
+          <button (click)="submitAutoDonation($event)" class="donate-btn text-center" [disabled]="!donationForm.valid">{{changedText.submitauto || 'Proceed to Auto Pay'}}</button>
           </div>
           </fieldset>
         </form>
