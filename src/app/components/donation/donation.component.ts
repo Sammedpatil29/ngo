@@ -19,9 +19,7 @@ declare var Razorpay: any;
   styleUrl: './donation.component.css'
 })
 export class DonationComponent implements OnInit {
-navigateToPolicy(arg0: string) {
-throw new Error('Method not implemented.');
-}
+
   bankDetails = {
     bankName: 'UNION BANK',
     accountName: 'May I Help You Foundation',
@@ -569,6 +567,10 @@ verifySignatureOnBackend(response:any){
       }
     });
   }
+}
+
+gotoHome(){
+  this.router.navigate(['/home'])
 }
 
 }
