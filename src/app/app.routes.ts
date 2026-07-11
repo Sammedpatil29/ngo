@@ -37,6 +37,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/donor-form/donor-form.component').then(m => m.DonorFormComponent)
     },
     {
+        path: 'docs',
+        loadComponent: () => import('./components/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+    },
+    {
         path: 'login',
         loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent),
     },

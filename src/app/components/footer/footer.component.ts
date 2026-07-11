@@ -19,4 +19,25 @@ export class FooterComponent {
     this.router.navigate(['/login']);
   }
 
+  openDocs(type: string) {
+    const currentDomain = window.location.origin;
+    let url = '';
+    switch(type) {
+      case 'terms': 
+        url = `${currentDomain}/docs?type=terms`;
+        break;
+      case 'privacy-policy':
+        url = `${currentDomain}/docs?type=privacy-policy`;
+        break;
+      case 'cancellation':
+        url = `${currentDomain}/docs?type=cancellation`;
+        break;
+      default:
+        url = `${currentDomain}/docs?type=terms`;
+        return;
+    }
+    window.open(url, '_blank');
+    
+  }
+
 }
