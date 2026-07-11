@@ -80,7 +80,7 @@
             <label for="amount">{{changedText.amount || 'Amount'}} (₹)<span class=text-danger>*</span></label>
             <input type="number" min="1" step="10" [maxlength]="6" id="amount" [placeholder]="changedText.placeholder.amount" required [(ngModel)]="donation.amount" name="amount">
             <div class="amount-suggestions">
-              <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '10'">₹10</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '20'">₹20</button>
               <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '50'">₹50</button>
               <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '100'">₹100</button>
               <button type="button" class="btn btn-outline-secondary btn-sm" (click)="donation.amount = '250'">₹250</button>
@@ -94,7 +94,10 @@
             </div>
             <textarea id="message" rows="4" [placeholder]="changedText.placeholder.message" maxlength="200" [(ngModel)]="donation.message" name="message"></textarea>
           </div>
+          <div class="action-buttons">
           <button type="submit" class="donate-btn" [disabled]="!donationForm.valid">{{changedText.submit || 'Proceed to Pay'}}</button>
+          <button (click)="submitAutoDonation($event)" class="donate-btn text-center" [disabled]="!donationForm.valid">{{changedText.submitauto || 'Proceed to Auto Pay'}}</button>
+          </div>
           </fieldset>
         </form>
       </div>
@@ -105,17 +108,21 @@
        
         <h2>{{changedText.bankDetails || 'Bank Transfer Details'}}</h2>
         <div class="bank-info">
-          <p><strong>{{changedText.bankName || 'Bank Name'}}:</strong> {{bankDetails.bankName}}</p>
-          <p><strong>{{changedText.accountName || 'Account Name'}}:</strong> {{bankDetails.accountName}}</p>
-          <p><strong>{{changedText.accountNumber || 'Account Number'}}:</strong> {{bankDetails.accountNumber}}</p>
-          <p><strong>{{changedText.ifscCode || 'IFSC Code'}}:</strong> {{bankDetails.ifscCode}}</p>
-          <p><strong>{{changedText.branch || 'Branch'}}:</strong> {{bankDetails.branch}}</p>
+          <p><strong>{{changedText.bankName || 'Bank Name'}}:</strong> {{bankDetails.bankName}} <span><svg [cdkCopyToClipboard]="bankDetails.bankName" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#439400"><path d="M364.62-280q-24.32 0-40.47-16.15T308-336.62v-430.76q0-24.32 16.15-40.47T364.62-824h334.76q24.32 0 40.47 16.15T756-767.38v430.76q0 24.32-16.15 40.47T699.38-280H364.62Zm0-32h334.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-430.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H364.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v430.76q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69Zm-104 136q-24.32 0-40.47-16.15T204-232.61v-462.77h32v462.77q0 9.23 7.69 16.92 7.69 7.69 16.93 7.69h366.76v32H260.62ZM340-312v-480 480Z"/></svg></span></p>
+          <p><strong>{{changedText.accountName || 'Account Name'}}:</strong> {{bankDetails.accountName}}<span><svg [cdkCopyToClipboard]="bankDetails.accountName" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#439400"><path d="M364.62-280q-24.32 0-40.47-16.15T308-336.62v-430.76q0-24.32 16.15-40.47T364.62-824h334.76q24.32 0 40.47 16.15T756-767.38v430.76q0 24.32-16.15 40.47T699.38-280H364.62Zm0-32h334.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-430.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H364.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v430.76q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69Zm-104 136q-24.32 0-40.47-16.15T204-232.61v-462.77h32v462.77q0 9.23 7.69 16.92 7.69 7.69 16.93 7.69h366.76v32H260.62ZM340-312v-480 480Z"/></svg></span></p>
+          <p><strong>{{changedText.accountNumber || 'Account Number'}}:</strong> {{bankDetails.accountNumber}}<span><svg [cdkCopyToClipboard]="bankDetails.accountNumber" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#439400"><path d="M364.62-280q-24.32 0-40.47-16.15T308-336.62v-430.76q0-24.32 16.15-40.47T364.62-824h334.76q24.32 0 40.47 16.15T756-767.38v430.76q0 24.32-16.15 40.47T699.38-280H364.62Zm0-32h334.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-430.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H364.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v430.76q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69Zm-104 136q-24.32 0-40.47-16.15T204-232.61v-462.77h32v462.77q0 9.23 7.69 16.92 7.69 7.69 16.93 7.69h366.76v32H260.62ZM340-312v-480 480Z"/></svg></span></p>
+          <p><strong>{{changedText.ifscCode || 'IFSC Code'}}:</strong> {{bankDetails.ifscCode}}<span><svg [cdkCopyToClipboard]="bankDetails.ifscCode" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#439400"><path d="M364.62-280q-24.32 0-40.47-16.15T308-336.62v-430.76q0-24.32 16.15-40.47T364.62-824h334.76q24.32 0 40.47 16.15T756-767.38v430.76q0 24.32-16.15 40.47T699.38-280H364.62Zm0-32h334.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-430.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H364.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v430.76q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69Zm-104 136q-24.32 0-40.47-16.15T204-232.61v-462.77h32v462.77q0 9.23 7.69 16.92 7.69 7.69 16.93 7.69h366.76v32H260.62ZM340-312v-480 480Z"/></svg></span></p>
+          <p><strong>{{changedText.branch || 'Branch'}}:</strong> {{bankDetails.branch}}<span><svg [cdkCopyToClipboard]="bankDetails.branch" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#439400"><path d="M364.62-280q-24.32 0-40.47-16.15T308-336.62v-430.76q0-24.32 16.15-40.47T364.62-824h334.76q24.32 0 40.47 16.15T756-767.38v430.76q0 24.32-16.15 40.47T699.38-280H364.62Zm0-32h334.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-430.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H364.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v430.76q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69Zm-104 136q-24.32 0-40.47-16.15T204-232.61v-462.77h32v462.77q0 9.23 7.69 16.92 7.69 7.69 16.93 7.69h366.76v32H260.62ZM340-312v-480 480Z"/></svg></span></p>
         </div>
         
         <div class="qr-section">
           <h3>{{changedText.scantopay || 'Scan to Pay'}}</h3>
           <div class="qr-placeholder">
             <img src="assets/qr-code.png" alt="Payment QR Code">
+          </div>
+          <div class="d-flex justify-content-center align-items-center gap-1">
+            <p class="m-0" #upiId>{{bankDetails.upiId}}</p>
+          <svg [cdkCopyToClipboard]="upiId.innerText" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#439400"><path d="M364.62-280q-24.32 0-40.47-16.15T308-336.62v-430.76q0-24.32 16.15-40.47T364.62-824h334.76q24.32 0 40.47 16.15T756-767.38v430.76q0 24.32-16.15 40.47T699.38-280H364.62Zm0-32h334.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93v-430.76q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H364.62q-9.24 0-16.93 7.69-7.69 7.69-7.69 16.93v430.76q0 9.24 7.69 16.93 7.69 7.69 16.93 7.69Zm-104 136q-24.32 0-40.47-16.15T204-232.61v-462.77h32v462.77q0 9.23 7.69 16.92 7.69 7.69 16.93 7.69h366.76v32H260.62ZM340-312v-480 480Z"/></svg>
           </div>
           <p>{{changedText.acceptMessage || 'Accepting UPI payments'}}</p>
         </div>
@@ -149,7 +156,7 @@
             <span>❌</span>
           }
         </div>
-        <p class="lead" style="font-family: luckiest guy, anek telugu, sans-serif;">{{ paymentMessage }}</p>
+        <p class="lead">{{ paymentMessage }}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" [ngClass]="{'btn-success': paymentStatus === 'success', 'btn-danger': paymentStatus === 'failure'}" (click)="closePaymentModal()">Close</button>

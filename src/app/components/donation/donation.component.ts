@@ -6,13 +6,15 @@ import { CommonServiceService } from '../../services/common-service.service';
 import { LoaderComponent } from "../loader/loader.component";
 import { timer, switchMap, tap, takeWhile, finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 declare var Razorpay: any;
 
 @Component({
   selector: 'app-donation',
   standalone: true,
-  imports: [CommonModule, FooterComponent, FormsModule, LoaderComponent],
+  imports: [CommonModule, FooterComponent, FormsModule, LoaderComponent, ClipboardModule],
   templateUrl: './donation.component.html',
   styleUrl: './donation.component.css'
 })
@@ -22,7 +24,8 @@ export class DonationComponent implements OnInit {
     accountName: 'May I Help You Foundation',
     accountNumber: '043711100002944',
     ifscCode: 'UBIN0804371',
-    branch: 'Proddatur Main Branch'
+    branch: 'Proddatur Main Branch',
+    upiId: '62918801@ubin'
   };
 
   selectedLanguage: any = 'english';  
@@ -41,6 +44,7 @@ export class DonationComponent implements OnInit {
         amount: 'ದಾನದ ಮೊತ್ತ',
         message: 'ಸಂದೇಶ',
         submit: 'ಪೇಮೆಂಟ್ ಮಾಡಿ',
+        submitauto: 'ಆಟೋ ಪೇಮೆಂಟ್',
         bankDetails: 'ಬ್ಯಾಂಕ್ ಖಾತೆಯ ವಿವರಗಳು',
         bankName: 'ಬ್ಯಾಂಕ್ ಹೆಸರು',
         accountName: 'ಖಾತೆ ಹೆಸರು',
@@ -87,6 +91,7 @@ paymentVerificationTimedOutMessage: 'ನಿಮ್ಮ ಪಾವತಿಯ ಸ್�
         amount: 'దాన మొత్తం',
         message: 'సందేశం',
         submit: 'పేమెంట్ చేయండి',
+        submitauto: 'Monthly ఆటో పేమెంట్',
         bankDetails: 'బ్యాంక్ ఖాతె వివరాలు',
         bankName: 'బ్యాంక్ పేరు',
         accountName: 'అకౌంటు పేరు',
@@ -134,6 +139,7 @@ paymentVerificationTimedOutMessage: 'మేము మీ చెల్లిం�
         amount: 'தானம் தொகை',
         message: 'செய்தி',
         submit: 'பணம் செலுத்த தொடரவும்',
+        submitauto: 'மாதாந்திர தானியங்கு பணம் செலுத்த',
         bankDetails: 'வங்கி கணக்கு விவரங்கள்',
         bankName: 'வங்கி பெயர்',
         accountName: 'கணக்கு பெயர்',
@@ -180,6 +186,7 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
         amount: 'दान राशि',
         message: 'संदेश',
         submit: 'भुगतान के लिए आगे बढ़ें',
+        submitauto: 'मासिक ऑटो भुगतान',
         bankDetails: 'बैंक खाता विवरण',
         bankName: 'बैंक का नाम',
         accountName: 'खाता नाम',
@@ -227,6 +234,7 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
         amount: 'Donation Amount',
         message: 'Message',
         submit: 'Proceed to payment',
+        submitauto: 'Monthly Auto Payment',
         bankDetails: 'Bank Account Details',
         bankName: 'Bank Name',
         accountName: 'Account Name',
@@ -340,9 +348,29 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
     });
   }
 
+  submitAutoDonation(event: Event) {
+    event.preventDefault();
+    if (!this.donation.amount) {
+      this.showModal('failure', 'Missing Information', 'Please enter a donation amount.');
+      return;
+    }
+    this.isLoading = true
+    this.commonService.createAutoDonation(this.donation).subscribe({
+      next: (response: any) => {
+        this.isLoading = false
+        this.openRazorpayForSubscription(response.subscription_id);
+      },
+      error: (error) => {
+        this.isLoading = false
+        console.error('Error initiating autopay donation:', error);
+        this.showModal('failure', 'Error', 'Something went wrong. Please try again later.');
+      }
+    });
+  }
+
   openRazorpay(orderData: any) {
     const options = {
-      key: 'rzp_live_T7pd8t1TXmAhLL',
+      key: environment.razorpay_id, // Public Key ID
       amount: orderData.amount,
       currency: orderData.currency,
       name: 'May I Help You Foundation',
@@ -385,6 +413,75 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
     });
     rzp.open();
   }
+
+  openRazorpayForSubscription(subscriptionId: string) {
+  const options = {
+    key: environment.razorpay_id, // Public Key ID
+    subscription_id: subscriptionId, // Mandate session identifier
+    name: 'May I Help You Foundation',
+    description: 'Monthly Automated Contribution',
+    image: '/assets/logo.png',
+    handler: (response: any) => {
+      this.zone.run(() => {
+        // Triggered automatically if authorization passes
+        this.verifySignatureOnBackend(response);
+      });
+    },
+    prefill: {
+        name: this.donation.donorName,
+        email: this.donation.email,
+        contact: this.donation.phone
+      },
+      notes: {
+        address: this.donation.city
+      },
+      theme: {
+        color: '#d31a70'
+      },
+      modal: {
+        ondismiss: () => {
+          this.zone.run(() => {
+            this.isLoading = false;
+            console.log('User closed the Razorpay modal');
+          });
+        }
+      }
+  };
+
+  const rzp = new Razorpay(options);
+  rzp.open();
+}
+
+verifySignatureOnBackend(response:any){
+  this.isLoading = true;
+ this.commonService.verifyCustomSub(response).subscribe((res:any )=> {
+    if(res.status === 'completed'){
+      this.isLoading = false;
+      const donorName = this.donation.donorName; // Store donor name before clearing
+      this.showModal('success', this.changedText.paymentSuccessTitle, this.changedText.paymentSuccessMessage.replace('${donorName}', donorName));
+      this.donation = {
+        donorName: "",
+        email: "",
+        phone: '',
+        city: '',
+        amount: '',
+        currency: "INR",
+        message: "",
+        transactionId: "",
+        paymentStatus: "pending",
+        isBloodDonor: false,
+        bloodGroup: ""
+      };
+    } else {
+      this.showModal('failure', this.changedText.paymentVerificationFailedTitle, this.changedText.paymentVerificationFailedMessage);
+    }
+  },
+  err => {
+    this.isLoading = false;
+    console.error('Error occurred while verifying custom subscription:', err);
+    this.showModal('failure', this.changedText.paymentVerificationFailedTitle, this.changedText.paymentVerificationFailedMessage);
+  });
+}
 
   showModal(status: 'success' | 'failure', title: string, message: string) {
     this.paymentStatus = status;
