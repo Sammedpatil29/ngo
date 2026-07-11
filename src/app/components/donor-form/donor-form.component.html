@@ -1,0 +1,61 @@
+<section class="donor-section">
+  <div class="donor-card">
+    <div class="donor-logo">
+      <img src="assets/logo.png" alt="Logo">
+    </div>
+    <h1 class="text-center">Become a Donor 🩸</h1>
+    <p class="donor-subtitle">Share your details and let us connect you with blood donation requests near you.</p>
+
+    <form (submit)="submitDonor($event)">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required [(ngModel)]="donor.name">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required [(ngModel)]="donor.email">
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" maxlength="10" required [(ngModel)]="donor.phone">
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" placeholder="Enter your city" required [(ngModel)]="donor.city">
+      </div>
+
+      <div class="form-group">
+        <label>Are you willing to donate blood?</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="isBloodDonor" [value]="true" [(ngModel)]="donor.isBloodDonor">
+            Yes
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="isBloodDonor" [value]="false" [(ngModel)]="donor.isBloodDonor">
+            No
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="donor.isBloodDonor">
+        <label for="bloodGroup">Blood Group</label>
+        <select id="bloodGroup" name="bloodGroup" [(ngModel)]="donor.bloodGroup" required>
+          <option value="" disabled selected>Select Blood Group</option>
+          <option *ngFor="let group of bloodGroups" [value]="group">{{ group }}</option>
+        </select>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="isLoading">
+        @if(isLoading){
+            Submiting...
+        } @else {
+            Submit
+        }
+      </button>
+    </form>
+  </div>
+</section>

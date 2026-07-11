@@ -13,6 +13,11 @@ export const routes: Routes = [
     },
     {
         path: 'donation',
+        redirectTo: 'membership-donation',
+        pathMatch: 'full'
+    },
+    {
+        path: 'membership-donation',
         loadComponent: () => import('./components/donation/donation.component').then(m => m.DonationComponent)
     },
     {
@@ -28,6 +33,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/gallery/gallery.component').then(m => m.GalleryComponent)
     },
     {
+        path: 'donor-form',
+        loadComponent: () => import('./components/donor-form/donor-form.component').then(m => m.DonorFormComponent)
+    },
+    {
         path: 'login',
         loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent),
     },
@@ -35,7 +44,7 @@ export const routes: Routes = [
         path: 'admin-layout',
         loadComponent: () => import('./components/admin-layout/admin-layout.component').then(m => m.AdminLayoutComponent),
         children: [
-            { path: '', redirectTo: 'admin-banners', pathMatch: 'full' },
+            { path: '', redirectTo: 'admin-donations', pathMatch: 'full' },
             
             {
                 path: 'admin-banners',

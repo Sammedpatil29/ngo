@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -8,7 +8,7 @@ export class CommonServiceService {
 
   constructor(private http: HttpClient) { }
 
-  url = 'https://ngo-backend-4032850793.asia-south1.run.app';
+  url = environment.apiUrl;
 
   getHomeData() {
     return this.http.get(`${this.url}/api/home`);
@@ -28,6 +28,14 @@ export class CommonServiceService {
 
   createDonation(data: any) {
     return this.http.post(`${this.url}/api/donations`, data);
+  }
+
+  createAutoDonation(params: any) {
+    return this.http.post(`${this.url}/api/donations/subscribe-custom`, params);
+  }
+
+  verifyCustomSub(res:any){
+    return this.http.post(`${this.url}/api/donations/verify-subscription`, res);
   }
 
   verifyPayment(data: any) {

@@ -1,0 +1,47 @@
+.donation-summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.donation-summary-card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 20px;
+  padding: 0.3rem 1.25rem;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summary-label {
+  color: #1b5e20;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: 0.88rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+.summary-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #e91e63;
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+.summary-meta {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 900px) {
+  .donation-summary-row {
+    grid-template-columns: 1fr;
+  }
+}

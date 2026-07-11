@@ -1,1 +1,49 @@
 <router-outlet />
+
+@if (showFeedbackModal) {
+    <div class="modal-backdrop fade show" style="background-color: rgba(0, 0, 0, 0.5);"></div>
+    <div class="modal fade show" style="display: block;" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Give Feedback</h5>
+            <button type="button" class="btn-close" (click)="closeFeedbackModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="submitFeedback()">
+              <div class="mb-3">
+                <label for="name" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="name" [(ngModel)]="newReview.name" name="name" required>
+              </div>
+              <div class="mb-3">
+                <label for="rating" class="form-label">Rating</label>
+                <select class="form-select" id="rating" [(ngModel)]="newReview.ratings" name="rating" required>
+                  @for(value of [5, 4, 3, 2, 1]; track value) {
+                    <option [value]="value">{{ value }} Star{{ value > 1 ? 's' : '' }}</option>
+                  }
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="comment" class="form-label">Comment</label>
+                <textarea class="form-control" id="comment" rows="3" [(ngModel)]="newReview.comment" name="comment" required></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeFeedbackModal()">Close</button>
+                <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+                  @if(isSubmitting){
+                    Submitting
+                  } @else {
+                    Submit
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+@if(!production) {
+    <div class="position-fixed bottom-0 fs-4 m-4 bg-success p-1" style="font-family: monospace">Pre-prod / Testing</div>
+}

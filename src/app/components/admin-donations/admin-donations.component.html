@@ -1,6 +1,32 @@
 <div class="container-fluid">
+  <div class="donation-summary-row mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+    <div class="donation-summary-card">
+      <div class="summary-label"><Span>Today</Span><small class="text-secondary">{{ metrics.today.count }} donations</small></div>
+      <div class="summary-value">₹ {{ metrics.today.amount | number:'1.0-0' }}</div>
+    </div>
+    <div class="donation-summary-card">
+       <div class="summary-label"><Span>This Week</Span><small class="text-secondary">{{ metrics.week.count }} donations</small></div>
+      <div class="summary-value">₹ {{ metrics.week.amount | number:'1.0-0' }}</div>
+    </div>
+    <div class="donation-summary-card">
+       <div class="summary-label"><Span>This Month</Span><small class="text-secondary">{{ metrics.month.count }} donations</small></div>
+      <div class="summary-value">₹ {{ metrics.month.amount | number:'1.0-0' }}</div>
+    </div>
+    <div class="donation-summary-card">
+       <div class="summary-label"><Span>This Year</Span><small class="text-secondary">{{ metrics.year.count }} donations</small></div>
+      <div class="summary-value">₹ {{ metrics.year.amount | number:'1.0-0' }}</div>
+    </div>
+    <div class="donation-summary-card">
+       <div class="summary-label"><Span>Auto Pays</Span><small class="text-secondary">{{ activeSubscriptionsCount.count }} subscriptions</small></div>
+      <div class="summary-value">₹ {{ activeSubscriptionsCount.total | number:'1.0-0' }}</div>
+    </div>
+  </div>
+
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Donations List</h2>
+    <div class="d-flex align-items-center">
+      <h2>Donations List</h2>
+      <small class="text-success ms-4">*Orders with <span style="background-color: #ffc107; color: #212529; padding: 2px 5px; border-radius: 10px;">Pending</span> status will update in 30min.</small>
+    </div>
     <div class="w-25">
       <input type="text" class="form-control" placeholder="Search by Name, City, Amount, Status..." [(ngModel)]="searchTerm" (input)="onSearch()">
     </div>
@@ -16,6 +42,7 @@
               <th scope="col">Contact</th>
               <th scope="col">City</th>
               <th scope="col">Amount</th>
+              <th scope="col">Mode</th>
               <th scope="col">Status</th>
               <th scope="col">Transaction ID</th>
               <th scope="col">Date</th>
@@ -31,17 +58,24 @@
                 </td>
                 <td>{{ donation.city }}</td>
                 <td class="fw-bold">{{ donation.currency }} {{ donation.amount }}</td>
+                <td class="fw-bold">
+                  @if(donation.transactionId[0] === 's'){
+                   <svg title="Auto Pay" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#574385"><path d="M320-280h74l23-70h124l23 70h76L520-618h-80L320-280Zm116-128 44-132 43 132h-87Zm-76-432v-80h240v80H360Zm-19.5 731.5Q275-137 226-186t-77.5-114.5Q120-366 120-440t28.5-139.5Q177-645 226-694t114.5-77.5Q406-800 480-800q62 0 119 20t107 58l56-56 56 56-56 56q38 50 58 107t20 119q0 74-28.5 139.5T734-186q-49 49-114.5 77.5T480-80q-74 0-139.5-28.5Z"/></svg>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#439400"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-20-200h80v-400H380v80h80v320Z"/></svg>
+                  }
+                </td>
                 <td>
                   @if (donation.paymentStatus === 'completed') {
                     <span class="badge bg-success rounded-pill">Completed</span>
                   } @else if (donation.paymentStatus === 'pending') {
                     <span class="badge bg-warning text-dark rounded-pill">Pending</span>
                   } @else {
-                    <span class="badge bg-danger rounded-pill">{{ donation.paymentStatus }}</span>
+                    <span class="badge bg-danger rounded-pill">{{ donation.paymentStatus | titlecase }}</span>
                   }
                 </td>
                 <td><small class="text-muted font-monospace">{{ donation.transactionId }}</small></td>
-                <td>{{ donation.createdAt | date:'mediumDate' }}</td>
+                <td>{{ donation.createdAt | date:'dd/MM/yyyy, hh:mm a' }}</td>
               </tr>
             } @empty {
               <tr>
@@ -54,3 +88,7 @@
     </div>
   </div>
 </div>
+
+@if(isLoading){
+  <app-loader></app-loader>
+}

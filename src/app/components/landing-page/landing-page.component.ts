@@ -47,6 +47,7 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   reviews: any[] = [];
   
   showFeedbackModal = false;
+  isSubmitting = false;
   newReview = { name: '', ratings: 5, comment: '', date: '', isActive: false };
 
   constructor(
@@ -56,11 +57,13 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.getHomeData();
+    this.getHomeData(true);
   }
 
-  getHomeData(){
-    this.isLoading = true;
+  getHomeData(reload: boolean = false) {
+    if(reload){
+      this.isLoading = true;
+    }
     this.commonService.getHomeData().subscribe({
       next: (response: any) => {
         this.heroSlides = response.banners;
@@ -167,12 +170,18 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   }
 
   submitFeedback() {
+    this.isSubmitting = true;
     this.adminService.aaddReview(this.newReview).subscribe({
       next: () => {
+        this.isSubmitting = false;
         alert('Thank you for your feedback!');
         this.closeFeedbackModal();
       },
-      error: (err) => console.error('Error submitting feedback:', err)
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error('Error submitting feedback:', err);
+        alert('Failed to submit feedback. Please try again later.');
+      }
     });
   }
 

@@ -8,25 +8,28 @@
           <h5 class="m-0 text-secondary">Admin Panel</h5>
         </div>
         <div class="col-12 col-md-auto">
-          <div class="dropdown">
-            <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <strong>Menu</strong>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end w-100">
-              <li><a class="dropdown-item" routerLink="admin-volunteers" routerLinkActive="active">Volunteers</a></li>
-              <li><a class="dropdown-item" routerLink="admin-banners" routerLinkActive="active">Banners</a></li>
-              <li><a class="dropdown-item" routerLink="admin-services" routerLinkActive="active">Services</a></li>
-              <li><a class="dropdown-item" routerLink="admin-members" routerLinkActive="active">Members</a></li>
-              <li><a class="dropdown-item" routerLink="admin-donors" routerLinkActive="active">Donors</a></li>
-              <li><a class="dropdown-item" routerLink="admin-donations" routerLinkActive="active">Donations</a></li>
-              <li><a class="dropdown-item" routerLink="admin-images" routerLinkActive="active">Images</a></li>
-              <li><a class="dropdown-item" routerLink="admin-media" routerLinkActive="active">Media</a></li>
-              <li><a class="dropdown-item" routerLink="admin-review" routerLinkActive="active">Reviews</a></li>
-              <!-- <li><a class="dropdown-item" routerLink="admin-donation" routerLinkActive="active">Donation</a></li> -->
-              <li><hr class="dropdown-divider"></li>
-              <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
-              <li><a class="dropdown-item" (click)="logOut()">Sign out</a></li>
-            </ul>
+          <div class="d-flex align-items-center gap-3">
+            <div id="google_translate_element"></div>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <strong>Menu</strong>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end w-100">
+                <li><a class="dropdown-item" routerLink="admin-volunteers" routerLinkActive="active">Volunteers</a></li>
+                <li><a class="dropdown-item" routerLink="admin-banners" routerLinkActive="active">Banners</a></li>
+                <li><a class="dropdown-item" routerLink="admin-services" routerLinkActive="active">Services</a></li>
+                <li><a class="dropdown-item" routerLink="admin-members" routerLinkActive="active">Members</a></li>
+                <li><a class="dropdown-item" routerLink="admin-donors" routerLinkActive="active">Donors</a></li>
+                <li><a class="dropdown-item" routerLink="admin-donations" routerLinkActive="active">Donations</a></li>
+                <li><a class="dropdown-item" routerLink="admin-images" routerLinkActive="active">Images</a></li>
+                <li><a class="dropdown-item" routerLink="admin-media" routerLinkActive="active">Media</a></li>
+                <li><a class="dropdown-item" routerLink="admin-review" routerLinkActive="active">Reviews</a></li>
+                <!-- <li><a class="dropdown-item" routerLink="admin-donation" routerLinkActive="active">Donation</a></li> -->
+                <li><hr class="dropdown-divider"></li>
+                <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
+                <li><a class="dropdown-item" (click)="logOut()">Sign out</a></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
