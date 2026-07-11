@@ -34,6 +34,10 @@ export class CommonServiceService {
     return this.http.post(`${this.url}/api/donations/subscribe-custom`, params);
   }
 
+  verifyCustomSub(res:any){
+    return this.http.post(`${this.url}/api/donations/verify-subscription`, res);
+  }
+
   verifyPayment(data: any) {
     return this.http.post(`${this.url}/api/donations/verify`, data);
   }

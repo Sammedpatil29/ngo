@@ -6,6 +6,7 @@ import { CommonServiceService } from '../../services/common-service.service';
 import { LoaderComponent } from "../loader/loader.component";
 import { timer, switchMap, tap, takeWhile, finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 declare var Razorpay: any;
 
@@ -352,16 +353,14 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
       return;
     }
     this.isLoading = true
-    let params = {
-      "customAmount": this.donation.amount
-    }
-    this.commonService.createAutoDonation(params).subscribe({
+    this.commonService.createAutoDonation(this.donation).subscribe({
       next: (response: any) => {
-        this.openRazorpayForSubscription(response.subscriptionId);
+        this.isLoading = false
+        this.openRazorpayForSubscription(response.subscription_id);
       },
       error: (error) => {
         this.isLoading = false
-        console.error('Error initiating donation:', error);
+        console.error('Error initiating autopay donation:', error);
         this.showModal('failure', 'Error', 'Something went wrong. Please try again later.');
       }
     });
@@ -369,7 +368,7 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
 
   openRazorpay(orderData: any) {
     const options = {
-      key: 'rzp_live_T7pd8t1TXmAhLL',
+      key: environment.razorpay_id, // Public Key ID
       amount: orderData.amount,
       currency: orderData.currency,
       name: 'May I Help You Foundation',
@@ -415,15 +414,16 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
 
   openRazorpayForSubscription(subscriptionId: string) {
   const options = {
-    key: 'rzp_live_TBrXkFXc7eJwDA', // Public Key ID
+    key: environment.razorpay_id, // Public Key ID
     subscription_id: subscriptionId, // Mandate session identifier
     name: 'May I Help You Foundation',
     description: 'Monthly Automated Contribution',
-    image: 'assets/logo.png',
+    image: '/assets/logo.png',
     handler: (response: any) => {
-      // Triggered automatically if authorization passes
-      // this.verifySignatureOnBackend(response);
-      alert('Subscription payment successful! Payment ID: ' + response.razorpay_payment_id);
+      this.zone.run(() => {
+        // Triggered automatically if authorization passes
+        this.verifySignatureOnBackend(response);
+      });
     },
     prefill: {
         name: this.donation.donorName,
@@ -436,10 +436,49 @@ paymentVerificationTimedOutMessage: 'உங்கள் பணம் செல�
       theme: {
         color: '#d31a70'
       },
+      modal: {
+        ondismiss: () => {
+          this.zone.run(() => {
+            this.isLoading = false;
+            console.log('User closed the Razorpay modal');
+          });
+        }
+      }
   };
 
   const rzp = new Razorpay(options);
   rzp.open();
+}
+
+verifySignatureOnBackend(response:any){
+  this.isLoading = true;
+ this.commonService.verifyCustomSub(response).subscribe((res:any )=> {
+    if(res.status === 'completed'){
+      this.isLoading = false;
+      const donorName = this.donation.donorName; // Store donor name before clearing
+      this.showModal('success', this.changedText.paymentSuccessTitle, this.changedText.paymentSuccessMessage.replace('${donorName}', donorName));
+      this.donation = {
+        donorName: "",
+        email: "",
+        phone: '',
+        city: '',
+        amount: '',
+        currency: "INR",
+        message: "",
+        transactionId: "",
+        paymentStatus: "pending",
+        isBloodDonor: false,
+        bloodGroup: ""
+      };
+    } else {
+      this.showModal('failure', this.changedText.paymentVerificationFailedTitle, this.changedText.paymentVerificationFailedMessage);
+    }
+  },
+  err => {
+    this.isLoading = false;
+    console.error('Error occurred while verifying custom subscription:', err);
+    this.showModal('failure', this.changedText.paymentVerificationFailedTitle, this.changedText.paymentVerificationFailedMessage);
+  });
 }
 
   showModal(status: 'success' | 'failure', title: string, message: string) {

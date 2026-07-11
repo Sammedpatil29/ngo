@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { AdminServiceService } from './services/admin-service.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ export class AppComponent implements OnInit {
   showFeedbackModal = false;
   isSubmitting = false;
   newReview = { name: '', ratings: 5, comment: '', date: '', isActive: false };
-
+  production = environment.production;
   constructor(private adminService: AdminServiceService, private router: Router){}
 
   ngOnInit() {

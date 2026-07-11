@@ -15,6 +15,7 @@ export class AdminDonationsComponent implements OnInit {
   donations: any[] = [];
   filteredDonations: any[] = [];
   searchTerm: string = '';
+  activeSubscriptionsCount: any = { count: 0, total: 0 };
   metrics = {
     today: { amount: 0, count: 0 },
     week: { amount: 0, count: 0 },
@@ -38,6 +39,7 @@ export class AdminDonationsComponent implements OnInit {
       next: (response: any) => {
         this.isLoading = false
         this.donations = response.donations;
+        this.activeSubscriptionsCount = response.razorpayStats.activeSubscriptions;
         this.filteredDonations = response.donations;
         this.metrics.today.amount = response.razorpayStats.today.total
         this.metrics.today.count = response.razorpayStats.today.count
