@@ -7,13 +7,14 @@ import { LoaderComponent } from "../loader/loader.component";
 import { timer, switchMap, tap, takeWhile, finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 declare var Razorpay: any;
 
 @Component({
   selector: 'app-donation',
   standalone: true,
-  imports: [CommonModule, FooterComponent, FormsModule, LoaderComponent],
+  imports: [CommonModule, FooterComponent, FormsModule, LoaderComponent, ClipboardModule],
   templateUrl: './donation.component.html',
   styleUrl: './donation.component.css'
 })
@@ -23,7 +24,8 @@ export class DonationComponent implements OnInit {
     accountName: 'May I Help You Foundation',
     accountNumber: '043711100002944',
     ifscCode: 'UBIN0804371',
-    branch: 'Proddatur Main Branch'
+    branch: 'Proddatur Main Branch',
+    upiId: '62918801@ubin'
   };
 
   selectedLanguage: any = 'english';  
