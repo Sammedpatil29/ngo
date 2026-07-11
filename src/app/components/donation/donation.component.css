@@ -354,3 +354,7 @@ h2 {
   border-radius: 50px; /* Capsule shape */
 }
 
+svg:hover {
+  filter: grayscale(100%);
+  cursor: pointer
+}
