@@ -1,8 +1,9 @@
 <div class="container-fluid">
   <div class="donation-summary-row mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
     <div class="donation-summary-card">
-      <div class="summary-label"><Span>Today</Span><small class="text-secondary">{{ metrics.today.count }} donations</small></div>
-      <div class="summary-value">₹ {{ metrics.today.amount | number:'1.0-0' }}</div>
+      <div class="summary-label"><Span>Today/hold</Span><small class="text-secondary">{{ metrics.today.count }} donations</small></div>
+  
+      <div class="summary-value">₹ {{ metrics.today.amount | number:'1.0-0' }} / ₹ {{ donationsRes.razorpayStats.balance | number:'1.0-0' }}</div>
     </div>
     <div class="donation-summary-card">
        <div class="summary-label"><Span>This Week</Span><small class="text-secondary">{{ metrics.week.count }} donations</small></div>
@@ -17,7 +18,7 @@
       <div class="summary-value">₹ {{ metrics.year.amount | number:'1.0-0' }}</div>
     </div>
     <div class="donation-summary-card">
-       <div class="summary-label"><Span>Auto Pays</Span><small class="text-secondary">{{ activeSubscriptionsCount.count }} subscriptions</small></div>
+       <div class="summary-label"><Span>Auto Pay</Span><small class="text-secondary">{{ activeSubscriptionsCount.count }} subscriptions</small></div>
       <div class="summary-value">₹ {{ activeSubscriptionsCount.total | number:'1.0-0' }}</div>
     </div>
   </div>
