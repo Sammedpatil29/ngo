@@ -3,7 +3,7 @@
     <div class="donation-summary-card">
       <div class="summary-label"><Span>Today/hold</Span><small class="text-secondary">{{ metrics.today.count }} donations</small></div>
   
-      <div class="summary-value">₹ {{ metrics.today.amount | number:'1.0-0' }} / ₹ {{ donationsRes.razorpayStats.balance | number:'1.0-0' }}</div>
+      <div class="summary-value">₹ {{ metrics.today.amount | number:'1.0-0' }} / ₹ {{ donationsRes?.razorpayStats?.balance || 0 | number:'1.0-0' }}</div>
     </div>
     <div class="donation-summary-card">
        <div class="summary-label"><Span>This Week</Span><small class="text-secondary">{{ metrics.week.count }} donations</small></div>
