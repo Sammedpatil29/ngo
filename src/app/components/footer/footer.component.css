@@ -56,3 +56,12 @@
   font-size: 0.9rem;
   color: #888;
 }
+
+.admin-login {
+  cursor: pointer;
+  background-color: var(--primary);
+  border-radius: 5px;
+  padding: 3px 10px;
+  width: fit-content;
+  color: white;
+}
