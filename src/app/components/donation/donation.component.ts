@@ -140,7 +140,7 @@ export class DonationComponent implements OnInit {
       currency: orderData.currency,
       name: 'May I Help You Foundation',
       description: 'Donation',
-      image: '/assets/logo.png',
+      image: '/assets/ngologo.avif',
       order_id: orderData.orderId,
       handler: (response: any) => {
         this.zone.run(() => {
@@ -185,7 +185,7 @@ export class DonationComponent implements OnInit {
     subscription_id: subscriptionId, // Mandate session identifier
     name: 'May I Help You Foundation',
     description: 'Monthly Automated Contribution',
-    image: '/assets/logo.png',
+    image: '/assets/ngologo.avif',
     handler: (response: any) => {
       this.zone.run(() => {
         // Triggered automatically if authorization passes
