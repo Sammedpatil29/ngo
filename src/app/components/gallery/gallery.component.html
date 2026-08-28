@@ -53,21 +53,31 @@
 
     <!-- Lightbox Modal -->
     @if (viewingImage) {
-      <div class="modal-backdrop fade show" style="background-color: rgba(0, 0, 0, 0.9); z-index: 1040;"></div>
-      <div class="modal fade show d-block" tabindex="-1" style="z-index: 1050; display: flex !important; align-items: center; justify-content: center;" (click)="closeLightbox()">
-        <div class="modal-dialog modal-xl position-relative w-100" style="max-width: 90vw;" (click)="$event.stopPropagation()">
-          <button type="button" class="btn-close position-absolute top-0 end-0 m-3" style="z-index: 1060; filter: invert(1) grayscale(100%) brightness(200%);" aria-label="Close" (click)="closeLightbox()"></button>
+      <div class="lightbox-backdrop" (click)="closeLightbox()"></div>
+      <div class="lightbox-overlay" (click)="closeLightbox()">
+        
+        <!-- Close Button - fixed to viewport top-right -->
+        <button type="button" class="lightbox-close-btn" aria-label="Close" (click)="closeLightbox(); $event.stopPropagation()">
+          &times;
+        </button>
+
+        <div class="lightbox-dialog" (click)="$event.stopPropagation()">
+          <!-- Previous Button -->
+          <button type="button" class="lightbox-nav-btn lightbox-prev" aria-label="Previous" (click)="prevImage(); $event.stopPropagation()">
+            &#10094;
+          </button>
           
-          <button class="btn btn-link text-white position-absolute top-50 start-0 translate-middle-y ms-2 text-decoration-none" style="z-index: 1060; font-size: 3rem;" (click)="prevImage()">&#10094;</button>
-          
-          <div class="modal-content bg-transparent border-0 text-center">
-            <img [src]="viewingImage.url" [alt]="viewingImage.place" class="img-fluid mx-auto shadow-lg" style="max-height: 85vh; object-fit: contain;">
+          <div class="lightbox-content">
+            <img [src]="viewingImage.url" [alt]="viewingImage.place" class="lightbox-img">
             @if (viewingImage.place) {
-              <div class="text-white mt-3 fs-5">{{ viewingImage.place }}</div>
+              <div class="lightbox-caption">{{ viewingImage.place }}</div>
             }
           </div>
           
-          <button class="btn btn-link text-white position-absolute top-50 end-0 translate-middle-y me-2 text-decoration-none" style="z-index: 1060; font-size: 3rem;" (click)="nextImage()">&#10095;</button>
+          <!-- Next Button -->
+          <button type="button" class="lightbox-nav-btn lightbox-next" aria-label="Next" (click)="nextImage(); $event.stopPropagation()">
+            &#10095;
+          </button>
         </div>
       </div>
     }
