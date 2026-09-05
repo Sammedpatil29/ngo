@@ -97,9 +97,11 @@
             <button type="submit" class="donate-btn" [disabled]="!donationForm.valid">
               {{changedText.submit || 'One time Pay'}}
             </button>
-            <button type="button" (click)="submitAutoDonation($event)" class="donate-btn autopay-btn" [disabled]="!donationForm.valid">
-              {{changedText.submitauto || 'Monthly Auto-Pay'}}
-            </button>
+            @if (isTestAutoPayNumber()) {
+              <button type="button" (click)="submitAutoDonation($event)" class="donate-btn autopay-btn" [disabled]="!donationForm.valid">
+                {{changedText.submitauto || 'Monthly Auto-Pay'}}
+              </button>
+            }
           </div>
           </fieldset>
         </form>
