@@ -231,16 +231,22 @@ export class DonationComponent implements OnInit {
 
   openRazorpayForSubscription(subData: any) {
     const razorpayKey = subData.keyId || environment.razorpay_id;
+    const subscriptionId = subData.subscription_id;
 
     const options = {
       key: razorpayKey,
-      subscription_id: subData.subscription_id,
+      subscription_id: subscriptionId,
       name: 'May I Help You Foundation',
       description: 'Monthly Automated Contribution',
       image: '/assets/ngologo.avif',
       handler: (response: any) => {
         this.zone.run(() => {
-          this.verifySignatureOnBackend(response);
+          const payload = {
+            razorpay_payment_id: response?.razorpay_payment_id || response?.payment_id,
+            razorpay_subscription_id: response?.razorpay_subscription_id || response?.subscription_id || subscriptionId,
+            razorpay_signature: response?.razorpay_signature || response?.signature
+          };
+          this.verifySignatureOnBackend(payload);
         });
       },
       prefill: {
@@ -265,6 +271,17 @@ export class DonationComponent implements OnInit {
 
     try {
       const rzp = new Razorpay(options);
+      rzp.on('payment.failed', (response: any) => {
+        this.zone.run(() => {
+          this.isLoading = false;
+          console.error('Subscription mandate authorization failed:', response.error);
+          this.showModal(
+            'failure',
+            this.changedText?.paymentFailedTitle || 'Payment Failed',
+            response?.error?.description || this.changedText?.paymentFailedMessage || 'Your subscription mandate could not be processed.'
+          );
+        });
+      });
       rzp.open();
     } catch (e: any) {
       this.isLoading = false;
