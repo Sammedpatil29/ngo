@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -11,10 +11,26 @@ import { CommonModule } from '@angular/common';
 })
 export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
 
+  sidebarOpen = false;
+  logoutConfirmVisible = false;
+
   constructor(private router: Router) { }
 
   ngAfterViewInit(): void {
     // this.addGoogleTranslateScript();
+  }
+
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeSidebar();
   }
 
   addGoogleTranslateScript() {
@@ -40,7 +56,16 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
     document.body.appendChild(script);
   }
 
+  showLogoutConfirm(): void {
+    this.logoutConfirmVisible = true;
+  }
+
+  cancelLogout(): void {
+    this.logoutConfirmVisible = false;
+  }
+
   logOut() {
+    this.logoutConfirmVisible = false;
     sessionStorage.removeItem('adminToken');
     this.router.navigate(['/login']);
   }

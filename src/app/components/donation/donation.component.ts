@@ -4,11 +4,10 @@ import { FooterComponent } from '../footer/footer.component';
 import { FormsModule } from '@angular/forms';
 import { CommonServiceService } from '../../services/common-service.service';
 import { LoaderComponent } from "../loader/loader.component";
-import { timer, switchMap, tap, takeWhile, finalize } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import  languages  from '../../../assets/lang.json'
+import languages from '../../../assets/lang.json';
 
 declare var Razorpay: any;
 
@@ -30,13 +29,10 @@ export class DonationComponent implements OnInit {
     upiId: '62918801@ubin'
   };
 
-  selectedLanguage: any = 'english';  
-
+  selectedLanguage: any = 'english';
   changedText: any;
-
-  isLoading: boolean = false
-
-  languages:any = {}
+  isLoading: boolean = false;
+  languages: any = {};
 
   donation = {
     donorName: "",
@@ -57,89 +53,133 @@ export class DonationComponent implements OnInit {
   paymentTitle = '';
   paymentMessage = '';
 
-  constructor(private commonService: CommonServiceService, private zone: NgZone, private route: ActivatedRoute, private router: Router) {
+  constructor(
+    private commonService: CommonServiceService,
+    private zone: NgZone,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
     this.languages = languages;
   }
 
+  isTestAutoPayNumber(): boolean {
+    const cleaned = (this.donation.phone || '').toString().trim().replace(/[^0-9]/g, '');
+    return cleaned.endsWith('9591420068');
+  }
+
   ngOnInit(): void {
-    this.changedText = this.languages[this.selectedLanguage]; // Initialize with default language
-    this.loadRazorpayScript();
+    this.changedText = this.languages[this.selectedLanguage] || this.languages['english'];
+    this.ensureRazorpayScriptLoaded();
+
     this.route.queryParams.subscribe(params => {
       const lang = params['lang'];
       if (lang && this.languages[lang]) {
         this.selectedLanguage = lang;
         this.changedText = this.languages[this.selectedLanguage];
       } else {
-        this.selectedLanguage = 'english'; // Default to English if no valid lang param
+        this.selectedLanguage = 'english';
       }
     });
   }
 
-  loadRazorpayScript() {
-    if (!document.getElementById('razorpay-script')) {
+  ensureRazorpayScriptLoaded(): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (typeof Razorpay !== 'undefined') {
+        resolve(true);
+        return;
+      }
+      const existingScript = document.getElementById('razorpay-script');
+      if (existingScript) {
+        existingScript.onload = () => resolve(true);
+        existingScript.onerror = () => resolve(false);
+        return;
+      }
       const script = document.createElement('script');
       script.id = 'razorpay-script';
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => {
+        console.error('Failed to load Razorpay SDK script');
+        resolve(false);
+      };
       document.body.appendChild(script);
-    }
-  }
-
-  changeLanguage(){
-    this.changedText = this.languages[this.selectedLanguage]
-    this.router.navigate([], {
-      queryParams: {
-        lang: this.selectedLanguage
-      },
-      queryParamsHandling: 'merge' // 'merge' keeps existing query params, 'preserve' keeps old ones completely, default replaces them
     });
   }
 
-  submitDonation(event: Event) {
+  changeLanguage() {
+    this.changedText = this.languages[this.selectedLanguage];
+    this.router.navigate([], {
+      queryParams: { lang: this.selectedLanguage },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  async submitDonation(event: Event) {
     event.preventDefault();
-    if (!this.donation.amount) {
-      this.showModal('failure', 'Missing Information', 'Please enter a donation amount.');
+    if (!this.donation.amount || parseFloat(this.donation.amount) <= 0) {
+      this.showModal('failure', 'Missing Information', 'Please enter a valid donation amount.');
       return;
     }
-    this.isLoading = true
+
+    this.isLoading = true;
+    const scriptLoaded = await this.ensureRazorpayScriptLoaded();
+    if (!scriptLoaded) {
+      this.isLoading = false;
+      this.showModal('failure', 'Network Error', 'Could not load payment gateway. Please check your internet connection.');
+      return;
+    }
+
     this.commonService.createDonation(this.donation).subscribe({
       next: (response: any) => {
         this.openRazorpay(response);
       },
       error: (error) => {
-        this.isLoading = false
-        console.error('Error initiating donation:', error);
-        this.showModal('failure', 'Error', 'Something went wrong. Please try again later.');
+        this.isLoading = false;
+        console.error('Error initiating donation order:', error);
+        const errMsg = error?.error?.error || 'Something went wrong while initiating donation. Please try again.';
+        this.showModal('failure', 'Error', errMsg);
       }
     });
   }
 
-  submitAutoDonation(event: Event) {
+  async submitAutoDonation(event: Event) {
     event.preventDefault();
-    if (!this.donation.amount) {
-      this.showModal('failure', 'Missing Information', 'Please enter a donation amount.');
+    if (!this.donation.amount || parseFloat(this.donation.amount) <= 0) {
+      this.showModal('failure', 'Missing Information', 'Please enter a valid donation amount.');
       return;
     }
-    this.isLoading = true
+
+    this.isLoading = true;
+    const scriptLoaded = await this.ensureRazorpayScriptLoaded();
+    if (!scriptLoaded) {
+      this.isLoading = false;
+      this.showModal('failure', 'Network Error', 'Could not load payment gateway. Please check your internet connection.');
+      return;
+    }
+
     this.commonService.createAutoDonation(this.donation).subscribe({
       next: (response: any) => {
-        this.isLoading = false
-        this.openRazorpayForSubscription(response.subscription_id);
+        this.openRazorpayForSubscription(response);
       },
       error: (error) => {
-        this.isLoading = false
-        console.error('Error initiating autopay donation:', error);
-        this.showModal('failure', 'Error', 'Something went wrong. Please try again later.');
+        this.isLoading = false;
+        console.error('Error initiating autopay subscription:', error);
+        const errMsg = error?.error?.error || 'Something went wrong while creating recurring donation. Please try again.';
+        this.showModal('failure', 'Error', errMsg);
       }
     });
   }
 
   openRazorpay(orderData: any) {
+    const razorpayKey = orderData.keyId || environment.razorpay_id;
+
     const options = {
-      key: environment.razorpay_id, // Public Key ID
+      key: razorpayKey,
       amount: orderData.amount,
-      currency: orderData.currency,
+      currency: orderData.currency || 'INR',
       name: 'May I Help You Foundation',
-      description: 'Donation',
+      description: 'Donation Contribution',
       image: '/assets/ngologo.avif',
       order_id: orderData.orderId,
       handler: (response: any) => {
@@ -153,7 +193,8 @@ export class DonationComponent implements OnInit {
         contact: this.donation.phone
       },
       notes: {
-        address: this.donation.city
+        city: this.donation.city,
+        isBloodDonor: this.donation.isBloodDonor ? 'Yes' : 'No'
       },
       theme: {
         color: '#d31a70'
@@ -162,43 +203,53 @@ export class DonationComponent implements OnInit {
         ondismiss: () => {
           this.zone.run(() => {
             this.isLoading = false;
-            console.log('User closed the Razorpay modal');
           });
         }
       }
     };
 
-    const rzp = new Razorpay(options);
-    rzp.on('payment.failed', (response: any) => {
-      this.zone.run(() => {
-        console.error('Payment failed:', response.error);
-        this.showModal('failure', this.changedText.paymentFailedTitle, this.changedText.paymentFailedMessage);
-        this.isLoading = false;
+    try {
+      const rzp = new Razorpay(options);
+      rzp.on('payment.failed', (response: any) => {
+        this.zone.run(() => {
+          this.isLoading = false;
+          console.error('Payment failed at checkout:', response.error);
+          this.showModal(
+            'failure',
+            this.changedText?.paymentFailedTitle || 'Payment Failed',
+            response?.error?.description || this.changedText?.paymentFailedMessage || 'Your payment could not be processed.'
+          );
+        });
       });
-    });
-    rzp.open();
+      rzp.open();
+    } catch (e: any) {
+      this.isLoading = false;
+      console.error('Failed to open Razorpay modal:', e);
+      this.showModal('failure', 'Gateway Error', 'Failed to initialize payment gateway.');
+    }
   }
 
-  openRazorpayForSubscription(subscriptionId: string) {
-  const options = {
-    key: environment.razorpay_id, // Public Key ID
-    subscription_id: subscriptionId, // Mandate session identifier
-    name: 'May I Help You Foundation',
-    description: 'Monthly Automated Contribution',
-    image: '/assets/ngologo.avif',
-    handler: (response: any) => {
-      this.zone.run(() => {
-        // Triggered automatically if authorization passes
-        this.verifySignatureOnBackend(response);
-      });
-    },
-    prefill: {
+  openRazorpayForSubscription(subData: any) {
+    const razorpayKey = subData.keyId || environment.razorpay_id;
+
+    const options = {
+      key: razorpayKey,
+      subscription_id: subData.subscription_id,
+      name: 'May I Help You Foundation',
+      description: 'Monthly Automated Contribution',
+      image: '/assets/ngologo.avif',
+      handler: (response: any) => {
+        this.zone.run(() => {
+          this.verifySignatureOnBackend(response);
+        });
+      },
+      prefill: {
         name: this.donation.donorName,
         email: this.donation.email,
         contact: this.donation.phone
       },
       notes: {
-        address: this.donation.city
+        city: this.donation.city
       },
       theme: {
         color: '#d31a70'
@@ -207,46 +258,100 @@ export class DonationComponent implements OnInit {
         ondismiss: () => {
           this.zone.run(() => {
             this.isLoading = false;
-            console.log('User closed the Razorpay modal');
           });
         }
       }
-  };
+    };
 
-  const rzp = new Razorpay(options);
-  rzp.open();
-}
-
-verifySignatureOnBackend(response:any){
-  this.isLoading = true;
- this.commonService.verifyCustomSub(response).subscribe((res:any )=> {
-    if(res.status === 'completed'){
+    try {
+      const rzp = new Razorpay(options);
+      rzp.open();
+    } catch (e: any) {
       this.isLoading = false;
-      const donorName = this.donation.donorName; // Store donor name before clearing
-      this.showModal('success', this.changedText.paymentSuccessTitle, this.changedText.paymentSuccessMessage.replace('${donorName}', donorName));
-      this.donation = {
-        donorName: "",
-        email: "",
-        phone: '',
-        city: '',
-        amount: '',
-        currency: "INR",
-        message: "",
-        transactionId: "",
-        paymentStatus: "pending",
-        isBloodDonor: false,
-        bloodGroup: ""
-      };
-    } else {
-      this.showModal('failure', this.changedText.paymentVerificationFailedTitle, this.changedText.paymentVerificationFailedMessage);
+      console.error('Failed to open Razorpay subscription modal:', e);
+      this.showModal('failure', 'Gateway Error', 'Failed to initialize subscription modal.');
     }
-  },
-  err => {
-    this.isLoading = false;
-    console.error('Error occurred while verifying custom subscription:', err);
-    this.showModal('failure', this.changedText.paymentVerificationFailedTitle, this.changedText.paymentVerificationFailedMessage);
-  });
-}
+  }
+
+  verifyPayment(paymentResponse: any) {
+    this.isLoading = true;
+    const currentDonorName = this.donation.donorName || 'Generous Supporter';
+
+    this.commonService.verifyPayment(paymentResponse).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        if (response && response.status === 'success') {
+          const successMsg = (this.changedText?.paymentSuccessMessage || 'Thank you for your generous donation, ${donorName}!')
+            .replace('${donorName}', currentDonorName);
+          this.showModal('success', this.changedText?.paymentSuccessTitle || 'Payment Successful!', successMsg);
+          this.resetDonationForm();
+        } else {
+          this.showModal(
+            'failure',
+            this.changedText?.paymentVerificationFailedTitle || 'Verification Failed',
+            response?.message || this.changedText?.paymentVerificationFailedMessage || 'Payment verification failed.'
+          );
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Payment verification error:', error);
+        this.showModal(
+          'failure',
+          this.changedText?.paymentVerificationFailedTitle || 'Verification Failed',
+          error?.error?.message || this.changedText?.paymentVerificationFailedMessage || 'Payment verification could not be completed.'
+        );
+      }
+    });
+  }
+
+  verifySignatureOnBackend(response: any) {
+    this.isLoading = true;
+    const currentDonorName = this.donation.donorName || 'Generous Supporter';
+
+    this.commonService.verifyCustomSub(response).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        if (res && (res.valid || res.status === 'completed')) {
+          const successMsg = (this.changedText?.paymentSuccessMessage || 'Thank you for your monthly support, ${donorName}!')
+            .replace('${donorName}', currentDonorName);
+          this.showModal('success', this.changedText?.paymentSuccessTitle || 'Subscription Active!', successMsg);
+          this.resetDonationForm();
+        } else {
+          this.showModal(
+            'failure',
+            this.changedText?.paymentVerificationFailedTitle || 'Verification Failed',
+            res?.message || this.changedText?.paymentVerificationFailedMessage || 'Subscription verification failed.'
+          );
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error verifying subscription:', err);
+        this.showModal(
+          'failure',
+          this.changedText?.paymentVerificationFailedTitle || 'Verification Failed',
+          err?.error?.message || this.changedText?.paymentVerificationFailedMessage || 'Subscription verification failed.'
+        );
+      }
+    });
+  }
+
+  resetDonationForm() {
+    this.donation = {
+      donorName: "",
+      email: "",
+      phone: '',
+      city: '',
+      amount: '',
+      currency: "INR",
+      message: "",
+      transactionId: "",
+      paymentStatus: "pending",
+      isBloodDonor: false,
+      bloodGroup: ""
+    };
+  }
 
   showModal(status: 'success' | 'failure', title: string, message: string) {
     this.paymentStatus = status;
@@ -259,82 +364,28 @@ verifySignatureOnBackend(response:any){
     this.showPaymentModal = false;
   }
 
-  verifyPayment(paymentResponse: any) {
-     this.isLoading = true;
-
-    const MAX_RETRIES = 5;
-    const RETRY_INTERVAL_MS = 3000; // 3 seconds
-
-    let attempt = 0;
-
-    timer(0, RETRY_INTERVAL_MS).pipe(
-      tap(() => attempt++),
-      switchMap(() => this.commonService.verifyPayment(paymentResponse)),
-      tap((response: any) => {
-        // Assuming the response has a 'status' field, e.g., { status: 'success' | 'failure' | 'pending' }
-        if (response.status === 'success') {
-          this.isLoading = false;
-          this.showModal('success', this.changedText.paymentSuccessTitle, this.changedText.paymentSuccessMessage.replace('${donorName}', this.donation.donorName));
-          this.donation = {
-            donorName: "",
-            email: "",
-            phone: '',
-            city: '',
-            amount: '',
-            currency: "INR",
-            message: "",
-            transactionId: "",
-            paymentStatus: "pending",
-            isBloodDonor: false,
-            bloodGroup: ""
-          };
-        } else if (response.status === 'failure') {
-          this.isLoading = false;
-          console.error('Payment verification failed with status: failure', response);
-          this.showModal('failure', this.changedText.paymentVerificationFailedTitle, this.changedText.paymentVerificationFailedMessage);
-        }
-      }),
-      takeWhile((response: any) => response.status === 'pending' && attempt < MAX_RETRIES, true),
-      finalize(() => {
-        if (this.isLoading) { // If still loading, it means polling timed out
-          this.isLoading = false;
-          this.showModal('failure', this.changedText.paymentVerificationTimedOutTitle, this.changedText.paymentVerificationTimedOutMessage);
-        }
-      })
-    ).subscribe();
-  }
-
   checkPhone(phone: string) {
-  if (phone.length === 10) {
-    this.isLoading = true
-    this.commonService.donorByPhone(phone).subscribe({
-      next: (data: any) => {
-        this.isLoading = false
-        if (data) {
-          this.donation.donorName = data.donorName || '';
-          this.donation.email = data.email || '';
-          this.donation.city = data.city || '';
-          this.donation.isBloodDonor = data.isBloodDonor || false;
-          this.donation.bloodGroup = data.bloodGroup || '';
-          this.donation.amount = data.amount || '';
+    if (phone && phone.length === 10) {
+      this.isLoading = true;
+      this.commonService.donorByPhone(phone).subscribe({
+        next: (data: any) => {
+          this.isLoading = false;
+          if (data) {
+            this.donation.donorName = data.donorName || '';
+            this.donation.email = data.email || '';
+            this.donation.city = data.city || '';
+            this.donation.isBloodDonor = data.isBloodDonor || false;
+            this.donation.bloodGroup = data.bloodGroup || '';
+          }
+        },
+        error: () => {
+          this.isLoading = false;
         }
-      },
-      error: (err) => {
-        this.isLoading = false
-        console.log('Donor not found or error:', err);
-        this.donation.donorName =  '';
-          this.donation.email = '';
-          this.donation.city = '';
-          this.donation.isBloodDonor = false;
-          this.donation.bloodGroup = '';
-          this.donation.amount = '';
-      }
-    });
+      });
+    }
   }
-}
 
-gotoHome(){
-  this.router.navigate(['/home'])
-}
-
+  gotoHome() {
+    this.router.navigate(['/home']);
+  }
 }
