@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
 
   sidebarOpen = false;
+  logoutConfirmVisible = false;
 
   constructor(private router: Router) { }
 
@@ -55,7 +56,16 @@ export class AdminLayoutComponent implements AfterViewInit, OnDestroy {
     document.body.appendChild(script);
   }
 
+  showLogoutConfirm(): void {
+    this.logoutConfirmVisible = true;
+  }
+
+  cancelLogout(): void {
+    this.logoutConfirmVisible = false;
+  }
+
   logOut() {
+    this.logoutConfirmVisible = false;
     sessionStorage.removeItem('adminToken');
     this.router.navigate(['/login']);
   }

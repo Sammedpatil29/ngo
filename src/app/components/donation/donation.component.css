@@ -81,7 +81,7 @@
 
 .action-buttons {
   display: flex;
-  gap: 5px;
+  gap: 12px;
 }
 
 @media (max-width: 768px) {
@@ -237,7 +237,20 @@ h2 {
 
 .donate-btn:hover:not(:disabled) {
   background-color: var(--accent);
-  /* box-shadow: var(--neon-shadow); */
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.autopay-btn {
+  background-color: #1b5e20;
+  border: 2px solid #1b5e20;
+}
+
+.autopay-btn:hover:not(:disabled) {
+  background-color: #144618;
+  border-color: #144618;
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
 /* Payment Details Styles */
