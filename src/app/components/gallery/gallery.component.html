@@ -6,82 +6,125 @@
 </header>
 
 @if(!isLoading) {
-<section class="gallery-section">
-  <!-- Sticky Category Header -->
-  <div class="sticky-top bg-white py-3 shadow-sm mb-3 z-2">
-    <div class="container">
-      <div class="d-flex overflow-auto align-items-center no-scrollbar">
-        <div class="d-flex flex-nowrap gap-3">
-        @for (cat of categories; track cat.id) {
-          <div class="category-card" 
-            [class.selected]="selectedCategory?.id === cat.id"
-            (click)="selectCategory(cat)">
-            <img [src]="cat.url" [alt]="cat.name">
-            <div class="category-name">{{ cat.name }}</div>
-          </div>
-        }
-      </div>
+<section class="gallery-section py-5">
+  <div class="container">
+    <div class="section-heading text-center mb-5">
+      <span class="badge-tag">Photo Albums</span>
+      <h2 class="section-title">Explore Our Impact By Category</h2>
+      <p class="section-subtitle">Click on any album to view all event photos</p>
     </div>
+
+    <!-- Category Albums Grid -->
+    <div class="categories-grid">
+      @for (cat of categories; track cat.id) {
+        <div class="category-album-card" (click)="openCategory(cat)" role="button" tabindex="0">
+          <div class="album-img-wrapper">
+            <img [src]="cat.url || 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800'" [alt]="cat.name" class="album-img">
+            <div class="album-hover-overlay">
+              <span class="view-album-btn">
+                <i class="bi bi-images me-1"></i> View Album
+              </span>
+            </div>
+            <span class="photo-count-badge">
+              <i class="bi bi-camera-fill me-1"></i> {{ getActiveImagesCount(cat) }} Photos
+            </span>
+          </div>
+          <div class="album-info">
+            <h3 class="album-title">{{ cat.name }}</h3>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-gallery-msg text-center py-5">
+          <p class="text-muted fs-5">No gallery albums available at the moment.</p>
+        </div>
+      }
     </div>
   </div>
 
-  <div class="container">
-    @if (selectedCategory) {
-      <div class="mb-4">
-        <h2 class="text-primary">{{ selectedCategory.name }}</h2>
-      </div>
+  <!-- Category Album Popup Modal -->
+  @if (activeCategoryModal) {
+    <div class="category-modal-backdrop" (click)="closeCategoryModal()"></div>
+    <div class="category-modal-overlay" (click)="closeCategoryModal()">
+      <div class="category-modal-dialog" (click)="$event.stopPropagation()">
+        
+        <!-- Modal Header -->
+        <div class="category-modal-header">
+          <div class="modal-header-info">
+            <div>
+              <h3 class="modal-category-title">{{ activeCategoryModal.name }}</h3>
+              <span class="modal-category-subtitle">{{ activeImages.length }} Photos in this album</span>
+            </div>
+          </div>
+          <button type="button" class="category-modal-close" aria-label="Close" (click)="closeCategoryModal()">
+            &times;
+          </button>
+        </div>
 
-      <div class="gallery-grid">
-        @for (img of selectedCategory.images; track img.id) {
-          @if (img.isActive) {
-            <div class="gallery-card" (click)="openLightbox(img)" style="cursor: pointer;">
-              <div class="gallery-img">
-                <img [src]="img.url" [alt]="img.place">
-              </div>
-              <div class="gallery-info">
-                <h4>{{ img.place }}</h4>
-              </div>
+        <!-- Modal Body: Image Grid -->
+        <div class="category-modal-body">
+          @if (activeImages.length > 0) {
+            <div class="modal-images-grid">
+              @for (img of activeImages; track img.id) {
+                <div class="modal-image-card" (click)="openLightbox(img)">
+                  <div class="modal-img-container">
+                    <img [src]="img.url" [alt]="img.place" loading="lazy" class="modal-img">
+                    <div class="modal-img-hover-overlay">
+                      <i class="bi bi-arrows-fullscreen"></i>
+                    </div>
+                  </div>
+                  @if (img.place) {
+                    <div class="modal-image-caption">
+                      <span>{{ img.place }}</span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty-album text-center py-5">
+              <i class="bi bi-image fs-1 text-muted d-block mb-3"></i>
+              <p class="text-muted mb-0">No photos available in this album yet.</p>
             </div>
           }
-        } @empty {
-          <div class="text-center w-100 py-5">
-            <p class="text-muted">No images available in this category.</p>
-          </div>
-        }
+        </div>
       </div>
-    }
+    </div>
+  }
 
-    <!-- Lightbox Modal -->
-    @if (viewingImage) {
-      <div class="lightbox-backdrop" (click)="closeLightbox()"></div>
-      <div class="lightbox-overlay" (click)="closeLightbox()">
-        
-        <!-- Close Button - fixed to viewport top-right -->
-        <button type="button" class="lightbox-close-btn" aria-label="Close" (click)="closeLightbox(); $event.stopPropagation()">
-          &times;
-        </button>
+  <!-- Full-screen Lightbox Modal -->
+  @if (viewingImage) {
+    <div class="lightbox-backdrop" (click)="closeLightbox()"></div>
+    <div class="lightbox-overlay" (click)="closeLightbox()">
+      
+      <!-- Close Button -->
+      <button type="button" class="lightbox-close-btn" aria-label="Close" (click)="closeLightbox(); $event.stopPropagation()">
+        &times;
+      </button>
 
-        <div class="lightbox-dialog" (click)="$event.stopPropagation()">
-          <!-- Previous Button -->
+      <div class="lightbox-dialog" (click)="$event.stopPropagation()">
+        <!-- Previous Button -->
+        @if (activeImages.length > 1) {
           <button type="button" class="lightbox-nav-btn lightbox-prev" aria-label="Previous" (click)="prevImage(); $event.stopPropagation()">
             &#10094;
           </button>
-          
-          <div class="lightbox-content">
-            <img [src]="viewingImage.url" [alt]="viewingImage.place" class="lightbox-img">
-            @if (viewingImage.place) {
-              <div class="lightbox-caption">{{ viewingImage.place }}</div>
-            }
-          </div>
-          
-          <!-- Next Button -->
+        }
+        
+        <div class="lightbox-content">
+          <img [src]="viewingImage.url" [alt]="viewingImage.place" class="lightbox-img">
+          @if (viewingImage.place) {
+            <div class="lightbox-caption">{{ viewingImage.place }}</div>
+          }
+        </div>
+        
+        <!-- Next Button -->
+        @if (activeImages.length > 1) {
           <button type="button" class="lightbox-nav-btn lightbox-next" aria-label="Next" (click)="nextImage(); $event.stopPropagation()">
             &#10095;
           </button>
-        </div>
+        }
       </div>
-    }
-  </div>
+    </div>
+  }
 </section>
 } @else {
   <app-loader></app-loader>

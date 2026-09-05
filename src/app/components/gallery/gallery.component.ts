@@ -1,6 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { MediaService } from '../../services/media.service';
 import { FooterComponent } from '../footer/footer.component';
 import { LoaderComponent } from "../loader/loader.component";
@@ -31,10 +30,12 @@ export class GalleryComponent implements OnInit {
   categories: Category[] = [];
   isLoading = false;
 
-  selectedCategory: Category | null = null;
-  
-  viewingImage: Image | null = null;
+  // Selected category for the popup album view
+  activeCategoryModal: Category | null = null;
   activeImages: Image[] = [];
+
+  // Lightbox full-screen view
+  viewingImage: Image | null = null;
   currentImageIndex: number = 0;
 
   ngOnInit() {
@@ -45,11 +46,8 @@ export class GalleryComponent implements OnInit {
     this.isLoading = true;
     this.mediaService.getMedia().subscribe({
       next: (data) => {
-        this.categories = data;
+        this.categories = data || [];
         this.isLoading = false;
-        if (this.categories.length > 0) {
-          this.selectedCategory = this.categories[0];
-        }
       },
       error: (err) => {
         this.isLoading = false;
@@ -58,15 +56,29 @@ export class GalleryComponent implements OnInit {
     });
   }
 
-  selectCategory(cat: Category) {
-    this.selectedCategory = cat;
+  getActiveImagesCount(cat: Category): number {
+    if (!cat || !cat.images) return 0;
+    return cat.images.filter(img => img.isActive !== false).length;
+  }
+
+  openCategory(cat: Category) {
+    this.activeCategoryModal = cat;
+    this.activeImages = (cat.images || []).filter(img => img.isActive !== false);
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeCategoryModal() {
+    this.activeCategoryModal = null;
+    this.viewingImage = null;
+    document.body.style.overflow = '';
   }
 
   openLightbox(img: Image) {
-    if (this.selectedCategory && this.selectedCategory.images) {
-      // Filter so the next/prev buttons only cycle through active images
-      this.activeImages = this.selectedCategory.images.filter(i => i.isActive);
+    if (this.activeImages.length > 0) {
       this.currentImageIndex = this.activeImages.findIndex(i => i.id === img.id);
+      if (this.currentImageIndex === -1) {
+        this.currentImageIndex = 0;
+      }
       this.viewingImage = this.activeImages[this.currentImageIndex];
     }
   }
@@ -77,7 +89,6 @@ export class GalleryComponent implements OnInit {
 
   prevImage() {
     if (this.activeImages.length > 0) {
-      // Navigate to previous, loop around to end if at the start
       this.currentImageIndex = (this.currentImageIndex - 1 + this.activeImages.length) % this.activeImages.length;
       this.viewingImage = this.activeImages[this.currentImageIndex];
     }
@@ -85,9 +96,23 @@ export class GalleryComponent implements OnInit {
 
   nextImage() {
     if (this.activeImages.length > 0) {
-      // Navigate to next, loop around to start if at the end
       this.currentImageIndex = (this.currentImageIndex + 1) % this.activeImages.length;
       this.viewingImage = this.activeImages[this.currentImageIndex];
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.viewingImage) {
+      if (event.key === 'ArrowLeft') {
+        this.prevImage();
+      } else if (event.key === 'ArrowRight') {
+        this.nextImage();
+      } else if (event.key === 'Escape') {
+        this.closeLightbox();
+      }
+    } else if (this.activeCategoryModal && event.key === 'Escape') {
+      this.closeCategoryModal();
     }
   }
 }
