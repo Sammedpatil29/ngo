@@ -226,7 +226,6 @@ h2 {
   background-color: var(--accent);
   color: var(--white);
   border: none;
-  border-radius: 8px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -237,18 +236,6 @@ h2 {
 
 .donate-btn:hover:not(:disabled) {
   background-color: var(--accent);
-  opacity: 0.95;
-  transform: translateY(-1px);
-}
-
-.autopay-btn {
-  background-color: #1b5e20;
-  border: 2px solid #1b5e20;
-}
-
-.autopay-btn:hover:not(:disabled) {
-  background-color: #144618;
-  border-color: #144618;
   opacity: 0.95;
   transform: translateY(-1px);
 }

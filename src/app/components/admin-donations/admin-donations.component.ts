@@ -61,9 +61,20 @@ export class AdminDonationsComponent implements OnInit {
 
   isAutoPay(donation: any): boolean {
     if (!donation) return false;
-    if (donation.subscriptionId && donation.subscriptionId.trim() !== '') return true;
-    if (donation.transactionId && (donation.transactionId.startsWith('sub_') || donation.transactionId.startsWith('sub-'))) return true;
-    if (donation.message && donation.message.toLowerCase().includes('subscription')) return true;
+    // 1. If mode is present in API data, use it directly
+    if (donation.mode) {
+      return donation.mode === 'auto';
+    }
+    // 2. Fallback to old method if mode is not present (legacy records)
+    if (donation.transactionId && (donation.transactionId.startsWith('sub_') || donation.transactionId.startsWith('sub-') || donation.transactionId.startsWith('sub'))) {
+      return true;
+    }
+    if (donation.subscriptionId && donation.subscriptionId.trim() !== '') {
+      return true;
+    }
+    if (donation.message && donation.message.toLowerCase().includes('subscription')) {
+      return true;
+    }
     return false;
   }
 
@@ -82,6 +93,7 @@ export class AdminDonationsComponent implements OnInit {
         (donation.donorName && donation.donorName.toLowerCase().includes(term)) ||
         (donation.city && donation.city.toLowerCase().includes(term)) ||
         (donation.amount && donation.amount.toString().includes(term)) ||
+        (donation.mode && donation.mode.toLowerCase().includes(term)) ||
         (donation.paymentStatus && donation.paymentStatus.toLowerCase().includes(term)) ||
         (donation.transactionId && donation.transactionId.toLowerCase().includes(term)) ||
         (donation.subscriptionId && donation.subscriptionId.toLowerCase().includes(term)) ||

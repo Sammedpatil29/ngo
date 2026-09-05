@@ -95,7 +95,7 @@
           </div>
           <div class="action-buttons">
             <button type="submit" class="donate-btn" [disabled]="!donationForm.valid">
-              {{changedText.submit || 'Proceed to Pay'}}
+              {{changedText.submit || 'One time Pay'}}
             </button>
             <button type="button" (click)="submitAutoDonation($event)" class="donate-btn autopay-btn" [disabled]="!donationForm.valid">
               {{changedText.submitauto || 'Monthly Auto-Pay'}}
