@@ -1,42 +1,151 @@
-<div class="d-flex flex-column" style="height: 100vh; overflow: hidden;">
-  <div class="flex-grow-1 d-flex flex-column bg-light" style="overflow-y: auto;">
-    <!-- Header -->
-    <header class="bg-white shadow-sm p-3 mb-4">
-      <div class="row align-items-center justify-content-between g-2">
-        <div class="col-12 col-md-auto d-flex align-items-center gap-2">
-          <img src="assets/ngologo.avif" alt="Logo" style="height: 40px; width: auto;">
-          <h5 class="m-0 text-secondary">Admin Panel</h5>
-        </div>
-        <div class="col-12 col-md-auto">
-          <div class="d-flex align-items-center gap-3">
-            <div id="google_translate_element"></div>
-            <div class="dropdown">
-              <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <strong>Menu</strong>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end w-100">
-                <li><a class="dropdown-item" routerLink="admin-volunteers" routerLinkActive="active">Volunteers</a></li>
-                <li><a class="dropdown-item" routerLink="admin-banners" routerLinkActive="active">Banners</a></li>
-                <li><a class="dropdown-item" routerLink="admin-services" routerLinkActive="active">Services</a></li>
-                <li><a class="dropdown-item" routerLink="admin-members" routerLinkActive="active">Members</a></li>
-                <li><a class="dropdown-item" routerLink="admin-donors" routerLinkActive="active">Donors</a></li>
-                <li><a class="dropdown-item" routerLink="admin-donations" routerLinkActive="active">Donations</a></li>
-                <li><a class="dropdown-item" routerLink="admin-images" routerLinkActive="active">Images</a></li>
-                <li><a class="dropdown-item" routerLink="admin-media" routerLinkActive="active">Media</a></li>
-                <li><a class="dropdown-item" routerLink="admin-review" routerLinkActive="active">Reviews</a></li>
-                <!-- <li><a class="dropdown-item" routerLink="admin-donation" routerLinkActive="active">Donation</a></li> -->
-                <li><hr class="dropdown-divider"></li>
-                <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
-                <li><a class="dropdown-item" (click)="logOut()">Sign out</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+<div class="admin-shell">
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div class="sidebar-overlay" [class.active]="sidebarOpen" (click)="closeSidebar()"></div>
+
+  <!-- Left Sidebar -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+      <img src="assets/ngologo.avif" alt="Logo" class="sidebar-logo">
+      <span class="sidebar-title">Admin Panel</span>
+      <button class="sidebar-close-btn d-md-none" (click)="closeSidebar()" aria-label="Close sidebar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Nav Links -->
+    <nav class="sidebar-nav">
+
+      <a class="sidebar-link" routerLink="admin-donations" routerLinkActive="active"
+         data-tooltip="Donations" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v1H1zm0 2h14v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5 3a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1z"/>
+        </svg>
+        <span class="link-label">Donations</span>
+      </a>
+
+      <a class="sidebar-link" routerLink="admin-donors" routerLinkActive="active"
+         data-tooltip="Donors" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+        </svg>
+        <span class="link-label">Donors</span>
+      </a>
+
+      <a class="sidebar-link" routerLink="admin-volunteers" routerLinkActive="active"
+         data-tooltip="Volunteers" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 1a2 2 0 1 1 0 4 2 2 0 0 1 0-4m0 5c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4"/>
+        </svg>
+        <span class="link-label">Volunteers</span>
+      </a>
+
+      <a class="sidebar-link" routerLink="admin-members" routerLinkActive="active"
+         data-tooltip="Members" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+        </svg>
+        <span class="link-label">Members</span>
+      </a>
+
+      <a class="sidebar-link" routerLink="admin-banners" routerLinkActive="active"
+         data-tooltip="Banners" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"/>
+          <path d="M10.648 8.646a.5.5 0 0 1 .577-.093l4 2a.5.5 0 0 1 0 .894l-4 2a.5.5 0 0 1-.723-.447V9.092a.5.5 0 0 1 .146-.446"/>
+        </svg>
+        <span class="link-label">Banners</span>
+      </a>
+
+      <a class="sidebar-link" routerLink="admin-services" routerLinkActive="active"
+         data-tooltip="Services" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
+          <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
+        </svg>
+        <span class="link-label">Services</span>
+      </a>
+
+      <a class="sidebar-link" routerLink="admin-images" routerLinkActive="active"
+         data-tooltip="Images" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+          <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>
+        </svg>
+        <span class="link-label">Images</span>
+      </a>
+
+      <a class="sidebar-link" routerLink="admin-media" routerLinkActive="active"
+         data-tooltip="Media" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
+        </svg>
+        <span class="link-label">Media</span>
+      </a>
+
+      <a class="sidebar-link" routerLink="admin-review" routerLinkActive="active"
+         data-tooltip="Reviews" (click)="closeSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a21 21 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.088-.243 4.5 4.5 0 0 1-2.219.638z"/>
+        </svg>
+        <span class="link-label">Reviews</span>
+      </a>
+
+      <div class="sidebar-divider"></div>
+
+      <button class="sidebar-link sidebar-logout" data-tooltip="Sign Out" (click)="showLogoutConfirm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+          <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+        </svg>
+        <span class="link-label">Sign Out</span>
+      </button>
+
+    </nav>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="admin-main">
+
+    <!-- Top Bar (mobile only) -->
+    <header class="admin-topbar">
+      <button class="hamburger-btn" (click)="toggleSidebar()" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="topbar-brand">
+        <img src="assets/ngologo.avif" alt="Logo" class="topbar-logo">
+        <span>Admin Panel</span>
       </div>
     </header>
-    
-    <div class="container-fluid px-4">
+
+    <!-- Page Content -->
+    <div class="admin-content">
       <router-outlet></router-outlet>
     </div>
+
   </div>
+
+  <!-- Logout Confirmation Modal -->
+  <div class="logout-overlay" *ngIf="logoutConfirmVisible" (click)="cancelLogout()"></div>
+  <div class="logout-modal" *ngIf="logoutConfirmVisible">
+    <div class="logout-modal-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ef4444" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+      </svg>
+    </div>
+    <h3 class="logout-modal-title">Sign Out</h3>
+    <p class="logout-modal-text">Are you sure you want to sign out?</p>
+    <div class="logout-modal-actions">
+      <button class="btn-cancel" (click)="cancelLogout()">Cancel</button>
+      <button class="btn-confirm" (click)="logOut()">Sign Out</button>
+    </div>
+  </div>
+
 </div>

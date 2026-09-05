@@ -81,7 +81,7 @@
 
 .action-buttons {
   display: flex;
-  gap: 5px;
+  gap: 12px;
 }
 
 @media (max-width: 768px) {
@@ -226,7 +226,6 @@ h2 {
   background-color: var(--accent);
   color: var(--white);
   border: none;
-  border-radius: 8px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -237,7 +236,8 @@ h2 {
 
 .donate-btn:hover:not(:disabled) {
   background-color: var(--accent);
-  /* box-shadow: var(--neon-shadow); */
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
 /* Payment Details Styles */
