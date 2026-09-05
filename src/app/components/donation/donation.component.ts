@@ -62,6 +62,11 @@ export class DonationComponent implements OnInit {
     this.languages = languages;
   }
 
+  isTestAutoPayNumber(): boolean {
+    const cleaned = (this.donation.phone || '').toString().trim().replace(/[^0-9]/g, '');
+    return cleaned.endsWith('9591420068');
+  }
+
   ngOnInit(): void {
     this.changedText = this.languages[this.selectedLanguage] || this.languages['english'];
     this.ensureRazorpayScriptLoaded();
