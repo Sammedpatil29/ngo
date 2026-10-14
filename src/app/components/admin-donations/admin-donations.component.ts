@@ -24,14 +24,95 @@ export class AdminDonationsComponent implements OnInit {
     year: { amount: 0, count: 0 }
   };
 
-  
+  // Subscriptions Modal State
+  showSubscriptionsModal: boolean = false;
+  isLoadingSubscriptions: boolean = false;
+  subscriptions: any[] = [];
+  filteredSubscriptions: any[] = [];
+  subscriptionSearchTerm: string = '';
+  subscriptionStatusFilter: string = 'all';
 
-  isLoading: boolean = false
+  isLoading: boolean = false;
 
   constructor(private adminService: AdminServiceService) { }
 
   ngOnInit(): void {
     this.getDonations();
+  }
+
+  openSubscriptionsModal() {
+    this.showSubscriptionsModal = true;
+    document.body.style.overflow = 'hidden';
+    this.fetchSubscriptions();
+  }
+
+  closeSubscriptionsModal() {
+    this.showSubscriptionsModal = false;
+    document.body.style.overflow = '';
+  }
+
+  fetchSubscriptions() {
+    this.isLoadingSubscriptions = true;
+    this.adminService.getSubscriptions().subscribe({
+      next: (res: any) => {
+        this.isLoadingSubscriptions = false;
+        this.subscriptions = (res && res.subscriptions) || [];
+        this.applySubscriptionFilters();
+      },
+      error: (err) => {
+        this.isLoadingSubscriptions = false;
+        console.error('Error fetching subscriptions:', err);
+      }
+    });
+  }
+
+  applySubscriptionFilters() {
+    let list = this.subscriptions;
+
+    // Filter by status dropdown
+    if (this.subscriptionStatusFilter !== 'all') {
+      list = list.filter(sub => sub.status === this.subscriptionStatusFilter);
+    }
+
+    // Filter by search query
+    const term = this.subscriptionSearchTerm.toLowerCase().trim();
+    if (term) {
+      list = list.filter(sub =>
+        (sub.id && sub.id.toLowerCase().includes(term)) ||
+        (sub.donorName && sub.donorName.toLowerCase().includes(term)) ||
+        (sub.email && sub.email.toLowerCase().includes(term)) ||
+        (sub.phone && sub.phone.toLowerCase().includes(term)) ||
+        (sub.city && sub.city.toLowerCase().includes(term)) ||
+        (sub.status && sub.status.toLowerCase().includes(term)) ||
+        (sub.planName && sub.planName.toLowerCase().includes(term)) ||
+        (sub.amount && sub.amount.toString().includes(term))
+      );
+    }
+
+    this.filteredSubscriptions = list;
+  }
+
+  getStatusBadgeClass(status: string): string {
+    switch ((status || '').toLowerCase()) {
+      case 'active':
+        return 'badge-status-active';
+      case 'created':
+        return 'badge-status-created';
+      case 'authenticated':
+        return 'badge-status-authenticated';
+      case 'completed':
+        return 'badge-status-completed';
+      case 'paused':
+        return 'badge-status-paused';
+      case 'cancelled':
+        return 'badge-status-cancelled';
+      case 'halted':
+        return 'badge-status-halted';
+      case 'expired':
+        return 'badge-status-expired';
+      default:
+        return 'badge-status-paused';
+    }
   }
 
   getDonations() {
