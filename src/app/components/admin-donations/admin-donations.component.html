@@ -17,7 +17,7 @@
        <div class="summary-label"><Span>This Year</Span><small class="text-secondary">{{ metrics.year.count }} donations</small></div>
       <div class="summary-value">₹ {{ metrics.year.amount | number:'1.0-0' }}</div>
     </div>
-    <div class="donation-summary-card">
+    <div class="donation-summary-card auto-pay-card" (click)="openSubscriptionsModal()" title="View subscriptions">
        <div class="summary-label"><Span>Auto Pay</Span><small class="text-secondary">{{ activeSubscriptionsCount.count }} subscriptions</small></div>
       <div class="summary-value">₹ {{ activeSubscriptionsCount.total | number:'1.0-0' }}</div>
     </div>
@@ -96,6 +96,201 @@
       </div>
     </div>
   </div>
+  <!-- All Subscriptions Modal Dialog -->
+  @if (showSubscriptionsModal) {
+    <div class="modal-backdrop-custom" (click)="closeSubscriptionsModal()">
+      <div class="subscriptions-modal-dialog" (click)="$event.stopPropagation()">
+        
+        <!-- Modal Header -->
+        <div class="modal-header bg-white py-3 px-4 border-bottom d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 42px; height: 42px; background-color: #f3effa; color: #574385; flex-shrink: 0;">
+              <svg xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 -960 960 960" width="22px" fill="currentColor">
+                <path d="M320-280h74l23-70h124l23 70h76L520-618h-80L320-280Zm116-128 44-132 43 132h-87Zm-76-432v-80h240v80H360Zm-19.5 731.5Q275-137 226-186t-77.5-114.5Q120-366 120-440t28.5-139.5Q177-645 226-694t114.5-77.5Q406-800 480-800q62 0 119 20t107 58l56-56 56 56-56 56q38 50 58 107t20 119q0 74-28.5 139.5T734-186q-49 49-114.5 77.5T480-80q-74 0-139.5-28.5Z"/>
+              </svg>
+            </div>
+            <div>
+              <h5 class="modal-title mb-0 fw-bold text-dark" style="font-size: 1.15rem; line-height: 1.3;">Razorpay Subscriptions</h5>
+              <div class="d-flex align-items-center gap-2 mt-1">
+                <span class="badge bg-light text-secondary border" style="font-size: 0.75rem; font-weight: 600;">
+                  Total: {{ subscriptions.length }}
+                </span>
+                @if (filteredSubscriptions.length !== subscriptions.length) {
+                  <span class="badge bg-primary-subtle text-primary border-0" style="font-size: 0.75rem; font-weight: 600;">
+                    Filtered: {{ filteredSubscriptions.length }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 px-3 py-1" 
+              style="height: 36px; border-radius: 6px;"
+              (click)="fetchSubscriptions()" 
+              [disabled]="isLoadingSubscriptions" 
+              title="Refresh list">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px" fill="currentColor" [class.spin]="isLoadingSubscriptions">
+                <path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"/>
+              </svg>
+              <span style="font-size: 0.82rem;">Refresh</span>
+            </button>
+            <button type="button" class="btn-close ms-2" aria-label="Close" (click)="closeSubscriptionsModal()"></button>
+          </div>
+        </div>
+
+        <!-- Controls: Search & Filter Toolbar -->
+        <div class="bg-light px-4 py-2 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div class="position-relative flex-grow-1" style="max-width: 420px;">
+            <svg xmlns="http://www.w3.org/2000/svg" height="17px" viewBox="0 -960 960 960" width="17px" fill="#64748b" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none;">
+              <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+            </svg>
+            <input 
+              type="text" 
+              class="form-control form-control-sm bg-white shadow-none ps-5" 
+              style="height: 38px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.88rem;"
+              placeholder="Search by ID, donor name, phone, email, plan..." 
+              [(ngModel)]="subscriptionSearchTerm" 
+              (input)="applySubscriptionFilters()">
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <label class="small text-secondary mb-0 fw-bold text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">Status</label>
+            <select 
+              class="form-select form-select-sm bg-white shadow-none" 
+              style="height: 38px; width: 170px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.85rem;"
+              [(ngModel)]="subscriptionStatusFilter" 
+              (change)="applySubscriptionFilters()">
+              <option value="all">All Statuses ({{ subscriptions.length }})</option>
+              <option value="active">Active</option>
+              <option value="created">Created</option>
+              <option value="authenticated">Authenticated</option>
+              <option value="completed">Completed</option>
+              <option value="paused">Paused</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="halted">Halted</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Modal Body: Table -->
+        <div class="modal-body p-0" style="overflow-y: auto; max-height: calc(88vh - 150px);">
+          @if (isLoadingSubscriptions) {
+            <div class="text-center py-5">
+              <div class="spinner-border text-primary" style="width: 2.2rem; height: 2.2rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <div class="text-muted mt-3 small fw-medium">Fetching subscriptions from Razorpay...</div>
+            </div>
+          } @else {
+            <div class="table-responsive m-0">
+              <table class="table table-hover align-middle mb-0 sub-table">
+                <thead class="sticky-top" style="z-index: 2;">
+                  <tr>
+                    <th scope="col" style="width: 22%;" class="ps-4">Subscription ID</th>
+                    <th scope="col" style="width: 23%;">Donor Details</th>
+                    <th scope="col" style="width: 17%;">Plan & Amount</th>
+                    <th scope="col" style="width: 12%;" class="text-center">Status</th>
+                    <th scope="col" style="width: 12%;" class="text-center">Cycles (Paid)</th>
+                    <th scope="col" style="width: 14%;" class="pe-4">Next Charge</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (sub of filteredSubscriptions; track sub.id) {
+                    <tr>
+                      <!-- Subscription ID -->
+                      <td class="ps-4">
+                        <div class="fw-bold font-monospace text-dark text-break" style="font-size: 0.85rem;">{{ sub.id }}</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.74rem;" [title]="sub.plan_id">Plan: {{ sub.plan_id }}</div>
+                        @if (sub.created_at) {
+                          <div class="text-secondary" style="font-size: 0.72rem;">Created: {{ sub.created_at | date:'dd MMM yyyy' }}</div>
+                        }
+                      </td>
+
+                      <!-- Donor Details -->
+                      <td>
+                        @if (sub.donorName || sub.phone || sub.email) {
+                          <div class="fw-semibold text-dark text-truncate" style="max-width: 210px;" [title]="sub.donorName || ''">
+                            {{ sub.donorName || '—' }}
+                          </div>
+                          @if (sub.phone) {
+                            <div class="text-muted" style="font-size: 0.8rem;">{{ sub.phone }}</div>
+                          }
+                          @if (sub.email) {
+                            <div class="text-muted text-truncate d-block" style="max-width: 210px; font-size: 0.75rem;" [title]="sub.email">{{ sub.email }}</div>
+                          }
+                          @if (sub.city) {
+                            <span class="badge bg-light text-secondary border mt-1" style="font-size: 0.68rem; font-weight: 500;">{{ sub.city }}</span>
+                          }
+                        } @else {
+                          <span class="text-muted small">—</span>
+                        }
+                      </td>
+
+                      <!-- Plan & Amount -->
+                      <td>
+                        <div class="fw-bold" style="color: #e91e63; font-size: 1rem;">
+                          {{ sub.currency }} {{ sub.amount | number:'1.2-2' }}
+                        </div>
+                        <div class="text-muted text-truncate" style="font-size: 0.8rem; max-width: 160px;" [title]="sub.planName || ''">
+                          {{ sub.planName || (sub.period | titlecase) }}
+                        </div>
+                      </td>
+
+                      <!-- Status Badge -->
+                      <td class="text-center">
+                        <span class="badge-status" [ngClass]="getStatusBadgeClass(sub.status)">
+                          {{ sub.status }}
+                        </span>
+                      </td>
+
+                      <!-- Billing Cycles -->
+                      <td class="text-center">
+                        <div class="fw-bold text-dark" style="font-size: 0.92rem;">
+                          <span class="text-success">{{ sub.paid_count || 0 }}</span>
+                          <span class="text-muted fw-normal"> / {{ sub.total_count }}</span>
+                        </div>
+                        <div class="text-muted text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.5px;">completed</div>
+                      </td>
+
+                      <!-- Next Charge -->
+                      <td class="pe-4">
+                        @if (sub.charge_at) {
+                          <div class="fw-medium text-dark" style="font-size: 0.85rem;">{{ sub.charge_at | date:'dd MMM yyyy' }}</div>
+                          <div class="text-muted" style="font-size: 0.74rem;">{{ sub.charge_at | date:'hh:mm a' }}</div>
+                        } @else {
+                          <span class="text-muted small">—</span>
+                        }
+                      </td>
+                    </tr>
+                  } @empty {
+                    <tr>
+                      <td colspan="6" class="text-center py-5 text-muted">
+                        <div class="py-4">
+                          <p class="mb-1 fw-semibold text-secondary" style="font-size: 1rem;">No subscriptions found</p>
+                          <small class="text-muted">Try adjusting your search keyword or status filter.</small>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer bg-white py-2 px-4 border-top d-flex justify-content-between align-items-center">
+          <div class="small text-muted">
+            Showing {{ filteredSubscriptions.length }} of {{ subscriptions.length }} subscriptions
+          </div>
+          <button type="button" class="btn btn-sm btn-secondary px-4 py-1" style="border-radius: 6px;" (click)="closeSubscriptionsModal()">Close</button>
+        </div>
+
+      </div>
+    </div>
+  }
 </div>
 
 @if(isLoading){
