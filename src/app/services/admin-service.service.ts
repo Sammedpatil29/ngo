@@ -136,6 +136,10 @@ addBanners(params: any) {
     return this.http.get(`${this.url}/api/donations`);
   }
 
+  getSubscriptions() {
+    return this.http.get(`${this.url}/api/donations/subscriptions`);
+  }
+
   getReviews() {
     return this.http.get(`${this.url}/api/reviews`);
   }
