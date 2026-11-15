@@ -8,7 +8,12 @@
               <p><strong>Address:</strong><br> D No: 9/324, Shankar Rao Street,<br> PRODDATUR - 516 360,<br> Kadapa Dist. A.P</p>
               <p><strong>Phone:</strong> <a href="tel:{{contactPhone()}}">{{contactPhone()}}</a></p>
               <p><strong>Email:</strong> <a href="mailto:{{contactEmail()}}">{{contactEmail()}}</a></p>
-              <p class="admin-login" (click)="login()">Admin Login</p>
+              <button type="button" class="admin-login-btn mt-2" (click)="login()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px" fill="currentColor">
+                  <path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 23.5T720-80H240Zm0-80h480v-400H240v400Zm240-120q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/>
+                </svg>
+                <span>{{ isLoggedIn() ? 'Admin Dashboard' : 'Admin Login' }}</span>
+              </button>
             </div>
             <div class="footer-section map-section">
               <h3>Our Location</h3>
@@ -25,7 +30,12 @@
               <p><strong>Address:</strong><br> Opp. CSRI church,<br> Jammalamadugu - 516 434,<br> Kadapa Dist. A.P</p>
               <p><strong>Phone:</strong> <a href="tel:{{contactPhone()}}">{{contactPhone()}}</a></p>
               <p><strong>Email:</strong> <a href="mailto:{{contactEmail()}}">{{contactEmail()}}</a></p>
-              <p class="admin-login" (click)="login()">Admin Login</p>
+              <button type="button" class="admin-login-btn mt-2" (click)="login()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px" fill="currentColor">
+                  <path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 23.5T720-80H240Zm0-80h480v-400H240v400Zm240-120q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/>
+                </svg>
+                <span>{{ isLoggedIn() ? 'Admin Dashboard' : 'Admin Login' }}</span>
+              </button>
             </div>
             <div class="footer-section map-section">
               <h3>Our Location</h3>
@@ -42,7 +52,12 @@
               <p><strong>Address:</strong><br> <br> Yaadiki - 515 408,<br> Ananthapur Dist. A.P</p>
               <p><strong>Phone:</strong> <a href="tel:{{contactPhone()}}">{{contactPhone()}}</a></p>
               <p><strong>Email:</strong> <a href="mailto:{{contactEmail()}}">{{contactEmail()}}</a></p>
-              <p class="admin-login" (click)="login()">Admin Login</p>
+              <button type="button" class="admin-login-btn mt-2" (click)="login()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 -960 960 960" width="15px" fill="currentColor">
+                  <path d="M240-80q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640h40v-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 23.5T720-80H240Zm0-80h480v-400H240v400Zm240-120q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM360-640h240v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85v80Z"/>
+                </svg>
+                <span>{{ isLoggedIn() ? 'Admin Dashboard' : 'Admin Login' }}</span>
+              </button>
             </div>
             <div class="footer-section map-section">
               <h3>Our Location</h3>
@@ -63,7 +78,12 @@
       </button>
     </div>
     <div class="footer-bottom">
-      <p class="m-0"><button class="bg-transparent border-0 text-secondary" (click)="openDocs('terms')">Terms and Conditions</button> | <button class="bg-transparent border-0 text-secondary" (click)="openDocs('privacy-policy')">Privacy Policy</button> | <button class="bg-transparent border-0 text-secondary" (click)="openDocs('cancellation')">Cancellation and Refund</button></p>
-      <p>&copy; {{year}} May I Help You Foundation. All rights reserved.</p>
+      <p class="m-0">
+        <button class="bg-transparent border-0 text-secondary" (click)="openDocs('terms')">Terms and Conditions</button> | 
+        <button class="bg-transparent border-0 text-secondary" (click)="openDocs('privacy-policy')">Privacy Policy</button> | 
+        <button class="bg-transparent border-0 text-secondary" (click)="openDocs('cancellation')">Cancellation and Refund</button> | 
+        <button class="bg-transparent border-0 text-secondary admin-footer-link" (click)="login()">{{ isLoggedIn() ? 'Admin Dashboard' : 'Admin Login' }}</button>
+      </p>
+      <p class="mt-1 mb-0">&copy; {{year}} May I Help You Foundation. All rights reserved.</p>
     </div>
   </footer>

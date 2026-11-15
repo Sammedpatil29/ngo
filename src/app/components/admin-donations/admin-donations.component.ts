@@ -24,6 +24,15 @@ export class AdminDonationsComponent implements OnInit {
     year: { amount: 0, count: 0 }
   };
 
+  // Table Pagination State
+  currentPage: number = 1;
+  pageSize: number = 10;
+  pageSizeOptions: number[] = [10, 20, 50, 100];
+  totalDonations: number = 0;
+  totalPages: number = 1;
+  isTableLoading: boolean = false;
+  private searchDebounceTimer: any = null;
+
   // Subscriptions Modal State
   showSubscriptionsModal: boolean = false;
   isLoadingSubscriptions: boolean = false;
@@ -37,7 +46,7 @@ export class AdminDonationsComponent implements OnInit {
   constructor(private adminService: AdminServiceService) { }
 
   ngOnInit(): void {
-    this.getDonations();
+    this.getDonations(true);
   }
 
   openSubscriptionsModal() {
@@ -115,29 +124,88 @@ export class AdminDonationsComponent implements OnInit {
     }
   }
 
-  getDonations() {
-    this.isLoading = true
-    this.adminService.getDonations().subscribe({
+  getDonations(includeStats: boolean = true) {
+    if (includeStats) {
+      this.isLoading = true;
+    } else {
+      this.isTableLoading = true;
+    }
+
+    this.adminService.getDonations(this.currentPage, this.pageSize, this.searchTerm, includeStats).subscribe({
       next: (response: any) => {
-        this.isLoading = false
-        this.donationsRes = response
-        this.donations = response.donations;
-        this.activeSubscriptionsCount = response.razorpayStats.activeSubscriptions;
-        this.filteredDonations = response.donations;
-        this.metrics.today.amount = response.razorpayStats.today.total
-        this.metrics.today.count = response.razorpayStats.today.count
-        this.metrics.week.amount = response.razorpayStats.lastWeek.total
-        this.metrics.week.count = response.razorpayStats.lastWeek.count
-        this.metrics.month.amount = response.razorpayStats.thisMonth.total
-        this.metrics.month.count = response.razorpayStats.thisMonth.count
-        this.metrics.year.amount = response.razorpayStats.thisYear.total
-        this.metrics.year.count = response.razorpayStats.thisYear.count
+        this.isLoading = false;
+        this.isTableLoading = false;
+        this.donations = response.donations || [];
+        this.filteredDonations = this.donations;
+
+        if (response.pagination) {
+          this.totalDonations = response.pagination.total || 0;
+          this.currentPage = response.pagination.page || 1;
+          this.pageSize = response.pagination.limit || this.pageSize;
+          this.totalPages = response.pagination.totalPages || 1;
+        } else {
+          this.totalDonations = this.donations.length;
+          this.totalPages = Math.ceil(this.totalDonations / this.pageSize) || 1;
+        }
+
+        if (response.razorpayStats) {
+          this.donationsRes = response;
+          this.activeSubscriptionsCount = response.razorpayStats.activeSubscriptions;
+          this.metrics.today.amount = response.razorpayStats.today.total;
+          this.metrics.today.count = response.razorpayStats.today.count;
+          this.metrics.week.amount = response.razorpayStats.lastWeek.total;
+          this.metrics.week.count = response.razorpayStats.lastWeek.count;
+          this.metrics.month.amount = response.razorpayStats.thisMonth.total;
+          this.metrics.month.count = response.razorpayStats.thisMonth.count;
+          this.metrics.year.amount = response.razorpayStats.thisYear.total;
+          this.metrics.year.count = response.razorpayStats.thisYear.count;
+        }
       },
       error: (error) => {
-        this.isLoading = false
-        console.error('Error fetching donations:', error)
-      } 
+        this.isLoading = false;
+        this.isTableLoading = false;
+        console.error('Error fetching donations:', error);
+      }
     });
+  }
+
+  onPageSizeChange() {
+    this.currentPage = 1;
+    this.getDonations(false);
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
+    this.currentPage = page;
+    this.getDonations(false);
+  }
+
+  get startRecord(): number {
+    if (this.totalDonations === 0) return 0;
+    return (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get endRecord(): number {
+    return Math.min(this.currentPage * this.pageSize, this.totalDonations);
+  }
+
+  get visiblePages(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = start + maxVisible - 1;
+
+    if (end > this.totalPages) {
+      end = this.totalPages;
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   isAutoPay(donation: any): boolean {
@@ -160,25 +228,12 @@ export class AdminDonationsComponent implements OnInit {
   }
 
   onSearch() {
-    const term = this.searchTerm.toLowerCase().trim();
-    if (!term) {
-      this.filteredDonations = this.donations;
-      return;
+    if (this.searchDebounceTimer) {
+      clearTimeout(this.searchDebounceTimer);
     }
-    this.filteredDonations = this.donations.filter(donation => {
-      const isAuto = this.isAutoPay(donation);
-      const modeMatches = (term === 'auto' || term === 'autopay' || term === 'subscription') ? isAuto :
-                          (term === 'one-time' || term === 'onetime' || term === '1-time') ? !isAuto : false;
-
-      return modeMatches ||
-        (donation.donorName && donation.donorName.toLowerCase().includes(term)) ||
-        (donation.city && donation.city.toLowerCase().includes(term)) ||
-        (donation.amount && donation.amount.toString().includes(term)) ||
-        (donation.mode && donation.mode.toLowerCase().includes(term)) ||
-        (donation.paymentStatus && donation.paymentStatus.toLowerCase().includes(term)) ||
-        (donation.transactionId && donation.transactionId.toLowerCase().includes(term)) ||
-        (donation.subscriptionId && donation.subscriptionId.toLowerCase().includes(term)) ||
-        (donation.phone && donation.phone.toLowerCase().includes(term));
-    });
+    this.searchDebounceTimer = setTimeout(() => {
+      this.currentPage = 1;
+      this.getDonations(false);
+    }, 300);
   }
 }
