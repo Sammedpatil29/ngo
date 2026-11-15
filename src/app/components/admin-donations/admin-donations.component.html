@@ -23,18 +23,36 @@
     </div>
   </div>
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center">
-      <h2>Donations List</h2>
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <div class="d-flex align-items-center flex-wrap">
+      <h2 class="mb-0">Donations List</h2>
       <small class="text-success ms-4">*Orders with <span style="background-color: #ffc107; color: #212529; padding: 2px 5px; border-radius: 10px;">Pending</span> status will update in 30min.</small>
     </div>
-    <div class="w-25">
-      <input type="text" class="form-control" placeholder="Search by Name, City, Amount, Status..." [(ngModel)]="searchTerm" (input)="onSearch()">
+    <div class="d-flex align-items-center gap-3">
+      <div class="d-flex align-items-center gap-2">
+        <label class="text-secondary small fw-semibold mb-0 text-nowrap">Show</label>
+        <select class="form-select form-select-sm" style="width: 80px;" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+          @for (size of pageSizeOptions; track size) {
+            <option [ngValue]="size">{{ size }}</option>
+          }
+        </select>
+        <span class="text-secondary small text-nowrap">entries</span>
+      </div>
+      <div style="min-width: 260px;">
+        <input type="text" class="form-control" placeholder="Search by Name, City, Amount, Status..." [(ngModel)]="searchTerm" (input)="onSearch()">
+      </div>
     </div>
   </div>
 
   <div class="card shadow-sm">
-    <div class="card-body p-0">
+    <div class="card-body p-0 position-relative">
+      @if (isTableLoading) {
+        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(255, 255, 255, 0.65); z-index: 5;">
+          <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
       <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
           <thead class="table-light">
@@ -88,11 +106,63 @@
               </tr>
             } @empty {
               <tr>
-                <td colspan="7" class="text-center py-4 text-muted">No donations found.</td>
+                <td colspan="9" class="text-center py-4 text-muted">No donations found.</td>
               </tr>
             }
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="card-footer bg-white py-3 px-4 border-top d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div class="text-muted small">
+        Showing <span class="fw-semibold text-dark">{{ startRecord }}</span> to <span class="fw-semibold text-dark">{{ endRecord }}</span> of <span class="fw-semibold text-dark">{{ totalDonations }}</span> donations
+      </div>
+
+      <div class="d-flex align-items-center gap-3 flex-wrap">
+        <div class="d-flex align-items-center gap-2">
+          <label class="text-muted small mb-0">Rows per page:</label>
+          <select class="form-select form-select-sm" style="width: 75px;" [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange()">
+            @for (size of pageSizeOptions; track size) {
+              <option [ngValue]="size">{{ size }}</option>
+            }
+          </select>
+        </div>
+
+        <nav aria-label="Donations pagination">
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="currentPage === 1 || isTableLoading">
+              <button class="page-link" type="button" (click)="goToPage(1)" [disabled]="currentPage === 1 || isTableLoading" title="First Page">
+                &laquo;
+              </button>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === 1 || isTableLoading">
+              <button class="page-link" type="button" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1 || isTableLoading">
+                Prev
+              </button>
+            </li>
+
+            @for (page of visiblePages; track page) {
+              <li class="page-item" [class.active]="page === currentPage">
+                <button class="page-link" type="button" (click)="goToPage(page)" [disabled]="isTableLoading">
+                  {{ page }}
+                </button>
+              </li>
+            }
+
+            <li class="page-item" [class.disabled]="currentPage === totalPages || isTableLoading">
+              <button class="page-link" type="button" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages || isTableLoading">
+                Next
+              </button>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages || isTableLoading">
+              <button class="page-link" type="button" (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages || isTableLoading" title="Last Page">
+                &raquo;
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
