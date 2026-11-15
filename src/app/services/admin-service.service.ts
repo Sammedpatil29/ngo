@@ -132,8 +132,16 @@ addBanners(params: any) {
     return this.http.post(`${this.url}/api/donors`, params);
   }
 
-  getDonations() {
-    return this.http.get(`${this.url}/api/donations`);
+  getDonations(page: number = 1, limit: number = 10, search: string = '', includeStats: boolean = true) {
+    const params: any = {
+      page: page.toString(),
+      limit: limit.toString(),
+      includeStats: includeStats.toString()
+    };
+    if (search && search.trim()) {
+      params.search = search.trim();
+    }
+    return this.http.get(`${this.url}/api/donations`, { params });
   }
 
   getSubscriptions() {
